@@ -1,0 +1,209 @@
+scop@loc_concediu.
+
+regula@1
+lista_premise@(
+    buget_disponibil@redus@
+)
+concluzie@
+    (@in_romania , fc@90@).
+
+regula@2
+lista_premise@(
+    buget_disponibil@mediu@
+)
+concluzie@
+    (@in_romania , fc@70@).
+
+regula@3
+lista_premise@(
+    buget_disponibil@mare@
+)
+concluzie@
+    (@in_romania , fc@50@).
+
+regula@4
+lista_premise@(
+    departare@aproape@
+)
+concluzie@
+    (@in_romania).
+
+regula@5
+lista_premise@(
+    departare@departe@
+)
+concluzie@
+    (@in_romania , fc@40@).
+
+regula@6
+lista_premise@(
+    @in_romania@
+    @la_mare@
+    tip_oferta@sejur_1_luna@
+    buget_disponibil@mare@
+    anotimp@vara@
+)
+concluzie@
+    (loc_concediu@=neptun , fc@80@).
+
+regula@7
+lista_premise@(
+    @in_romania@
+    @la_mare@
+    tip_oferta@sejur_2_saptamani@
+    buget_disponibil@mare@ 
+    anotimp@vara@
+)
+concluzie@
+    (loc_concediu@=mamaia,fc@90@).
+
+regula@8
+lista_premise@(
+    @in_romania@
+    @la_mare@
+    tip_oferta@sejur_2_saptamani@ 
+    anotimp@vara@
+)
+concluzie@
+    (loc_concediu@=costinesti,fc@60@).
+
+regula@9
+lista_premise@(
+    @in_romania@
+    @!la_mare@
+    tip_oferta@excursie@
+    anotimp@vara@
+)
+concluzie@
+    (loc_concediu@=manastiri_oltenia , fc@70@).
+
+regula@10
+lista_premise@(
+    @in_romania@
+    @!la_mare@
+    tip_oferta@excursie@ 
+    anotimp@vara@
+)
+concluzie@
+    (loc_concediu@=manastiri_moldova,fc@60@).
+
+regula@11
+lista_premise@(
+    @!la_mare@
+    anotimp@vara@
+)
+concluzie@
+    (loc_concediu@=delta_dunarii,fc@80@).
+
+regula@12
+lista_premise@(
+    @!la_mare@
+    tip_oferta@sejur_1_luna@ 
+    anotimp@vara@
+)
+concluzie@
+    (loc_concediu@=busteni).
+
+regula@13
+lista_premise@(
+    @la_mare@
+    departare@foarte_departe@
+    buget_disponibil@mare@ 
+    anotimp@vara@
+)
+concluzie@
+    (loc_concediu@=bahamas,fc@80@).
+
+regula@14
+lista_premise@(
+    @!la_mare@
+    departare@foarte_departe@
+    buget_disponibil@mare@
+    tip_oferta@excursie@ 
+    anotimp@vara@
+)
+concluzie@
+    (loc_concediu@=valea_loirei).
+
+regula@15
+lista_premise@(
+    departare@aproape@
+    @!la_mare@
+    buget_disponibil@mediu@ 
+    anotimp@vara@
+)
+concluzie@
+    (loc_concediu@=sinaia,fc@70@).
+
+regula@16
+lista_premise@(
+    @la_mare@
+    buget_disponibil@mare@
+    anotimp@iarna@
+)
+concluzie@
+    (loc_concediu@=rio_de_janeiro).
+
+regula@17
+lista_premise@(
+    buget_disponibil@mare@
+    @!la_mare@
+    departare@foarte_departe@
+    tip_oferta@excursie@
+    anotimp@iarna@
+)
+concluzie@
+    (loc_concediu@=austria_germania_franta,fc@90@).
+
+regula@18
+lista_premise@(
+    departare@foarte_departe@
+    @!la_mare@
+    tip_oferta@sejur_2_saptamani@
+    buget_disponibil@mare@
+    anotimp@iarna@
+)
+concluzie@
+    (loc_concediu@=chamonix,fc@60@).
+
+regula@19
+lista_premise@(
+    departare@aproape@
+    @!la_mare@
+    tip_oferta@sejur_2_saptamani@
+    buget_disponibil@mare@
+    anotimp@iarna@
+)
+concluzie@
+    (loc_concediu@=poiana_brasov).
+
+regula@20
+lista_premise@(
+    @in_romania@
+    @!la_mare@
+    tip_oferta@sejur_2_saptamani@
+    anotimp@iarna@
+)
+concluzie@
+    (loc_concediu@=busteni,fc@70@).
+
+
+intreaba@anotimp
+enunt@'In ce anotimp preferati sa va petreceti concediul?'
+variante@(vara || iarna).
+
+intreaba@tip_oferta
+enunt@'Preferati sa mergeti intr-o excursie, ori sa petreceti un sejur intr-o statiune?'
+variante@(sejur_2_saptamani || sejur_1_luna || excursie).
+
+intreaba@la_mare
+enunt@'Preferati sa petreceti concediul la mare?'
+variante@(da || nu).
+
+intreaba@departare
+enunt@'Preferati ca locul de petrecere a concediului sa fie mai aproape, ori mai departe de localitatea unde locuiti?'
+variante@(aproape || departe || foarte_departe).
+
+intreaba@buget_disponibil
+enunt@'Ce tip de  buget alocati pentru petrecerea concediului?'
+variante@(redus || mediu || mare).
