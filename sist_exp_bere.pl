@@ -59,7 +59,7 @@ citeste_linie([Cuv|Lista_cuv]) :-
 executa([incarca]) :- incarca, !, write('-V- Fisier incarcat -V-'),nl.
 	
 incarca :-
-	write('Introduceti numele fisierului intre ghilimele, urmat de un punct:'),nl, read(F),
+	write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
 	file_exists(F), !, incarca(F).
 
 incarca :- nl,
