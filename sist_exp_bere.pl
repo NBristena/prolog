@@ -121,14 +121,16 @@ trad( regula(N,premise(Daca),concluzie(Atunci,F)) ) --> identificator(N), daca(D
 				
 			propoz_daca(av(Atr,Val)) --> [Atr,'@',Val,'@'].
 			propoz_daca(av(Atr,da)) --> ['@',Atr,'@'].
-			propoz_daca(not av(Atr,da)) --> ['@','!',Atr,'@'].
+%			propoz_daca(not av(Atr,da)) --> ['@','!',Atr,'@'].
+			propoz_daca(av(Atr,nu)) --> ['@','!',Atr,'@'].
 
 	atunci(Atunci,FC) --> propoz_atunci(Atunci), [',',fc,'@'], [FC], ['@',')'].
 	atunci(Atunci,100) --> propoz_atunci(Atunci), [')'].
 			
 		propoz_atunci(av(Atr,Val)) --> [Atr,'@','=',Val].
 		propoz_atunci(av(Atr,da)) --> ['@',Atr].
-		propoz_atunci(not av(Atr,da)) --> ['@','!',Atr].
+%		propoz_atunci(not av(Atr,da)) --> ['@','!',Atr].
+		propoz_atunci(av(Atr,nu)) --> ['@','!',Atr].
 
 /*   ERORI   */
 trad('-X- Eroare la parsare -X-'-L,L,_).
@@ -177,16 +179,16 @@ executa([consulta]) :-
 determina(Atr) :- realizare_scop(av(Atr,_),_,[scop(Atr)]),!.
 determina(_).
 
-%---NOT FAPT 
+%---#NOT FAPT 
 	realizare_scop(not Scop, Not_FC, Istorie) :-
 		realizare_scop(Scop, FC, Istorie),
 		Not_FC is - FC, !.
 
-%---FAPT EXISTENT
+%---#FAPT EXISTENT
 	realizare_scop(Scop, FC, _) :-
 		fapt(Scop, FC, _), !.
 
-%---FAPT DE INTREBAT
+%---#FAPT DE INTREBAT
 	realizare_scop(Scop, FC, Istorie) :-
 		pot_interoga(Scop, Istorie),
 		!,realizare_scop(Scop, FC, Istorie).
@@ -198,33 +200,34 @@ determina(_).
 			asserta( deja_intrebat(av(Atr,_)) ).
 
 %INTREBARI YES/NO 
-/*			interogheaza(Atr, Mesaj, [da,nu], Istorie) :-
+			interogheaza(Atr, Mesaj, [da,nu], Istorie) :-
 				!, write('Q: '), write(Mesaj),nl,
+				citeste_opt([da,nu]),
 				de_la_utiliz(X, Istorie, [da,nu]),
 				det_val_fc(X, Val, FC),
-				asserta( fapt(av(Atr,Val), FC, [utiliz]) ).*/			
+				asserta( fapt(av(Atr,Val), FC, [utiliz]) ).
 
 %INTREBARI OPTIUNI
 			interogheaza(Atr, Mesaj, Optiuni, Istorie) :-
 				write('Q: '), write(Mesaj),nl,
-				citeste_opt(VLista, Optiuni, Istorie),
-				assert_fapt(Atr, VLista).
+				citeste_opt(Optiuni),
+				de_la_utiliz(X, Istorie, Optiuni),
+				assert_fapt(Atr, X).
 
-%	AFISEAZA OPTIUNI
-				citeste_opt(X, Optiuni, Istorie) :-
+%	%AFISEAZA OPTIUNI
+				citeste_opt(Optiuni) :-
 					%append(['('], Optiuni, Opt1),
 					%append(Opt1, [')'], Opt),
 					write('( '),
 					scrie_lista_optiuni(Optiuni),
-					write(' )\n'),
-					de_la_utiliz(X, Istorie, Optiuni).
+					write(' )\n').
 
-%		CITESTE RASPUNS
+%		%CITESTE RASPUNS
 					de_la_utiliz(X, Istorie, Lista_opt) :-
 						repeat,write(': '), citeste_linie(X),
 						proceseaza_raspuns(X, Istorie, Lista_opt).
 
-%			PROCESEAZA RASPUNS
+%			%PROCESEAZA RASPUNS
 						proceseaza_raspuns([de_ce], Istorie, _) :- nl,
 							write('|   Pentru regula:'),nl,
 							afis_istorie(Istorie), !, fail.
@@ -235,7 +238,7 @@ determina(_).
 						proceseaza_raspuns([X, fc, FC], _, Lista_opt):-
 							member(X, Lista_opt), float(FC).
 			
-%---FAPT DE DEMONSTRAT
+%---#FAPT DE DEMONSTRAT
 	realizare_scop(Scop, FC_curent, Istorie) :-
 		fg(Scop, FC_curent, Istorie).
 		
@@ -247,7 +250,7 @@ determina(_).
 			FC_curent == 100,!.
 		fg(Scop, FC, _) :- fapt(Scop, FC, _).
 			
-% DEMONSTREAZA PREMISE			
+% 	DEMONSTREAZA PREMISE			
 			demonstreaza(N, ListaPremise, Val_finala, Istorie) :-
 				dem(ListaPremise, 100, Val_finala, [N|Istorie]),!.
 
@@ -259,12 +262,12 @@ determina(_).
 					Val_interm >= 20,
 					dem(T, Val_interm, Val_finala, Istorie).
 
-% AJUSTEAZA FC = FC_regula * FC_premise / 100
+% 	AJUSTEAZA FC = FC_regula * FC_premise / 100
 			ajusteaza(FC1,FC2,FC) :-
 				X is FC1 * FC2 / 100,
 				FC is round(X).
 
-% ACTUALIZEAZA FAPTE
+% 	ACTUALIZEAZA FAPTE
 			actualizeaza(Scop, FC_nou, FC, RegulaN) :-
 				fapt(Scop, FC_vechi, _),
 				combina(FC_nou, FC_vechi, FC),
@@ -329,7 +332,7 @@ afisare_fapte :-
 	nl,nl.
 
 listeaza_fapte:-  
-	fapt(av(Atr,Val),FC,_), 
+	(fapt(av(Atr,Val),FC,_) ; fapt(not av(Atr,_),FC,_), Val = 'nu'), 
 	write('|('), write(Atr), write(','), write(Val), write(') '),
 	write('~'), write(' certitudine '), FC1 is integer(FC),write(FC1),
 	nl,fail.
@@ -454,19 +457,26 @@ transforma_concluzie(not av(A,da), ['@!',A]) :- !.
 transforma_concluzie(av(A,nu), ['@!',A]) :- !.
 transforma_concluzie(av(A,V),[A,'@','=',V]).
 
+% APARUT FIINDCA NU SE MAI ADAUGA SEPARAT ATRIBUTELE BOOLEENE
+/*assert_fapt(Atr,[nu,fc,FC]) :-
+	!,NFC is -FC, asserta( fapt(av(Atr,da),NFC,[utiliz]) ).*/
 
 assert_fapt(Atr,[Val,fc,FC]) :-
-!,asserta( fapt(av(Atr,Val),FC,[utiliz]) ).
+	!,asserta( fapt(av(Atr,Val),FC,[utiliz]) ).
+
+% APARUT FIINDCA NU SE MAI ADAUGA SEPARAT ATRIBUTELE BOOLEENE
+/*assert_fapt(Atr,[nu]) :-
+	asserta( fapt(av(Atr,da),-100,[utiliz])).*/
 
 assert_fapt(Atr,[Val]) :-
-asserta( fapt(av(Atr,Val),100,[utiliz])).
+	asserta( fapt(av(Atr,Val),100,[utiliz])).
 
 
-det_val_fc([nu],da,-100).
+/*det_val_fc([nu],da,-100).
 
 det_val_fc([nu,FC],da,NFC) :- NFC is -FC.
 
-det_val_fc([nu,fc,FC],da,NFC) :- NFC is -FC.
+det_val_fc([nu,fc,FC],da,NFC) :- NFC is -FC.*/
 
 det_val_fc([Val,FC],Val,FC).
 
@@ -610,42 +620,42 @@ caractere_in_interiorul_unui_cuvant(C):-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 			EXEMPLU INTREBARI
 
-Q: 'Veti fi sofer dupa ce plecati din local?'
+Q: Veti fi sofer dupa ce plecati din local?
 : nu
 
-Q: 'Urmati un tratament pe baza de medicamente?'
+Q: Urmati un tratament pe baza de medicamente?
 : nu
 
-Q: 'Ce buget aveti pentru aceasta seara?'
+Q: Ce buget aveti pentru aceasta seara?
 ( scazut / mediu / ridicat )
 : ridicat
 
-Q: 'Sunteti o fire conservatoare?'
+Q: Sunteti o fire conservatoare?
 : nu
 
-Q: 'Ce scop aveti in aceasta seara?'
+Q: Ce scop aveti in aceasta seara?
 ( betie / distractie )
 : distractie
 
-Q: 'Ce scop aveti in aceasta seara?'
+Q: Ce scop aveti in aceasta seara?
 ( scazuta / ridicata )
 : ridicata
 
-Q: 'Daca nu exista o diferenta de gust, conteaza care produs este mai proaspat?'
+Q: Daca nu exista o diferenta de gust, conteaza care produs este mai proaspat?
 : da
 
-Q: 'Te intereseaza aspectul alimentelor pe care le consumi?'
+Q: Te intereseaza aspectul alimentelor pe care le consumi?
 : nu
 
-Q: 'Aveti pofta de un aliment cu ce tip de gust?'
+Q: Aveti pofta de un aliment cu ce tip de gust?
 ( dulce / amar )
 : dulce
 
-Q: 'Ce nivel de acreala preferati in bauturi?'
+Q: Ce nivel de acreala preferati in bauturi?
 ( scazut / ridicat )
 : ridicat
 
-Q: 'Alege una din urmatoarele culori?'
+Q: Alege una din urmatoarele culori?
 ( alb / galben / portocaliu / stacojiu / maro )
 : stacojiu
 

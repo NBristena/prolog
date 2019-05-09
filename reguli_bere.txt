@@ -1,29 +1,54 @@
-scop @ cu_aroma.
+scop @ bere.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 regula@ 1
 lista_premise@( @ ia_medicamente @ )
-concluzie@ ( @!cu_alcool , fc@ 100 @ ).
+concluzie@ ( @! cu_alcool , fc@ 100 @ ).
 
 regula@ 2
 lista_premise@( @conduce@ )
-concluzie@ ( @!cu_alcool , fc@ 100 @).
+concluzie@ ( @! cu_alcool , fc@ 100 @).
 
 regula@ 3
 lista_premise@(
     @! conduce @
     @! ia_medicamente @
 )
-concluzie@ ( @cu_alcool , fc@ 60 @).
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+concluzie@ ( @ cu_alcool , fc@ 95 @).
+
 regula@ 4
 lista_premise@(
+    @! conduce @
+    @! ia_medicamente @
+)
+concluzie@ ( @! cu_alcool , fc@ 60 @).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+regula@ 5
+lista_premise@(
+    buget @ scazut @
     scop_iesire @ distractie @
     toleranta_alcool @ scazuta @
 )
 concluzie@ ( nivel_alcool @= scazut, fc@ 80 @).
 
-regula@ 5
+regula@ 6
+lista_premise@(
+    buget @ mediu @
+    scop_iesire @ distractie @
+    toleranta_alcool @ scazuta @
+)
+concluzie@ ( nivel_alcool @= scazut, fc@ 85 @).
+
+regula@ 7
+lista_premise@(
+    buget @ ridicat @
+    scop_iesire @ distractie @
+    toleranta_alcool @ scazuta @
+)
+concluzie@ ( nivel_alcool @= scazut, fc@ 90 @).
+
+regula@ 8
 lista_premise@(
     buget @ mediu @
     scop_iesire @ distractie @
@@ -31,7 +56,7 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= mediu, fc@ 50 @).
 
-regula@ 6
+regula@ 9
 lista_premise@(
     buget @ ridicat @
     scop_iesire @ distractie @
@@ -39,7 +64,7 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= mediu, fc@ 50 @).
 
-regula@ 7
+regula@ 10
 lista_premise@(
     buget @ scazut @
     scop_iesire @ betie @
@@ -47,15 +72,15 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= scazut, fc@ 70 @).
 
-regula@ 8
+regula@ 11
 lista_premise@(
     buget @ scazut @
     scop_iesire @ betie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= scazut, fc@ 80 @).
+concluzie@ ( nivel_alcool @= mediu, fc@ 80 @).
 
-regula@ 9
+regula@ 12
 lista_premise@(
     buget @ mediu @
     scop_iesire @ betie @
@@ -63,7 +88,7 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= scazut, fc@ 70 @).
 
-regula@ 10
+regula@ 13
 lista_premise@(
     buget @ mediu @
     scop_iesire @ betie @
@@ -71,31 +96,31 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= mediu, fc@ 80 @).
 
-regula@ 11
-lista_premise@(
-    buget @ ridicat @
-    scop_iesire @ betie @
-    toleranta_alcool @ scazuta @
-)
-concluzie@ ( nivel_alcool @= , fc@ 75 @).
-
-regula@ 12
-lista_premise@(
-    buget @ ridicat @
-    scop_iesire @ betie @
-    toleranta_alcool @ scazuta @
-)
-concluzie@ ( nivel_alcool @= , fc@ 80 @).
-
-regula@ 13
-lista_premise@(
-    buget @ ridicat @
-    scop_iesire @ betie @
-    toleranta_alcool @ scazuta @
-)
-concluzie@ ( nivel_alcool @= , fc@ 85 @).
-
 regula@ 14
+lista_premise@(
+    buget @ ridicat @
+    scop_iesire @ betie @
+    toleranta_alcool @ scazuta @
+)
+concluzie@ ( nivel_alcool @= scazut, fc@ 75 @).
+
+regula@ 15
+lista_premise@(
+    buget @ ridicat @
+    scop_iesire @ betie @
+    toleranta_alcool @ scazuta @
+)
+concluzie@ ( nivel_alcool @= mediu, fc@ 80 @).
+
+regula@ 16
+lista_premise@(
+    buget @ ridicat @
+    scop_iesire @ betie @
+    toleranta_alcool @ scazuta @
+)
+concluzie@ ( nivel_alcool @= ridicat, fc@ 85 @).
+
+regula@ 17
 lista_premise@(
     buget @ scazut @
     scop_iesire @ distractie @
@@ -103,7 +128,7 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= scazut, fc@ 80 @).
 
-regula@ 15
+regula@ 18
 lista_premise@(
     buget @ scazut @
     scop_iesire @ distractie @
@@ -111,7 +136,7 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= mediu, fc@ 75 @).
 
-regula@ 16
+regula@ 19
 lista_premise@(
     buget @ mediu @
     scop_iesire @ distractie @
@@ -119,7 +144,7 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= scazut, fc@ 75 @).
 
-regula@ 17
+regula@ 20
 lista_premise@(
     buget @ mediu @
     scop_iesire @ distractie @
@@ -127,7 +152,7 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= mediu, fc@ 80 @).
 
-regula@ 18
+regula@ 21
 lista_premise@(
     buget @ ridicat @
     scop_iesire @ distractie @
@@ -135,7 +160,7 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= scazut, fc@ 70 @).
 
-regula@ 19
+regula@ 22
 lista_premise@(
     buget @ ridicat @
     scop_iesire @ distractie @
@@ -143,7 +168,7 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= mediu, fc@ 80 @).
 
-regula@ 20
+regula@ 23
 lista_premise@(
     buget @ ridicat @
     scop_iesire @ distractie @
@@ -151,22 +176,85 @@ lista_premise@(
 )
 concluzie@ ( nivel_alcool @= ridicat, fc@ 75 @).
 
-regula@ 21
+regula@ 24
+lista_premise@(
+    buget @ mediu @
+    scop_iesire @ betie @
+    toleranta_alcool @ ridicata @
+)
+concluzie@ ( nivel_alcool @= mediu, fc@ 60 @).
+
+regula@ 200
 lista_premise@(
     buget @ ridicat @
     scop_iesire @ betie @
     toleranta_alcool @ ridicata @
 )
 concluzie@ ( nivel_alcool @= ridicat, fc@ 100 @).
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+regula@ 25
+lista_premise@(
+    @ fire_conservatoare @
+)
+concluzie@ ( tip_bere @= normala, fc@ 100 @).
+
+regula@ 26
+lista_premise@(
+    @! fire_conservatoare @
+    @ conteaza_aspect @
+    @! conteaza_prospetime @
+)
+concluzie@ ( tip_bere @= normala, fc@ 90 @).
+
 regula@ 27
 lista_premise@(
     @! fire_conservatoare @
+    @ conteaza_aspect @
+    @! conteaza_prospetime @
+)
+concluzie@ ( tip_bere @= artizanala, fc@ 70 @).
+
+regula@ 28
+lista_premise@(
+    @! fire_conservatoare @
+    @ conteaza_aspect @
+    @ conteaza_prospetime @
+)
+concluzie@ ( tip_bere @= artizanala, fc@ 100 @).
+
+regula@ 29
+lista_premise@(
+    @! fire_conservatoare @
+    @! conteaza_aspect @
+    @! conteaza_prospetime @
+)
+concluzie@ ( tip_bere @= nefiltrata, fc@ 90 @).
+
+regula@ 30
+lista_premise@(
+    @! fire_conservatoare @
+    @! conteaza_aspect @
+    @! conteaza_prospetime @
+)
+concluzie@ ( tip_bere @= normala, fc@ 70 @).
+
+regula@ 31
+lista_premise@(
+    @! fire_conservatoare @
+    @! conteaza_aspect @
+    @ conteaza_prospetime @
+)
+concluzie@ ( tip_bere @= artizanala, fc@ 100 @).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+regula@ 32
+lista_premise@(
+    @ fire_conservatoare @
 )
 concluzie@ ( @! cu_aroma, fc@ 100 @).
 
-regula@ 28
+regula@ 33
 lista_premise@(
     @! fire_conservatoare @
     @! vrea_ceva_nou @ 
@@ -174,7 +262,7 @@ lista_premise@(
 )
 concluzie@ ( @! cu_aroma, fc@ 100 @).
 
-regula@ 29
+regula@ 34
 lista_premise@(
     @! fire_conservatoare @
     @! vrea_ceva_nou @ 
@@ -182,7 +270,7 @@ lista_premise@(
 )
 concluzie@ ( @ cu_aroma, fc@ 90 @).
 
-regula@ 30
+regula@ 35
 lista_premise@(
     @! fire_conservatoare @
     @ vrea_ceva_nou @ 
@@ -190,81 +278,235 @@ lista_premise@(
 )
 concluzie@ ( @ cu_aroma, fc@ 100 @).
 
-regula@ 31
+regula@ 36
 lista_premise@(
     @! fire_conservatoare @
     @ vrea_ceva_nou @ 
     gust_preferat @ dulce @
 )
 concluzie@ ( @! cu_aroma, fc@ 90 @).
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-regula@98
-lista_premise@(
-    @!cu_alcool@
-    @!cu_aroma@
-)
-concluzie@
-    (bere@=warsteiner_fresh , fc@80@).
 
-regula@99
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+regula@ 37
 lista_premise@(
-    @cu_alcool@
-    buget@ridicat@
-    @!fire_conservatoare@
-    scop_iesire@betie@
+    gust_preferat @ dulce @
+    nivel_acreala @ scazut @
 )
-concluzie@
-    (bere@=pohjala_cocobanger , fc@100@).
+concluzie@ ( gust_aroma @= dulce, fc@ 100 @).
 
-regula@100
+regula@ 38
 lista_premise@(
-    @cu_alcool@
-    nivel_alcool@ridicat@
-    @conteaza_prospetime@
-    @!conteaza_aspect@
-    @!fire_conservatoare@
-    @cu_aroma@
-    nivel_acreala@ridicat@
-    culoare_preferata@stacojiu@
+    gust_preferat @ amar @
+    nivel_acreala @ scazut @
 )
-concluzie@
-    (bere@=kasteel_rouge , fc@83@).
+concluzie@ ( gust_aroma @= dulce, fc@ 90 @).
+
+regula@ 39
+lista_premise@(
+    gust_preferat @ amar @
+    nivel_acreala @ scazut @
+)
+concluzie@ ( gust_aroma @= acru, fc@ 50 @).
+
+regula@ 40
+lista_premise@(
+    gust_preferat @ dulce @
+    nivel_acreala @ ridicat @
+)
+concluzie@ ( gust_aroma @= dulce, fc@ 90 @).
+
+regula@ 41
+lista_premise@(
+    gust_preferat @ dulce @
+    nivel_acreala @ ridicat @
+)
+concluzie@ ( gust_aroma @= acru, fc@ 80 @).
+
+regula@ 42
+lista_premise@(
+    gust_preferat @ amar @
+    nivel_acreala @ ridicat @
+)
+concluzie@ ( gust_aroma @= acru, fc@ 100 @).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+regula@ 43
+lista_premise@(
+    culoare @ alb @
+    gust_aroma @ dulce @
+)
+concluzie@ ( aroma @= cocos, fc@ 100 @).
+
+regula@ 44
+lista_premise@(
+    culoare @ alb @
+    gust_aroma @ acru @
+)
+concluzie@ ( aroma @= tequila, fc@ 100 @).
+
+regula@ 45
+lista_premise@(
+    culoare @ galben @
+    gust_aroma @ dulce @
+)
+concluzie@ ( aroma @= vanilie, fc@ 100 @).
+
+regula@ 46
+lista_premise@(
+    culoare @ galben @
+    gust_aroma @ acru @
+)
+concluzie@ ( aroma @= lamaie, fc@ 100 @).
+
+regula@ 47
+lista_premise@(
+    culoare @ portocaliu @
+    gust_aroma @ dulce @
+)
+concluzie@ ( aroma @= ghimbir, fc@ 100 @).
+
+regula@ 48
+lista_premise@(
+    culoare @ portocaliu @
+    gust_aroma @ acru @
+)
+concluzie@ ( aroma @= portocala, fc@ 100 @).
+
+regula@ 49
+lista_premise@(
+    culoare @ stacojiu @
+    gust_aroma @ dulce @
+)
+concluzie@ ( aroma @= fructe_padure, fc@ 100 @).
+
+regula@ 50
+lista_premise@(
+    culoare @ stacojiu @
+    gust_aroma @ acru @
+)
+concluzie@ ( aroma @= cirese_acre, fc@ 100 @).
+
+regula@ 51
+lista_premise@(
+    culoare @ maro @
+    gust_aroma @ dulce @
+)
+concluzie@ ( aroma @= nuci, fc@ 100 @).
+
+regula@ 52
+lista_premise@(
+    culoare @ maro @
+    gust_aroma @ acru @
+)
+concluzie@ ( aroma @= coriandru, fc@ 100 @).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+regula@ 53
+lista_premise@(
+    @! cu_alcool @
+    @! cu_aroma @
+)
+concluzie@ ( bere @= b2, fc@ 100 @).
+
+regula@ 54
+lista_premise@(
+    @! cu_alcool @
+    @ cu_aroma @
+    aroma @ ghimbir @
+)
+concluzie@ ( bere @= b1, fc@ 100 @).
+
+regula@ 55
+lista_premise@(
+    @! cu_alcool @
+    @ cu_aroma @
+    aroma @ lamaie @
+)
+concluzie@ ( bere @= b3, fc@ 100 @).
+
+regula@ 56
+lista_premise@(
+    @ cu_alcool @
+    nivel_alcool @ scazut @
+    tip_bere @ artizanala @
+    @ cu_aroma @
+    aroma @ lamaie @
+)
+concluzie@ ( bere @= b6, fc@ 100 @).
+
+regula@ 57
+lista_premise@(
+    @ cu_alcool @
+    nivel_alcool @ scazut @
+    tip_bere @ normala @
+    @ cu_aroma @
+    aroma @ portocala @
+)
+concluzie@ ( bere @= b11, fc@ 100 @).
+
+regula@ 58
+lista_premise@(
+    @ cu_alcool @
+    nivel_alcool @ scazut @
+    tip_bere @ artizanala @
+    @! cu_aroma @
+)
+concluzie@ ( bere @= b13, fc@ 100 @).
+
+regula@ 59
+lista_premise@(
+    @ cu_alcool @
+    nivel_alcool @ scazut @
+    tip_bere @ artizanala @
+    @ cu_aroma @
+    aroma @ fructe_padure @
+)
+concluzie@ ( bere @= b17, fc@ 100 @).
+
+regula@ 60
+lista_premise@(
+    @ cu_alcool @
+    nivel_alcool @ scazut @
+    tip_bere @ nefiltrata @
+    @ cu_aroma @
+    aroma @ coriandru @
+)
+concluzie@ ( bere @= b20, fc@ 100 @).
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 **************************************************************************
 intreaba@ conduce
-enunt@ 'Veti fi sofer dupa ce plecati din local?'
+enunt@ 'Vei fi sofer dupa ce pleci din local?'
 variante@ (da || nu).
 
 intreaba@ ia_medicamente
-enunt@ 'Urmati un tratament pe baza de medicamente?'
+enunt@ 'Urmezi un tratament pe baza de medicamente?'
 variante@ (da || nu).
 
 intreaba@ buget
-enunt@ 'Ce buget aveti pentru aceasta seara?'
+enunt@ 'Ce buget ai pentru aceasta seara?'
 variante@ (scazut || mediu || ridicat).
 
 intreaba@ scop_iesire
-enunt@ 'Ce scop aveti in aceasta seara?'
+enunt@ 'Ce scop ai in aceasta seara?'
 variante@ (betie || distractie).
 
 intreaba@ toleranta_alcool
-enunt@ 'Cum va estimati toleranta la alcool?'
+enunt@ 'Cum iti estimezi toleranta la alcool?'
 variante@ (scazuta || ridicata).
 
 intreaba@ fire_conservatoare
-enunt@ 'Sunteti o fire conservatoare?'
+enunt@ 'Esti o fire conservatoare?'
 variante@ (da || nu).
 
 intreaba@ vrea_ceva_nou
-enunt@ ' Va doriti sa incercati ceva nou?'
+enunt@ 'Iti doresti sa incerci ceva nou?'
 variante@ (da || nu).
 
 intreaba@  gust_preferat
-enunt@ 'Aveti pofta de un aliment cu ce tip de gust?'
+enunt@ 'Ai pofta de un aliment cu ce tip de gust?'
 variante@ (dulce || amar).
 
 intreaba@ conteaza_prospetime
@@ -276,9 +518,9 @@ enunt@ 'Te intereseaza aspectul alimentelor pe care le consumi?'
 variante@ (da || nu).
 
 intreaba@ nivel_acreala
-enunt@ 'Ce nivel de acreala preferati in bauturi?'
+enunt@ 'Ce nivel de acreala preferi in bauturi?'
 variante@ (scazut || ridicat).
 
-intreaba@ culoare_preferata
+intreaba@ culoare
 enunt@ 'Alege una din urmatoarele culori?'
 variante@ (alb || galben || portocaliu || stacojiu || maro).
