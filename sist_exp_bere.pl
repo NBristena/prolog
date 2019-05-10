@@ -29,12 +29,12 @@ not(_).
 /*--------------------------------------------------------------------------------
  * 		   PORNIRE SISTEM
  *--------------------------------------------------------------------------------*/
-start :-
+go :-
 	retractall(deja_intrebat(_)),
 	retractall(fapt(_,_,_)),
 	repeat,
 	nl, write('  Alegeti una din urmatoarele optiuni: '),
-	nl, write(' (Incarca  Consulta  Afiseaza_fapte  Cum  Exit)'),
+	nl, write(' (Incarca | Consulta | Afiseaza_fapte | Cum.. | Exit)'),
 	nl, citeste_linie([H|T]),nl,
 	executa([H|T]), H == exit.
 
@@ -46,7 +46,7 @@ citeste_linie([Cuv|Lista_cuv]) :-
  
 	rest_cuvinte_linie(-1, []) :- !. % a gasit EOF, se opreste
 		
-	rest_cuvinte_linie(Char,[]) :- (Char == 13 ; Char == 10), !. %a gasit ENTER(\n ; \r), se opreste
+	rest_cuvinte_linie(Char,[]) :- (Char == 13 ; Char == 10), !. % a gasit ENTER(\n ; \r), se opreste
 
 	rest_cuvinte_linie(Char, [Cuv1|Lista_cuv]) :-
 		citeste_cuvant(Char, Cuv1, Char1),      
@@ -56,14 +56,14 @@ citeste_linie([Cuv|Lista_cuv]) :-
 /*--------------------------------------------------------------------------------
  * 		   INCARCA SI PROCESEAZA REGULI
  *--------------------------------------------------------------------------------*/
-executa([incarca]) :- incarca, !, write('-V- Fisier incarcat -V-'),nl.
+executa([incarca]) :- incarca, !, write('~*~ Fisier incarcat cu succes ~*~'),nl.
 	
-incarca :-
-	write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
+incarca :- F = 'reguli_bere.txt',
+%	write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
 	file_exists(F), !, incarca(F).
 
 incarca :- nl,
-	write('-X- Fisierul introdus nu exista -X-'),nl,nl,
+	write(' !X! Fisierul introdus nu exista !X!'),nl,nl,
 	incarca.
 
 % --------------- INCARCARE FISIER ---------------------------------------------
@@ -155,16 +155,16 @@ executa([consulta]) :-
 	scopuri_princ :-
 		scop(Atr),
 		determina(Atr), 
-		ordoneaza_solutii(Atr),
 		write(' ____________________'),nl,
 		write('|'),nl,
 		( fapt(av(Atr,_),_,_) -> 
+			ordoneaza_solutii(Atr),
 			write('| Optiunile dumneavoastra pentru '), write(Atr), write(' sunt:'),nl, 
 			write('|'), 
 			afiseaza_scop(Atr)
 		;
-			write('| Nu s-a gasit nicio optiune pentru '), write(Atr),nl,
-			write('| care sa se potriveasca cu cerintele dumneavoastra.'),nl
+			write('| Nu avem nicio '), write(Atr),write(' care sa se'),nl,
+			write('| potriveasca cu preferintele tale.'),nl
 		),
 		write('|____________________'),nl,
 		fail.
@@ -565,7 +565,7 @@ lungime([_|T],L) :- lungime(T,L1), L is L1+1.
 
 % ------------ 4. CITESTE INTRE APOSTROAFE
 citeste_cuvant(Character,Cuvant,Character1) :-
-	Character == 39,!, % 39 este codul ASCII pt '
+	Character == 39,!, % 39 este codul ASCII pt apostrof
 	pana_la_urmatorul_apostrof(Lista_caractere),
 	L=[Character|Lista_caractere],
 	name(Cuvant, L),get_code(Character1).
@@ -601,7 +601,7 @@ citeste_cuvant(_,Cuvant,Character1) :- get_code(Character),
 	citeste_cuvant(Character,Cuvant,Character1).
  
 
-% ------ CARACTERE ACCEPTATE     !   (   )   ,  .   ?   =   @    |
+% ------ CARACTERE ACCEPTATE   !   (   )   ,   .   ?   =   @    |
 caracter_cuvant(C):-member(C,[33, 40, 41, 44, 46, 63, 61, 64, 124]).
 
 caracter_numar(C):- C >= 48,C =< 57. % [0,9]
@@ -619,51 +619,5 @@ caractere_in_interiorul_unui_cuvant(C):-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 			EXEMPLU INTREBARI
-
-Q: Veti fi sofer dupa ce plecati din local?
-: nu
-
-Q: Urmati un tratament pe baza de medicamente?
-: nu
-
-Q: Ce buget aveti pentru aceasta seara?
-( scazut / mediu / ridicat )
-: ridicat
-
-Q: Sunteti o fire conservatoare?
-: nu
-
-Q: Ce scop aveti in aceasta seara?
-( betie / distractie )
-: distractie
-
-Q: Ce scop aveti in aceasta seara?
-( scazuta / ridicata )
-: ridicata
-
-Q: Daca nu exista o diferenta de gust, conteaza care produs este mai proaspat?
-: da
-
-Q: Te intereseaza aspectul alimentelor pe care le consumi?
-: nu
-
-Q: Aveti pofta de un aliment cu ce tip de gust?
-( dulce / amar )
-: dulce
-
-Q: Ce nivel de acreala preferati in bauturi?
-( scazut / ridicat )
-: ridicat
-
-Q: Alege una din urmatoarele culori?
-( alb / galben / portocaliu / stacojiu / maro )
-: stacojiu
-
- ____________________
-|
-| Optiunile dumneavoastra pentru bere sunt:
-|
-| --> kasteel_rouge  ~  factor de certitudine 50
-|____________________
 
 */
