@@ -3,26 +3,26 @@ scop @ bere.
 *************************************************************************
 regula@ 1
 lista_premise@( @ ia_medicamente @ )
-concluzie@ ( @! cu_alcool , fc@ 100 @ ).
+concluzie@ ( @! cu_alcool , fc@ 90 @ ).
 
 regula@ 2
 lista_premise@( @conduce@ )
-concluzie@ ( @! cu_alcool , fc@ 100 @).
+concluzie@ ( @! cu_alcool , fc@ 90 @).
 
 regula@ 3
-lista_premise@(
-    @! conduce @
-    @! ia_medicamente @
-)
-concluzie@ ( @ cu_alcool , fc@ 95 @).
-
-regula@ 4
 lista_premise@(
     @! conduce @
     @! ia_medicamente @
     scop @ distractie @
 )
 concluzie@ ( @! cu_alcool , fc@ 40 @).
+
+regula@ 4
+lista_premise@(
+    @! conduce @
+    @! ia_medicamente @
+)
+concluzie@ ( @ cu_alcool , fc@ 85 @).
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 regula@ 5
@@ -31,7 +31,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= scazut, fc@ 80 @).
+concluzie@ ( nivel_alcool @= scazut, fc@ 70 @).
 
 regula@ 6
 lista_premise@(
@@ -39,7 +39,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= scazut, fc@ 85 @).
+concluzie@ ( nivel_alcool @= scazut, fc@ 75 @).
 
 regula@ 7
 lista_premise@(
@@ -47,7 +47,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= scazut, fc@ 90 @).
+concluzie@ ( nivel_alcool @= scazut, fc@ 80 @).
 
 regula@ 8
 lista_premise@(
@@ -55,7 +55,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= mediu, fc@ 50 @).
+concluzie@ ( nivel_alcool @= mediu, fc@ 40 @).
 
 regula@ 9
 lista_premise@(
@@ -63,7 +63,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= mediu, fc@ 50 @).
+concluzie@ ( nivel_alcool @= mediu, fc@ 40 @).
 
 regula@ 10
 lista_premise@(
@@ -71,7 +71,7 @@ lista_premise@(
     scop_iesire @ betie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= scazut, fc@ 70 @).
+concluzie@ ( nivel_alcool @= scazut, fc@ 60 @).
 
 regula@ 11
 lista_premise@(
@@ -79,7 +79,7 @@ lista_premise@(
     scop_iesire @ betie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= mediu, fc@ 80 @).
+concluzie@ ( nivel_alcool @= mediu, fc@ 70 @).
 
 regula@ 12
 lista_premise@(
@@ -87,7 +87,7 @@ lista_premise@(
     scop_iesire @ betie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= scazut, fc@ 70 @).
+concluzie@ ( nivel_alcool @= scazut, fc@ 60 @).
 
 regula@ 13
 lista_premise@(
@@ -95,7 +95,7 @@ lista_premise@(
     scop_iesire @ betie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= mediu, fc@ 80 @).
+concluzie@ ( nivel_alcool @= mediu, fc@ 70 @).
 
 regula@ 14
 lista_premise@(
@@ -103,7 +103,7 @@ lista_premise@(
     scop_iesire @ betie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= scazut, fc@ 75 @).
+concluzie@ ( nivel_alcool @= scazut, fc@ 65 @).
 
 regula@ 15
 lista_premise@(
@@ -111,7 +111,7 @@ lista_premise@(
     scop_iesire @ betie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= mediu, fc@ 80 @).
+concluzie@ ( nivel_alcool @= mediu, fc@ 70 @).
 
 regula@ 16
 lista_premise@(
@@ -119,7 +119,7 @@ lista_premise@(
     scop_iesire @ betie @
     toleranta_alcool @ scazuta @
 )
-concluzie@ ( nivel_alcool @= ridicat, fc@ 85 @).
+concluzie@ ( nivel_alcool @= ridicat, fc@ 75 @).
 
 regula@ 17
 lista_premise@(
@@ -127,7 +127,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ ridicata @
 )
-concluzie@ ( nivel_alcool @= scazut, fc@ 80 @).
+concluzie@ ( nivel_alcool @= scazut, fc@ 70 @).
 
 regula@ 18
 lista_premise@(
@@ -135,7 +135,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ ridicata @
 )
-concluzie@ ( nivel_alcool @= mediu, fc@ 75 @).
+concluzie@ ( nivel_alcool @= mediu, fc@ 65 @).
 
 regula@ 19
 lista_premise@(
@@ -143,7 +143,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ ridicata @
 )
-concluzie@ ( nivel_alcool @= scazut, fc@ 75 @).
+concluzie@ ( nivel_alcool @= scazut, fc@ 65 @).
 
 regula@ 20
 lista_premise@(
@@ -151,7 +151,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ ridicata @
 )
-concluzie@ ( nivel_alcool @= mediu, fc@ 80 @).
+concluzie@ ( nivel_alcool @= mediu, fc@ 70 @).
 
 regula@ 21
 lista_premise@(
@@ -159,7 +159,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ ridicata @
 )
-concluzie@ ( nivel_alcool @= scazut, fc@ 70 @).
+concluzie@ ( nivel_alcool @= scazut, fc@ 60 @).
 
 regula@ 22
 lista_premise@(
@@ -167,7 +167,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ ridicata @
 )
-concluzie@ ( nivel_alcool @= mediu, fc@ 80 @).
+concluzie@ ( nivel_alcool @= mediu, fc@ 70 @).
 
 regula@ 23
 lista_premise@(
@@ -175,7 +175,7 @@ lista_premise@(
     scop_iesire @ distractie @
     toleranta_alcool @ ridicata @
 )
-concluzie@ ( nivel_alcool @= ridicat, fc@ 75 @).
+concluzie@ ( nivel_alcool @= ridicat, fc@ 65 @).
 
 regula@ 24
 lista_premise@(
@@ -183,7 +183,7 @@ lista_premise@(
     scop_iesire @ betie @
     toleranta_alcool @ ridicata @
 )
-concluzie@ ( nivel_alcool @= mediu, fc@ 60 @).
+concluzie@ ( nivel_alcool @= mediu, fc@ 50 @).
 
 regula@ 25
 lista_premise@(
@@ -191,7 +191,7 @@ lista_premise@(
     scop_iesire @ betie @
     toleranta_alcool @ ridicata @
 )
-concluzie@ ( nivel_alcool @= ridicat, fc@ 100 @).
+concluzie@ ( nivel_alcool @= ridicat, fc@ 90 @).
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 regula@ 26
@@ -199,7 +199,7 @@ lista_premise@(
     @ fire_conservatoare @
     @ conteaza_aspect @
 )
-concluzie@ ( tip_bere @= normala, fc@ 100 @).
+concluzie@ ( tip_bere @= normala, fc@ 90 @).
 
 regula@ 27
 lista_premise@(
@@ -207,7 +207,7 @@ lista_premise@(
     @! conteaza_aspect @
     @! conteaza_prospetime @
 )
-concluzie@ ( tip_bere @= nefiltrata, fc@ 100 @).
+concluzie@ ( tip_bere @= nefiltrata, fc@ 90 @).
 
 regula@ 28
 lista_premise@(
@@ -215,7 +215,7 @@ lista_premise@(
     @! conteaza_aspect @
     @! conteaza_prospetime @
 )
-concluzie@ ( tip_bere @= nefiltrata, fc@ 90 @).
+concluzie@ ( tip_bere @= nefiltrata, fc@ 80 @).
 
 regula@ 29
 lista_premise@(
@@ -223,7 +223,7 @@ lista_premise@(
     @! conteaza_aspect @
     @! conteaza_prospetime @
 )
-concluzie@ ( tip_bere @= normala, fc@ 50 @).
+concluzie@ ( tip_bere @= normala, fc@ 40 @).
 
 regula@ 30
 lista_premise@(
@@ -231,7 +231,7 @@ lista_premise@(
     @ conteaza_aspect @
     @! conteaza_prospetime @
 )
-concluzie@ ( tip_bere @= normala, fc@ 90 @).
+concluzie@ ( tip_bere @= normala, fc@ 80 @).
 
 regula@ 31
 lista_premise@(
@@ -239,7 +239,7 @@ lista_premise@(
     @ conteaza_aspect @
     @! conteaza_prospetime @
 )
-concluzie@ ( tip_bere @= artizanala, fc@ 40 @).
+concluzie@ ( tip_bere @= artizanala, fc@ 30 @).
 
 regula@ 32
 lista_premise@(
@@ -247,7 +247,7 @@ lista_premise@(
     @ conteaza_aspect @
     @ conteaza_prospetime @
 )
-concluzie@ ( tip_bere @= artizanala, fc@ 100 @).
+concluzie@ ( tip_bere @= artizanala, fc@ 90 @).
 
 regula@ 33
 lista_premise@(
@@ -255,14 +255,14 @@ lista_premise@(
     @! conteaza_aspect @
     @ conteaza_prospetime @
 )
-concluzie@ ( tip_bere @= artizanala, fc@ 80 @).
+concluzie@ ( tip_bere @= artizanala, fc@ 70 @).
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 regula@ 34
 lista_premise@(
     @ fire_conservatoare @
 )
-concluzie@ ( @! cu_aroma, fc@ 100 @).
+concluzie@ ( @! cu_aroma, fc@ 90 @).
 
 regula@ 35
 lista_premise@(
@@ -270,7 +270,7 @@ lista_premise@(
     @! vrea_ceva_nou @ 
     gust_preferat @ amar @
 )
-concluzie@ ( @! cu_aroma, fc@ 100 @).
+concluzie@ ( @! cu_aroma, fc@ 90 @).
 
 regula@ 36
 lista_premise@(
@@ -278,7 +278,7 @@ lista_premise@(
     @! vrea_ceva_nou @ 
     gust_preferat @ dulce @
 )
-concluzie@ ( @ cu_aroma, fc@ 90 @).
+concluzie@ ( @ cu_aroma, fc@ 80 @).
 
 regula@ 37
 lista_premise@(
@@ -286,7 +286,7 @@ lista_premise@(
     @ vrea_ceva_nou @ 
     gust_preferat @ amar @
 )
-concluzie@ ( @ cu_aroma, fc@ 100 @).
+concluzie@ ( @ cu_aroma, fc@ 90 @).
 
 regula@ 38
 lista_premise@(
@@ -294,7 +294,7 @@ lista_premise@(
     @ vrea_ceva_nou @ 
     gust_preferat @ dulce @
 )
-concluzie@ ( @! cu_aroma, fc@ 90 @).
+concluzie@ ( @! cu_aroma, fc@ 80 @).
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 regula@ 39
@@ -302,42 +302,42 @@ lista_premise@(
     gust_preferat @ dulce @
     nivel_acreala @ scazut @
 )
-concluzie@ ( gust_aroma @= dulce, fc@ 100 @).
+concluzie@ ( gust_aroma @= dulce, fc@ 90 @).
 
 regula@ 40
 lista_premise@(
     gust_preferat @ amar @
     nivel_acreala @ scazut @
 )
-concluzie@ ( gust_aroma @= dulce, fc@ 90 @).
+concluzie@ ( gust_aroma @= dulce, fc@ 80 @).
 
 regula@ 41
 lista_premise@(
     gust_preferat @ amar @
     nivel_acreala @ scazut @
 )
-concluzie@ ( gust_aroma @= acru, fc@ 50 @).
+concluzie@ ( gust_aroma @= acru, fc@ 40 @).
 
 regula@ 42
 lista_premise@(
     gust_preferat @ dulce @
     nivel_acreala @ ridicat @
 )
-concluzie@ ( gust_aroma @= dulce, fc@ 90 @).
+concluzie@ ( gust_aroma @= dulce, fc@ 80 @).
 
 regula@ 43
 lista_premise@(
     gust_preferat @ dulce @
     nivel_acreala @ ridicat @
 )
-concluzie@ ( gust_aroma @= acru, fc@ 80 @).
+concluzie@ ( gust_aroma @= acru, fc@ 70 @).
 
 regula@ 44
 lista_premise@(
     gust_preferat @ amar @
     nivel_acreala @ ridicat @
 )
-concluzie@ ( gust_aroma @= acru, fc@ 100 @).
+concluzie@ ( gust_aroma @= acru, fc@ 90 @).
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 regula@ 45
@@ -345,70 +345,70 @@ lista_premise@(
     culoare @ alb @
     gust_aroma @ dulce @
 )
-concluzie@ ( aroma @= cocos, fc@ 100 @).
+concluzie@ ( aroma @= cocos, fc@ 90 @).
 
 regula@ 46
 lista_premise@(
     culoare @ alb @
     gust_aroma @ acru @
 )
-concluzie@ ( aroma @= tequila, fc@ 100 @).
+concluzie@ ( aroma @= tequila, fc@ 90 @).
 
 regula@ 47
 lista_premise@(
     culoare @ galben @
     gust_aroma @ dulce @
 )
-concluzie@ ( aroma @= vanilie, fc@ 100 @).
+concluzie@ ( aroma @= vanilie, fc@ 90 @).
 
 regula@ 48
 lista_premise@(
     culoare @ galben @
     gust_aroma @ acru @
 )
-concluzie@ ( aroma @= lamaie, fc@ 100 @).
+concluzie@ ( aroma @= lamaie, fc@ 90 @).
 
 regula@ 49
 lista_premise@(
     culoare @ portocaliu @
     gust_aroma @ dulce @
 )
-concluzie@ ( aroma @= ghimbir, fc@ 100 @).
+concluzie@ ( aroma @= ghimbir, fc@ 90 @).
 
 regula@ 50
 lista_premise@(
     culoare @ portocaliu @
     gust_aroma @ acru @
 )
-concluzie@ ( aroma @= portocala, fc@ 100 @).
+concluzie@ ( aroma @= portocala, fc@ 90 @).
 
 regula@ 51
 lista_premise@(
     culoare @ stacojiu @
     gust_aroma @ dulce @
 )
-concluzie@ ( aroma @= fructe_padure, fc@ 100 @).
+concluzie@ ( aroma @= fructe_padure, fc@ 90 @).
 
 regula@ 52
 lista_premise@(
     culoare @ stacojiu @
     gust_aroma @ acru @
 )
-concluzie@ ( aroma @= cirese_acre, fc@ 100 @).
+concluzie@ ( aroma @= cirese_acre, fc@ 90 @).
 
 regula@ 53
 lista_premise@(
     culoare @ maro @
     gust_aroma @ dulce @
 )
-concluzie@ ( aroma @= nuci, fc@ 100 @).
+concluzie@ ( aroma @= nuci, fc@ 90 @).
 
 regula@ 54
 lista_premise@(
     culoare @ maro @
     gust_aroma @ acru @
 )
-concluzie@ ( aroma @= coriandru, fc@ 100 @).
+concluzie@ ( aroma @= coriandru, fc@ 90 @).
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 regula@ 55

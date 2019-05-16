@@ -32,6 +32,7 @@ not(_).
 go :-
 	retractall(deja_intrebat(_)),
 	retractall(fapt(_,_,_)),
+	executa([incarca]),
 	repeat,
 	nl, write('  Alegeti una din urmatoarele optiuni: '),
 	nl, write(' (Incarca | Consulta | Afiseaza_fapte | Cum.. | Exit)'),
@@ -93,7 +94,13 @@ citeste_propozitie([Cuv|Lista_cuv]) :-
 	
 % -------------- PROCESARE PROPOZITII ------------------------------------------
 proceseaza([end_of_file]) :- !.
-proceseaza(L) :- trad(R,L,[]),assertz(R), !.
+proceseaza(L) :- trad(R,L,[]),
+	(R = intrebare(Atr,M,P) ->
+		append(M,[nu_stiu,nu_conteaza],Mfinal),
+		assertz(intrebare(Atr,Mfinal,P))
+	;
+		assertz(R)
+	), !.
 
 /*   SCOP   */
 trad(scop(X)) --> [scop,'@',X].
@@ -144,6 +151,11 @@ trad(X,[regula,'@',6.0,lista_premise,'@','(','@',in_romania,'@','@',la_mare,'@',
 */
 
 
+
+
+
+
+
 /*--------------------------------------------------------------------------------
  * 		   CONSULTA SISTEMUL
  *--------------------------------------------------------------------------------*/
@@ -158,7 +170,7 @@ executa([consulta]) :-
 		write(' ____________________'),nl,
 		write('|'),nl,
 		( fapt(av(Atr,_),_,_) -> 
-			ordoneaza_solutii(Atr),
+			ord_sol_alfa(Atr),
 			write('| Optiunile dumneavoastra pentru '), write(Atr), write(' sunt:'),nl, 
 			write('|'), 
 			afiseaza_scop(Atr)
@@ -180,9 +192,9 @@ determina(Atr) :- realizare_scop(av(Atr,_),_,[scop(Atr)]),!.
 determina(_).
 
 %---#NOT FAPT 
-	realizare_scop(not Scop, Not_FC, Istorie) :-
+	/*realizare_scop(not Scop, Not_FC, Istorie) :-
 		realizare_scop(Scop, FC, Istorie),
-		Not_FC is - FC, !.
+		Not_FC is - FC, !.*/
 
 %---#FAPT EXISTENT
 	realizare_scop(Scop, FC, _) :-
@@ -200,19 +212,24 @@ determina(_).
 			asserta( deja_intrebat(av(Atr,_)) ).
 
 %INTREBARI YES/NO 
-			interogheaza(Atr, Mesaj, [da,nu], Istorie) :-
+			/*interogheaza(Atr, Mesaj, [da,nu], Istorie) :-
 				!, write('Q: '), write(Mesaj),nl,
 				citeste_opt([da,nu]),
 				de_la_utiliz(X, Istorie, [da,nu]),
 				det_val_fc(X, Val, FC),
-				asserta( fapt(av(Atr,Val), FC, [utiliz]) ).
+				asserta( fapt(av(Atr,Val), FC, [utiliz]) ).*/
 
 %INTREBARI OPTIUNI
 			interogheaza(Atr, Mesaj, Optiuni, Istorie) :-
 				write('Q: '), write(Mesaj),nl,
 				citeste_opt(Optiuni),
 				de_la_utiliz(X, Istorie, Optiuni),
-				assert_fapt(Atr, X).
+				(X == [nu_conteaza] ->
+					append(Opt,[nu_stiu,nu_conteaza],Optiuni),
+					assert_fapt(Atr, Opt)
+				;
+					assert_fapt(Atr, X)
+				).
 
 %	%AFISEAZA OPTIUNI
 				citeste_opt(Optiuni) :-
@@ -220,18 +237,18 @@ determina(_).
 					%append(Opt1, [')'], Opt),
 					write('( '),
 					scrie_lista_optiuni(Optiuni),
-					write(' )\n').
+					write(' )').
 
 %		%CITESTE RASPUNS
 					de_la_utiliz(X, Istorie, Lista_opt) :-
-						repeat,write(': '), citeste_linie(X),
+						repeat,nl,write(': '), citeste_linie(X),
 						proceseaza_raspuns(X, Istorie, Lista_opt).
 
 %			%PROCESEAZA RASPUNS
 						proceseaza_raspuns([de_ce], Istorie, _) :- nl,
 							write('|   Pentru regula:'),nl,
 							afis_istorie(Istorie), !, fail.
-
+						
 						proceseaza_raspuns([X], _, Lista_opt):-
 							member(X, Lista_opt).
 
@@ -277,32 +294,33 @@ determina(_).
 			actualizeaza(Scop, FC, FC, RegulaN) :-
 				asserta( fapt(Scop, FC, [RegulaN]) ).
 /* * * * * * * * * * * * * * * * * * * * *
- * 		CALCUL FACTOR CERTITUDINE 		 *
+ * 		CALCUL FACTOR PENTRU 2 CAI 		 *
  * * * * * * * * * * * * * * * * * * * * */
 				combina(FC1 ,FC2, FC) :-
 /* 2 pozitive */	FC1 >= 0, FC2 >= 0,
 					X is FC2 * (100 - FC1) / 100 + FC1,
 					FC is round(X).
 
-				combina(FC1, FC2, FC) :-
-/* 2 negative */	FC1 < 0, FC2 < 0,
-					X is - ( -FC1 -FC2 * (100 + FC1) / 100 ),
-					FC is round(X).
+				%combina(FC1, FC2, FC) :-
+/* 2 negative */	%FC1 < 0, FC2 < 0,
+					%X is - ( -FC1 -FC2 * (100 + FC1) / 100 ),
+					%FC is round(X).
 
-				combina(FC1, FC2, FC) :-
-/* 1 pozitiva */	(FC1 < 0 ; FC2 < 0),
-/* 1 negativa */	(FC1 > 0 ; FC2 > 0),
-					FCM1 is abs(FC1), 
-					FCM2 is abs(FC2),
-					MFC is min(FCM1, FCM2),
-					X is 100 * (FC1 + FC2) / (100 - MFC),
-					FC is round(X).
+				%combina(FC1, FC2, FC) :-
+/* 1 pozitiva */	%(FC1 < 0 ; FC2 < 0),
+/* 1 negativa */	%(FC1 > 0 ; FC2 > 0),
+					%FCM1 is abs(FC1), 
+					%FCM2 is abs(FC2),
+					%MFC is min(FCM1, FCM2),
+					%X is 100 * (FC1 + FC2) / (100 - MFC),
+					%FC is round(X).
 
 % --------------- AFISEAZA CONCLUZII -------------------------------------------
-ordoneaza_solutii(Atr) :- setof(sol(FC,X,I), Atr^retract(fapt(av(Atr,X),FC,I)), L), adauga_sol_ord(Atr,L).
-				
-	adauga_sol_ord(Atr,[sol(FC,X,I)|T]):- asserta(fapt(av(Atr,X),FC,I)), adauga_sol_ord(Atr,T).
-	adauga_sol_ord(_,[]).
+ord_sol_fc(Atr) :- setof(sol(FC,X,I), Atr^retract(fapt(av(Atr,X),FC,I)), L), adauga_sol_ord(fc,Atr,L).
+ord_sol_alfa(Atr) :- setof(sol(X,FC,I), Atr^retract(fapt(av(Atr,X),FC,I)), L), adauga_sol_ord(al,Atr,L).
+	adauga_sol_ord(fc,Atr,[sol(FC,X,I)|T]):- asserta(fapt(av(Atr,X),FC,I)), adauga_sol_ord(fc,Atr,T).
+	adauga_sol_ord(al,Atr,[sol(X,FC,I)|T]):- adauga_sol_ord(al,Atr,T), asserta(fapt(av(Atr,X),FC,I)).
+	adauga_sol_ord(_,_,[]).
 
 afiseaza_scop(Atr) :-nl,
 	fapt(av(Atr,Val),FC,_),
@@ -311,8 +329,11 @@ afiseaza_scop(Atr) :-nl,
 afiseaza_scop(_).
 
 scrie_scop(av(_,Val),FC) :-
-	write('| --> '), write(Val), 
-	write('  ~  factor de certitudine '), FC1 is integer(FC),write(FC1).
+	write('| -> '), write(Val), 
+	write(' ~ avand fc egal cu '), FC1 is integer(FC),write(FC1),
+	nl, write('|   [cale_relativa_img]'),
+	nl, write('|    Despre solutie: '),
+	nl, write('| ***************************').
 
 
 /*--------------------------------------------------------------------------------
@@ -457,6 +478,8 @@ transforma_concluzie(not av(A,da), ['@!',A]) :- !.
 transforma_concluzie(av(A,nu), ['@!',A]) :- !.
 transforma_concluzie(av(A,V),[A,'@','=',V]).
 
+
+
 % APARUT FIINDCA NU SE MAI ADAUGA SEPARAT ATRIBUTELE BOOLEENE
 /*assert_fapt(Atr,[nu,fc,FC]) :-
 	!,NFC is -FC, asserta( fapt(av(Atr,da),NFC,[utiliz]) ).*/
@@ -464,25 +487,29 @@ transforma_concluzie(av(A,V),[A,'@','=',V]).
 assert_fapt(Atr,[Val,fc,FC]) :-
 	!,asserta( fapt(av(Atr,Val),FC,[utiliz]) ).
 
+%pentru raspunsul nu_conteaza adaugam fapte pentru toate optiunile atributului
+assert_fapt(Atr,[Val1|RestValori]) :-
+	!,asserta( fapt(av(Atr,Val1),100,[utiliz]) ),
+	assert_fapt(Atr,RestValori).
+
 % APARUT FIINDCA NU SE MAI ADAUGA SEPARAT ATRIBUTELE BOOLEENE
 /*assert_fapt(Atr,[nu]) :-
 	asserta( fapt(av(Atr,da),-100,[utiliz])).*/
 
-assert_fapt(Atr,[Val]) :-
-	asserta( fapt(av(Atr,Val),100,[utiliz])).
+assert_fapt(_,[]).
 
 
 /*det_val_fc([nu],da,-100).
 
 det_val_fc([nu,FC],da,NFC) :- NFC is -FC.
 
-det_val_fc([nu,fc,FC],da,NFC) :- NFC is -FC.*/
+det_val_fc([nu,fc,FC],da,NFC) :- NFC is -FC.
 
 det_val_fc([Val,FC],Val,FC).
 
 det_val_fc([Val,fc,FC],Val,FC).
 
-det_val_fc([Val],Val,100).
+det_val_fc([Val],Val,100).*/
 
         
 afis_istorie([]) :-nl.
@@ -511,7 +538,7 @@ scrie_lista_fara_spatiu([]):-nl.
 scrie_lista_fara_spatiu([H|T]) :- write(H), scrie_lista_fara_spatiu(T).
 
 scrie_lista_optiuni([H|[]]) :- write(H).
-scrie_lista_optiuni([H|T]) :- write(H), write(' / '), scrie_lista_optiuni(T).
+scrie_lista_optiuni([H|T]) :- write(H), write(' | '), scrie_lista_optiuni(T).
 
 
 % --------------------- CITIRE -------------------------------------------------
