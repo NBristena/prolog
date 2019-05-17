@@ -34,7 +34,7 @@ go :-
 	retractall(fapt(_,_,_)),
 	executa([incarca]),
 	repeat,
-	nl, write('  Alegeti una din urmatoarele optiuni: '),
+	nl, write('     Meniu principal: '),
 	nl, write(' (Incarca | Consulta | Afiseaza_fapte | Cum.. | Exit)'),
 	nl, citeste_linie([H|T]),nl,
 	executa([H|T]), H == exit.
@@ -52,6 +52,9 @@ citeste_linie([Cuv|Lista_cuv]) :-
 	rest_cuvinte_linie(Char, [Cuv1|Lista_cuv]) :-
 		citeste_cuvant(Char, Cuv1, Char1),      
 		rest_cuvinte_linie(Char1, Lista_cuv).
+
+
+
 
 
 /*--------------------------------------------------------------------------------
@@ -170,18 +173,20 @@ executa([consulta]) :-
 		write(' ____________________'),nl,
 		write('|'),nl,
 		( fapt(av(Atr,_),_,_) -> 
-			ord_sol_alfa(Atr),
+			ord_sol_fc(Atr),
 			write('| Optiunile dumneavoastra pentru '), write(Atr), write(' sunt:'),nl, 
-			write('|'), 
+			write('|'), nl,
+			write('| ***************************'), 
 			afiseaza_scop(Atr)
 		;
 			write('| Nu avem nicio '), write(Atr),write(' care sa se'),nl,
-			write('| potriveasca cu preferintele tale.'),nl
+			write('| potriveasca cu preferintele tale.'),nl,
+			write('|____________________'),nl
 		),
-		write('|____________________'),nl,
 		fail.
 		
 	scopuri_princ.
+
 
 % --------------- INCEPE INTEROGAREA -------------------------------------------
 /* realizare NOT fapt cu NotFC-> realizare fapt cu FC si NotFC = -FC
@@ -315,9 +320,11 @@ determina(_).
 					%X is 100 * (FC1 + FC2) / (100 - MFC),
 					%FC is round(X).
 
+
 % --------------- AFISEAZA CONCLUZII -------------------------------------------
 ord_sol_fc(Atr) :- setof(sol(FC,X,I), Atr^retract(fapt(av(Atr,X),FC,I)), L), adauga_sol_ord(fc,Atr,L).
 ord_sol_alfa(Atr) :- setof(sol(X,FC,I), Atr^retract(fapt(av(Atr,X),FC,I)), L), adauga_sol_ord(al,Atr,L).
+	
 	adauga_sol_ord(fc,Atr,[sol(FC,X,I)|T]):- asserta(fapt(av(Atr,X),FC,I)), adauga_sol_ord(fc,Atr,T).
 	adauga_sol_ord(al,Atr,[sol(X,FC,I)|T]):- adauga_sol_ord(al,Atr,T), asserta(fapt(av(Atr,X),FC,I)).
 	adauga_sol_ord(_,_,[]).
@@ -326,7 +333,15 @@ afiseaza_scop(Atr) :-nl,
 	fapt(av(Atr,Val),FC,_),
 	FC >= 20, scrie_scop(av(Atr,Val),FC),nl,fail.
 
-afiseaza_scop(_).
+afiseaza_scop(_) :- write('|____________________'),nl,
+	meniu_secundar,!.
+	
+afiseaza_scop_secundar(Atr) :-nl,
+	fapt(av(Atr,Val),FC,_),
+	FC >= 20, scrie_scop(av(Atr,Val),FC),nl,fail.
+
+afiseaza_scop_secundar(_) :- write('|____________________'),nl,!.
+
 
 scrie_scop(av(_,Val),FC) :-
 	write('| -> '), write(Val), 
@@ -335,6 +350,26 @@ scrie_scop(av(_,Val),FC) :-
 	nl, write('|    Despre solutie: '),
 	nl, write('| ***************************').
 
+% --------------- MENIU SECUNDAR -------------------------------------------
+	meniu_secundar :- 
+		repeat,
+		nl, write('     Meniu secundar: '),
+		nl, write(' (Afis_alfabetic | Afis_prop | M_anterior)'),
+		nl, citeste_linie([H]),nl,
+		executa2([H]), H == m_anterior.
+
+executa2([afis_alfabetic]) :- scop(Atr), 
+	ord_sol_alfa(Atr),
+	write(' ____________________'),nl,
+	write('| [ Afisare in ordine alfabetica ] -----------------------'),nl,
+	write('|'),nl,
+	write('| ***************************'),
+	afiseaza_scop_secundar(Atr), !.
+
+executa2([afis_prop]) :- nl,write('MERG PROP'),nl,!.
+
+executa2([m_anterior]):-!.
+executa2([_]) :- write('-X- Comanda incorecta -X-'),nl,!.
 
 /*--------------------------------------------------------------------------------
  * 		   AFISEAZA FAPTE STIUTE
@@ -616,9 +651,11 @@ citeste_cuvant(Character,Cuvant,Character1) :- /*dai Iasi si retine iasi */
 citeste_intreg_cuvantul(Lista_Charactere,Character1) :-
 	get_code(Character),
 	(caractere_in_interiorul_unui_cuvant(Character),
-	((Character>64,Character<91),!, 
-	Character_modificat is Character+32;
-	Character_modificat is Character),
+	((Character > 64 , Character < 91)->
+		Character_modificat is Character+32
+	;
+		Character_modificat is Character
+	),
 	citeste_intreg_cuvantul(Lista_Charactere1, Character1),
 	Lista_Charactere=[Character_modificat|Lista_Charactere1]; \+(caractere_in_interiorul_unui_cuvant(Character)),
 	Lista_Charactere=[], Character1=Character).
