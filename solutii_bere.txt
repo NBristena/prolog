@@ -1,32 +1,13 @@
-[valoare scop --> warsteiner_fresh]
-[descriere --> 'Bere clasica fara alcool' ]
-[imagine solutie --> cale_relativa_imagine]
-[proprietati --> cu_alcool = nu ; 
-                 cu_aroma = nu ; ]
+[val scop --> b1]
+[desc --> 'Bere1' ]
+[img sol --> cale1]
+[props --> p1 = nu ; 
+           p2 = da ]
 /////////////////////
 
-[valoare scop --> john_crabbie_ginger_beer]
-[descriere --> 'Bere fara alcool cu aroma de ghimbir' ]
-[imagine solutie --> cale_relativa_imagine]
-[proprietati --> cu_alcool = nu ; 
-                 cu_aroma = da ;
-                 aroma = ghimbir]
-/////////////////////
-
-[valoare scop --> ursus_cooler]
-[descriere --> 'Bere fara alcool cu aroma racoritoare de lamaie' ]
-[imagine solutie --> cale_relativa_imagine]
-[proprietati --> cu_alcool = nu ; 
-                 cu_aroma = da ;
-                 aroma = lamaie]
-/////////////////////
-
-[valoare scop --> mikkeller_organic_shandy]
-[descriere --> 'Bere artizanala cu alcool scazut si aroma de lamaie' ]
-[imagine solutie --> cale_relativa_imagine]
-[proprietati --> cu_alcool = da ; 
-                 nivel_alcool = scazut ;
-                 tip_bere = artizanala ;
-                 cu_aroma = da ;
-                 aroma = lamaie]
+[val scop --> b2]
+[desc --> 'Bere2' ]
+[img sol --> cale2]
+[props --> p1 = ceva ; 
+           p2 = daltceva ]
 /////////////////////

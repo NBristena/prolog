@@ -1,5 +1,7 @@
 /* SET WORKING DIRECTORY
 :-use_module(library(file_systems),[]),file_systems:current_directory(_,'D:/0. Facultate/[3] Sem II/Expert/Proiect').
+
+:- use_module(library(file_systems),[]),file_systems:current_directory(_,'D:/Faculate/Anul_III/Info/Sistema expert - PROLOG/Proiect/Proiect - propriuzis/prolog_last_stage').
 */
 
 
@@ -60,20 +62,28 @@ citeste_linie([Cuv|Lista_cuv]) :-
 /*--------------------------------------------------------------------------------
  * 		   INCARCA SI PROCESEAZA REGULI
  *--------------------------------------------------------------------------------*/
-executa([incarca]) :- incarca, !, write('~*~ Fisier incarcat cu succes ~*~'),nl.
+executa([incarca]) :- incarca(1), incarca(2), !, write('~*~ Fisier incarcat cu succes ~*~'),nl.
 	
-incarca :- F = 'reguli_bere.txt',
+incarca(1) :- F = 'reguli_bere.txt',
 %	write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
-	file_exists(F), !, incarca(F).
+	file_exists(F), !, incarca(1,F).
 
-incarca :- nl,
+incarca(2) :- F = 'solutii_bere.txt',
+%	write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
+	file_exists(F), !, incarca(2,F).
+	
+incarca(_) :- nl,
 	write(' !X! Fisierul introdus nu exista !X!'),nl,nl,
 	incarca.
 
 % --------------- INCARCARE FISIER ---------------------------------------------
-incarca(F) :-
+incarca(1,F) :-
 	retractall(deja_intrebat(_)), retractall(fapt(_,_,_)),
 	retractall(scop(_)), retractall(regula(_,_,_)), retractall(intrebare(_,_,_)),
+	see(F), incarca_reguli, seen, !.
+	
+incarca(2,F) :-
+	retractall(solutie(_,_,_,_)),
 	see(F), incarca_reguli, seen, !.
 
 	incarca_reguli :-
@@ -93,7 +103,11 @@ citeste_propozitie([Cuv|Lista_cuv]) :-
 
 	rest_cuvinte_propozitie(Char,[Cuv1|Lista_cuv]) :-
 		citeste_cuvant(Char,Cuv1,Char1),      
-		rest_cuvinte_propozitie(Char1,Lista_cuv).
+		(Cuv1 \== '/////////////////////' ->
+			rest_cuvinte_propozitie(Char1,Lista_cuv)
+		;
+			Lista_cuv = []
+		).
 	
 % -------------- PROCESARE PROPOZITII ------------------------------------------
 proceseaza([end_of_file]) :- !.
@@ -104,7 +118,18 @@ proceseaza(L) :- trad(R,L,[]),
 	;
 		assertz(R)
 	), !.
-
+/*   SOLUTII   */
+trad( solutie(Nume,Desc,Img,proprietati(Props)) ) --> valoare(Nume), descriere(Desc), imagine(Img), lista_proprietati(Props),['/////////////////////'].
+	
+	valoare(Nume) --> ['[',val,scop,'-->',Nume,']'].
+	descriere(Desc) --> ['[',desc,'-->',Desc,']'].
+	imagine(Img) --> ['[',img,sol,'-->',Img,']'].
+	lista_proprietati(Props) --> ['[',props,'-->'], lista_de_proprietati(Props).
+		 
+		lista_de_proprietati([Prop]) -->  propoz_props(Prop),[']'].
+		lista_de_proprietati([Prima|Celelalte]) --> propoz_props(Prima),[';'], lista_de_proprietati(Celelalte).
+			
+			propoz_props(av(Atr,Val)) --> [Atr,'=',Val].
 /*   SCOP   */
 trad(scop(X)) --> [scop,'@',X].
 
@@ -665,8 +690,8 @@ citeste_cuvant(_,Cuvant,Character1) :- get_code(Character),
 	citeste_cuvant(Character,Cuvant,Character1).
  
 
-% ------ CARACTERE ACCEPTATE   !   (   )   ,   .   ?   =   @    |
-caracter_cuvant(C):-member(C,[33, 40, 41, 44, 46, 63, 61, 64, 124]).
+% ------ CARACTERE ACCEPTATE    !   (   )   ,   .   ?   =   @    |  [  ]  ;
+caracter_cuvant(C):-member(C,[33, 40, 41, 44, 46, 63, 61, 64, 124,91,93,59]).
 
 caracter_numar(C):- C >= 48,C =< 57. % [0,9]
 
@@ -675,7 +700,9 @@ caractere_in_interiorul_unui_cuvant(C):-
 	C >= 65,C =< 90;  % [A,Z]
 	C >= 97,C =< 122; % [a,z]
 	C == 45;		  % [-]
-	C == 95.		  % [_]
+	C == 95;		  % [_]
+	C == 47;		  % [/]
+	C == 62.		  % [>]
 
 
 
@@ -683,5 +710,45 @@ caractere_in_interiorul_unui_cuvant(C):-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 			EXEMPLU INTREBARI
+			
+[val scop --> b1]
+[desc --> 'Bere' ]
+[img sol --> cale1]
+[props --> p1 = nu ; 
+           p2 = da ]
+/////////////////////
+
+[valoare scop --> warsteiner_fresh]
+[descriere --> 'Bere clasica fara alcool' ]
+[imagine solutie --> cale_relativa_imagine1]
+[proprietati --> cu_alcool = nu ; 
+                 cu_aroma = nu ]
+/////////////////////
+
+[valoare scop --> john_crabbie_ginger_beer]
+[descriere --> 'Bere fara alcool cu aroma de ghimbir' ]
+[imagine solutie --> cale_relativa_imagine2]
+[proprietati --> cu_alcool = nu ; 
+                 cu_aroma = da ;
+                 aroma = ghimbir]
+/////////////////////
+
+[valoare scop --> ursus_cooler]
+[descriere --> 'Bere fara alcool cu aroma racoritoare de lamaie' ]
+[imagine solutie --> cale_relativa_imagine3]
+[proprietati --> cu_alcool = nu ; 
+                 cu_aroma = da ;
+                 aroma = lamaie]
+/////////////////////
+
+[valoare scop --> mikkeller_organic_shandy]
+[descriere --> 'Bere artizanala cu alcool scazut si aroma de lamaie' ]
+[imagine solutie --> cale_relativa_imagine4]
+[proprietati --> cu_alcool = da ; 
+                 nivel_alcool = scazut ;
+                 tip_bere = artizanala ;
+                 cu_aroma = da ;
+                 aroma = lamaie]
+/////////////////////
 
 */
