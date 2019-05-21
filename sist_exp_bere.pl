@@ -22,6 +22,7 @@ curata_bc :- current_predicate(P), abolish(P,[force(true)]), fail ; true.
 :- dynamic intrebare/3.
 :- dynamic fapt/3.
 :- dynamic deja_intrebat/1.
+:- dynamic solutie/4.
 
 :- op(900,fy,not).
 not(P) :- P, !, fail.
@@ -65,32 +66,32 @@ citeste_linie([Cuv|Lista_cuv]) :-
 executa([incarca]) :- incarca(1), incarca(2), !, write('~*~ Fisier incarcat cu succes ~*~'),nl.
 	
 incarca(1) :- F = 'reguli_bere.txt',
-%	write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
+	%write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
 	file_exists(F), !, incarca(1,F).
 
 incarca(2) :- F = 'solutii_bere.txt',
-%	write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
+	%write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
 	file_exists(F), !, incarca(2,F).
 	
 incarca(_) :- nl,
 	write(' !X! Fisierul introdus nu exista !X!'),nl,nl,
 	incarca.
 
-% --------------- INCARCARE FISIER ---------------------------------------------
+% --------------- INCARCARE FISIERE ---------------------------------------------
 incarca(1,F) :-
 	retractall(deja_intrebat(_)), retractall(fapt(_,_,_)),
 	retractall(scop(_)), retractall(regula(_,_,_)), retractall(intrebare(_,_,_)),
-	see(F), incarca_reguli, seen, !.
+	see(F), incarca_fisier, seen, !.
 	
 incarca(2,F) :-
 	retractall(solutie(_,_,_,_)),
-	see(F), incarca_reguli, seen, !.
+	see(F), incarca_fisier, seen, !.
 
-	incarca_reguli :-
+	incarca_fisier :-
 		repeat,
 			citeste_propozitie(L),
 			proceseaza(L),
-		L == [end_of_file].
+		L == [end_of_file],!.
 	
 % --------------- CITIRE DIN FISIER --------------------------------------------
 citeste_propozitie([Cuv|Lista_cuv]) :-
@@ -101,13 +102,14 @@ citeste_propozitie([Cuv|Lista_cuv]) :-
 		
 	rest_cuvinte_propozitie(Char,[]) :- Char == 46, !. %PUNCT
 
+	rest_cuvinte_propozitie(Char,[]) :- Char == 47, citeste_separator(19), !. %SLASH
+
 	rest_cuvinte_propozitie(Char,[Cuv1|Lista_cuv]) :-
 		citeste_cuvant(Char,Cuv1,Char1),      
-		(Cuv1 \== '/////////////////////' ->
-			rest_cuvinte_propozitie(Char1,Lista_cuv)
-		;
-			Lista_cuv = []
-		).
+			rest_cuvinte_propozitie(Char1,Lista_cuv).
+
+citeste_separator(0):-!.
+citeste_separator(N) :- get_code(_), N1 is N-1, citeste_separator(N1).
 	
 % -------------- PROCESARE PROPOZITII ------------------------------------------
 proceseaza([end_of_file]) :- !.
@@ -118,22 +120,27 @@ proceseaza(L) :- trad(R,L,[]),
 	;
 		assertz(R)
 	), !.
+
 /*   SOLUTII   */
-trad( solutie(Nume,Desc,Img,proprietati(Props)) ) --> valoare(Nume), descriere(Desc), imagine(Img), lista_proprietati(Props),['/////////////////////'].
+trad( solutie(Nume,Desc,Img,Props) ) --> sol(Nume), descriere(Desc), imagine(Img), lista_proprietati(Props),['/'].
 	
-	valoare(Nume) --> ['[',val,scop,'-->',Nume,']'].
-	descriere(Desc) --> ['[',desc,'-->',Desc,']'].
-	imagine(Img) --> ['[',img,sol,'-->',Img,']'].
-	lista_proprietati(Props) --> ['[',props,'-->'], lista_de_proprietati(Props).
+	sol(Nume) --> ['[',valoare,scop,'-->',Nume,']'].
+
+	descriere(Desc) --> ['[',descriere,'-->',Desc,']'].
+
+	imagine(Img) --> ['[',imagine,solutie,'-->',Img,']'].
+
+	lista_proprietati(Props) --> ['[',proprietati,'-->'], lista_de_proprietati(Props).
 		 
 		lista_de_proprietati([Prop]) -->  propoz_props(Prop),[']'].
 		lista_de_proprietati([Prima|Celelalte]) --> propoz_props(Prima),[';'], lista_de_proprietati(Celelalte).
 			
 			propoz_props(av(Atr,Val)) --> [Atr,'=',Val].
+			
 /*   SCOP   */
 trad(scop(X)) --> [scop,'@',X].
 
-/* INTREBARI */
+/*  INTREBARI  */
 trad(intrebare(Atr,M,P)) --> [intreaba,'@',Atr], afiseaza(Atr,P), lista_optiuni(M).
 	 
 	afiseaza(_,P) -->  [enunt,'@',P].
@@ -144,7 +151,7 @@ trad(intrebare(Atr,M,P)) --> [intreaba,'@',Atr], afiseaza(Atr,P), lista_optiuni(
 		lista_de_optiuni([Element]) -->  [Element,')'].
 		lista_de_optiuni([Element|T]) --> [Element],['|','|'], lista_de_optiuni(T).
 	
-/*  REGULI  */
+/*   REGULI   */
 trad( regula(N,premise(Daca),concluzie(Atunci,F)) ) --> identificator(N), daca(Daca), atunci(Atunci,F).
 	 
 	identificator(N) --> [regula,'@',N].
@@ -156,7 +163,6 @@ trad( regula(N,premise(Daca),concluzie(Atunci,F)) ) --> identificator(N), daca(D
 				
 			propoz_daca(av(Atr,Val)) --> [Atr,'@',Val,'@'].
 			propoz_daca(av(Atr,da)) --> ['@',Atr,'@'].
-%			propoz_daca(not av(Atr,da)) --> ['@','!',Atr,'@'].
 			propoz_daca(av(Atr,nu)) --> ['@','!',Atr,'@'].
 
 	atunci(Atunci,FC) --> propoz_atunci(Atunci), [',',fc,'@'], [FC], ['@',')'].
@@ -164,21 +170,10 @@ trad( regula(N,premise(Daca),concluzie(Atunci,F)) ) --> identificator(N), daca(D
 			
 		propoz_atunci(av(Atr,Val)) --> [Atr,'@','=',Val].
 		propoz_atunci(av(Atr,da)) --> ['@',Atr].
-%		propoz_atunci(not av(Atr,da)) --> ['@','!',Atr].
 		propoz_atunci(av(Atr,nu)) --> ['@','!',Atr].
 
 /*   ERORI   */
 trad('-X- Eroare la parsare -X-'-L,L,_).
-
-/* TRY IN CONSOLE:
-trad(X,[regula,1.0,daca,buget_disponibil,este,redus,atunci,in_romania,fc,90.0],[]). 
-trad(X,[regula,6.0,daca,in_romania,si,la_mare,si,tip_oferta,este,sejur_1_luna,si,buget_disponibil,este,mare,si,anotimp,este,vara,atunci,loc_concediu,este,neptun,fc,80.0],[]).
-
-trad(X,[regula,'@',1.0,lista_premise,'@','(',buget_disponibil,'@',redus,'@',')',concluzie,'@','(','@',in_romania,',',fc,'@',90,'@',')'],[]).
-trad(X,[regula,'@',6.0,lista_premise,'@','(','@',in_romania,'@','@',la_mare,'@',tip_oferta,'@',sejur_1_luna,'@',buget_disponibil,'@',mare,'@',anotimp,'@',vara,'@',')',concluzie,'@','(',loc_concediu,'@','=',neptun,',',fc,'@',80.0,'@',')'],[]).
-*/
-
-
 
 
 
@@ -195,16 +190,17 @@ executa([consulta]) :-
 	scopuri_princ :-
 		scop(Atr),
 		determina(Atr), 
-		write(' ____________________'),nl,
-		write('|'),nl,
+		
+			write(' ____________________'),nl,
+			write('|'),nl,
 		( fapt(av(Atr,_),_,_) -> 
 			ord_sol_fc(Atr),
-			write('| Optiunile dumneavoastra pentru '), write(Atr), write(' sunt:'),nl, 
+			format('| Optiunile dumneavoastra pentru ~a sunt:',[Atr]), nl, 
 			write('|'), nl,
 			write('| ***************************'), 
 			afiseaza_scop(Atr)
 		;
-			write('| Nu avem nicio '), write(Atr),write(' care sa se'),nl,
+			format('| Nu avem nicio ~a care sa se',[Atr]),nl,
 			write('| potriveasca cu preferintele tale.'),nl,
 			write('|____________________'),nl
 		),
@@ -251,7 +247,7 @@ determina(_).
 
 %INTREBARI OPTIUNI
 			interogheaza(Atr, Mesaj, Optiuni, Istorie) :-
-				write('Q: '), write(Mesaj),nl,
+				format('Q: ~a',[Mesaj]),nl,
 				citeste_opt(Optiuni),
 				de_la_utiliz(X, Istorie, Optiuni),
 				(X == [nu_conteaza] ->
@@ -271,7 +267,9 @@ determina(_).
 
 %		%CITESTE RASPUNS
 					de_la_utiliz(X, Istorie, Lista_opt) :-
-						repeat,nl,write(': '), citeste_linie(X),
+						repeat,
+							nl,write(': '), 
+							citeste_linie(X),
 						proceseaza_raspuns(X, Istorie, Lista_opt).
 
 %			%PROCESEAZA RASPUNS
@@ -354,26 +352,49 @@ ord_sol_alfa(Atr) :- setof(sol(X,FC,I), Atr^retract(fapt(av(Atr,X),FC,I)), L), a
 	adauga_sol_ord(al,Atr,[sol(X,FC,I)|T]):- adauga_sol_ord(al,Atr,T), asserta(fapt(av(Atr,X),FC,I)).
 	adauga_sol_ord(_,_,[]).
 
+
 afiseaza_scop(Atr) :-nl,
 	fapt(av(Atr,Val),FC,_),
-	FC >= 20, scrie_scop(av(Atr,Val),FC),nl,fail.
+	solutie(Val,Desc,Img,_),
+	FC >= 20, scrie_scop(av(Atr,Val),FC,Desc,Img),nl,fail.
 
 afiseaza_scop(_) :- write('|____________________'),nl,
 	meniu_secundar,!.
 	
 afiseaza_scop_secundar(Atr) :-nl,
 	fapt(av(Atr,Val),FC,_),
-	FC >= 20, scrie_scop(av(Atr,Val),FC),nl,fail.
+	solutie(Val,Desc,Img,_),
+	FC >= 20, scrie_scop(av(Atr,Val),FC,Desc,Img),nl,fail.
 
 afiseaza_scop_secundar(_) :- write('|____________________'),nl,!.
 
+scrie_scop(av(_,Val),FC,Desc,Img) :-
+	FC1 is integer(FC),
+	format('| -> ~a  ####  avand fc egal cu ~d',[Val,FC1]),nl,
+	format('|   [~a]',[Img]), nl,
+	format('|    Despre solutie: ~a',[Desc]), nl, 
+	 write('| ***************************').
 
-scrie_scop(av(_,Val),FC) :-
-	write('| -> '), write(Val), 
-	write(' ~ avand fc egal cu '), FC1 is integer(FC),write(FC1),
-	nl, write('|   [cale_relativa_img]'),
-	nl, write('|    Despre solutie: '),
-	nl, write('| ***************************').
+
+afiseaza_props(Atr) :-nl,
+	fapt(av(Atr,Val),FC,_),
+	solutie(Val,_,_,Props),
+	FC >= 20, scrie_scop(av(Atr,Val),FC,Props),nl,fail.
+
+afiseaza_props(_) :- write('|____________________'),nl,!.
+
+scrie_scop(av(_,Val),FC,Props) :-
+	FC1 is integer(FC),
+	format('| -> ~a  ####  avand fc egal cu ~d',[Val,FC1]),nl,
+	write('| Proprietati: '), 
+	scrie_props(Props),nl,
+	write('| ***************************').
+
+scrie_props([av(A1,V1)|Props]):-
+	%nl, format('|~t~a~14+ : ~a~t~14+~30|',[A1,V1]),
+	nl, format('|     ~a : ~a',[A1,V1]),
+	scrie_props(Props).
+scrie_props([]).
 
 % --------------- MENIU SECUNDAR -------------------------------------------
 	meniu_secundar :- 
@@ -386,12 +407,19 @@ scrie_scop(av(_,Val),FC) :-
 executa2([afis_alfabetic]) :- scop(Atr), 
 	ord_sol_alfa(Atr),
 	write(' ____________________'),nl,
+	write('|'),nl,
 	write('| [ Afisare in ordine alfabetica ] -----------------------'),nl,
 	write('|'),nl,
 	write('| ***************************'),
 	afiseaza_scop_secundar(Atr), !.
 
-executa2([afis_prop]) :- nl,write('MERG PROP'),nl,!.
+executa2([afis_prop]) :- scop(Atr),
+	write(' ____________________'),nl,
+	write('|'),nl,
+	write('| [ Lista de proprietati ale solutiilor ] ----------------'),nl,
+	write('|'),nl,
+	write('| ***************************'),
+	afiseaza_props(Atr), !.
 
 executa2([m_anterior]):-!.
 executa2([_]) :- write('-X- Comanda incorecta -X-'),nl,!.
@@ -414,8 +442,8 @@ afisare_fapte :-
 
 listeaza_fapte:-  
 	(fapt(av(Atr,Val),FC,_) ; fapt(not av(Atr,_),FC,_), Val = 'nu'), 
-	write('|('), write(Atr), write(','), write(Val), write(') '),
-	write('~'), write(' certitudine '), FC1 is integer(FC),write(FC1),
+	FC1 is integer(FC),
+	format('|(~a,~a) ~~ certitudine ~d',[Atr,Val,FC1]),
 	nl,fail.
 	
 listeaza_fapte.
@@ -467,7 +495,7 @@ cum(Scop) :-
 		lista_float_int(Reguli,Reguli1).
 
 	transforma_scop(av(A,da),[A]) :- !.
-	transforma_scop(not av(A,da), [nu,A]) :- !.
+	%transforma_scop(not av(A,da), [nu,A]) :- !.
 	transforma_scop(av(A,nu), [nu,A]) :- !.
 	transforma_scop(av(A,V),[A,este,V]).
 		
@@ -529,12 +557,12 @@ scrie_lista_premise([H|T]) :-
 
 
 transforma_premisa(av(A,da),['@',A,'@']) :- !.
-transforma_premisa(not av(A,da), ['@!',A,'@']) :- !.
+%transforma_premisa(not av(A,da), ['@!',A,'@']) :- !.
 transforma_premisa(av(A,nu), ['@!',A,'@']) :- !.
 transforma_premisa(av(A,V),[A,'@',V,'@']).
 
 transforma_concluzie(av(A,da),['@',A]) :- !.
-transforma_concluzie(not av(A,da), ['@!',A]) :- !.
+%transforma_concluzie(not av(A,da), ['@!',A]) :- !.
 transforma_concluzie(av(A,nu), ['@!',A]) :- !.
 transforma_concluzie(av(A,V),[A,'@','=',V]).
 
@@ -614,30 +642,32 @@ scrie_lista_optiuni([H|T]) :- write(H), write(' | '), scrie_lista_optiuni(T).
 citeste_cuvant(-1,end_of_file,-1):-!. 
 
 % ------------ 2. CARACTER ACCEPTAT
-citeste_cuvant(Character,Cuvant,Character1) :-   
-	caracter_cuvant(Character),!, 
-	name(Cuvant, [Character]),get_code(Character1).
+citeste_cuvant(Caracter,Cuvant,Caracter1) :-   
+	caracter_cuvant(Caracter),!, 
+	name(Cuvant, [Caracter]),get_code(Caracter1).
 	
 % ------------ 3. CAND DA DE UN NUMAR
-citeste_cuvant(Character, Numar, Character1) :-
-	caracter_numar(Character),!, /*nu citeste negative sau cu virgula*/
-	citeste_tot_numarul(Character, Numar, Character1).
+citeste_cuvant(Caracter, Numar, Caracter1) :-
+	caracter_numar(Caracter),!, /*nu citeste negative sau cu virgula*/
+	citeste_tot_numarul(Caracter, Numar, Caracter1).
  /*daca ii dai 123abc citeste nr 123 si abc e urmatorul cuvant*/
  /*daca ii dai abc123 citeste cuvantul abc123 */
 
 % ---- CITESTE TOATE CIFRELE
-citeste_tot_numarul(Character,Numar,Character1):-
-	determina_lista(Lista1,Character1),
-	append([Character],Lista1,Lista),
+citeste_tot_numarul(Caracter,Numar,Caracter1):-
+	determina_lista(Lista1,Caracter1),
+	append([Caracter],Lista1,Lista),
 	transforma_lista_numar(Lista,Numar).
 
-determina_lista(Lista,Character1):-
-	get_code(Character), 
-	(caracter_numar(Character),
-	determina_lista(Lista1,Character1),
-	append([Character],Lista1,Lista); 
-	\+(caracter_numar(Character)),
-	Lista=[],Character1=Character).
+determina_lista(Lista,Caracter1):-
+	get_code(Caracter), 
+	(caracter_numar(Caracter) ->
+		determina_lista(Lista1,Caracter1),
+		append([Caracter],Lista1,Lista)
+	; 
+		Lista=[],
+		Caracter1=Caracter
+	).
  
 % ---- TRANSFORMA LISTA DE CIFRE IN NUMAR
 transforma_lista_numar([],0).
@@ -651,47 +681,70 @@ lungime([],0).
 lungime([_|T],L) :- lungime(T,L1), L is L1+1.
 
 % ------------ 4. CITESTE INTRE APOSTROAFE
-citeste_cuvant(Character,Cuvant,Character1) :-
-	Character == 39,!, % 39 este codul ASCII pt apostrof
+citeste_cuvant(Caracter,Cuvant,Caracter1) :-
+	Caracter == 39,!, % 39 este codul ASCII pt apostrof
 	pana_la_urmatorul_apostrof(Lista_caractere),
-	L=[Character|Lista_caractere],
-	name(Cuvant, L),get_code(Character1).
+	L=[Caracter|Lista_caractere],
+	name(Cuvant, L),get_code(Caracter1).
 
 pana_la_urmatorul_apostrof(Lista_caractere):-
-	get_code(Character),
-	(Character == 39,Lista_caractere=[Character];
-	Character \== 39,
+	get_code(Caracter),
+	(Caracter == 39,Lista_caractere=[Caracter];
+	Caracter \== 39,
 	pana_la_urmatorul_apostrof(Lista_caractere1),
-	Lista_caractere=[Character|Lista_caractere1]).
+	Lista_caractere=[Caracter|Lista_caractere1]).
 
 % ------------ 5. CITIRE CUVANT NORMAL
-citeste_cuvant(Character,Cuvant,Character1) :- /*dai Iasi si retine iasi */
-	caractere_in_interiorul_unui_cuvant(Character),!,              
-	((Character>64,Character<91),!,
-	Character_modificat is Character+32;
-	Character_modificat is Character),                              
-	citeste_intreg_cuvantul(Charactere,Character1),
-	name(Cuvant,[Character_modificat|Charactere]).
-
-citeste_intreg_cuvantul(Lista_Charactere,Character1) :-
-	get_code(Character),
-	(caractere_in_interiorul_unui_cuvant(Character),
-	((Character > 64 , Character < 91)->
-		Character_modificat is Character+32
+citeste_cuvant(Caracter,Cuvant,Caracter1) :- /*dai Iasi si retine iasi */
+	caractere_in_interiorul_unui_cuvant(Caracter),!,              
+	((Caracter > 64 , Caracter < 91) ->
+		Caracter_modificat is Caracter+32
 	;
-		Character_modificat is Character
-	),
-	citeste_intreg_cuvantul(Lista_Charactere1, Character1),
-	Lista_Charactere=[Character_modificat|Lista_Charactere1]; \+(caractere_in_interiorul_unui_cuvant(Character)),
-	Lista_Charactere=[], Character1=Character).
+		Caracter_modificat is Caracter
+	),                              
+	citeste_intreg_cuvantul(Caractere,Caracter1),
+	name(Cuvant,[Caracter_modificat|Caractere]).
 
-% ------------ 6. ORICE ALTCEVA ESTE IGNORAT
-citeste_cuvant(_,Cuvant,Character1) :- get_code(Character),       
-	citeste_cuvant(Character,Cuvant,Character1).
+citeste_intreg_cuvantul(Lista_Caractere,Caracter1) :-
+	get_code(Caracter),
+	(caractere_in_interiorul_unui_cuvant(Caracter) ->
+		((Caracter > 64 , Caracter < 91) ->
+			Caracter_modificat is Caracter+32
+		;
+			Caracter_modificat is Caracter
+		),
+		citeste_intreg_cuvantul(Lista_Caractere1, Caracter1),
+		Lista_Caractere=[Caracter_modificat|Lista_Caractere1]
+	;
+		Lista_Caractere=[], 
+		Caracter1=Caracter
+	).
+
+% ------------ 6. CITIRE CUVANT /////
+/*citeste_cuvant(Caracter,Cuvant,Caracter1) :- /* ///// */
+	/*caracter_slash(Caracter),!,                                           
+	citeste_intreg_slash(Caractere,Caracter1),
+	name(Cuvant,[Caracter|Caractere]).
+
+citeste_intreg_slash(Lista_Caractere,Caracter1) :-
+	get_code(Caracter),
+	(caracter_slash(Caracter) ->
+		citeste_intreg_slash(Lista_Caractere1, Caracter1),
+		Lista_Caractere = [Caracter|Lista_Caractere1]
+	; 
+		Lista_Caractere = [], 
+		Caracter1 = Caracter
+	).*/
+
+% ------------ 7. ORICE ALTCEVA ESTE IGNORAT
+citeste_cuvant(_,Cuvant,Caracter1) :- get_code(Caracter),       
+	citeste_cuvant(Caracter,Cuvant,Caracter1).
  
 
-% ------ CARACTERE ACCEPTATE    !   (   )   ,   .   ?   =   @    |  [  ]  ;
-caracter_cuvant(C):-member(C,[33, 40, 41, 44, 46, 63, 61, 64, 124,91,93,59]).
+% ------ CARACTERE ACCEPTATE   !   (   )   ,   .   ?   =   @   |   [  ]  ;  /
+caracter_cuvant(C):-member(C,[33, 40, 41, 44, 46, 63, 61, 64, 124,91,93,59,47]).
+
+%caracter_slash(C):- C = 47. % /
 
 caracter_numar(C):- C >= 48,C =< 57. % [0,9]
 
@@ -701,7 +754,6 @@ caractere_in_interiorul_unui_cuvant(C):-
 	C >= 97,C =< 122; % [a,z]
 	C == 45;		  % [-]
 	C == 95;		  % [_]
-	C == 47;		  % [/]
 	C == 62.		  % [>]
 
 
@@ -709,46 +761,23 @@ caractere_in_interiorul_unui_cuvant(C):-
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-			EXEMPLU INTREBARI
-			
-[val scop --> b1]
-[desc --> 'Bere' ]
-[img sol --> cale1]
-[props --> p1 = nu ; 
-           p2 = da ]
-/////////////////////
-
-[valoare scop --> warsteiner_fresh]
-[descriere --> 'Bere clasica fara alcool' ]
-[imagine solutie --> cale_relativa_imagine1]
-[proprietati --> cu_alcool = nu ; 
-                 cu_aroma = nu ]
-/////////////////////
-
-[valoare scop --> john_crabbie_ginger_beer]
-[descriere --> 'Bere fara alcool cu aroma de ghimbir' ]
-[imagine solutie --> cale_relativa_imagine2]
-[proprietati --> cu_alcool = nu ; 
-                 cu_aroma = da ;
-                 aroma = ghimbir]
-/////////////////////
-
 [valoare scop --> ursus_cooler]
-[descriere --> 'Bere fara alcool cu aroma racoritoare de lamaie' ]
+[descriere --> 'Bere fara alcool cu aroma racoritoare de lamaie']
 [imagine solutie --> cale_relativa_imagine3]
 [proprietati --> cu_alcool = nu ; 
                  cu_aroma = da ;
-                 aroma = lamaie]
+                 aroma = lamaie ]
+
 /////////////////////
 
 [valoare scop --> mikkeller_organic_shandy]
-[descriere --> 'Bere artizanala cu alcool scazut si aroma de lamaie' ]
+[descriere --> 'Bere artizanala cu alcool scazut si aroma de lamaie']
 [imagine solutie --> cale_relativa_imagine4]
 [proprietati --> cu_alcool = da ; 
                  nivel_alcool = scazut ;
                  tip_bere = artizanala ;
                  cu_aroma = da ;
                  aroma = lamaie]
-/////////////////////
 
+/////////////////////
 */
