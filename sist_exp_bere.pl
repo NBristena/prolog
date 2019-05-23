@@ -461,7 +461,6 @@ executa([cum|L]) :-
 	
 	
 % --------------- Scrie in fisier -------------------------------------------
-	/**/
 	write_in_file([]).
 	write_in_file(L):- 
 		isdirector('output_sys_exp'),
