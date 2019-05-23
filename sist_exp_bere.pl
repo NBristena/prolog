@@ -11,7 +11,10 @@
 close_all :- current_stream(_,_,S), close(S), fail ; true.
 curata_bc :- current_predicate(P), abolish(P,[force(true)]), fail ; true.
 
-:- discontiguous trad/3, executa/1, citeste_cuvant/3, interogheaza/4, realizare_scop/3, cum/1.
+:- discontiguous executa1/1, executa2/1, citeste_cuvant/3, trad/3, realizare_scop/3, interogheaza/4, proceseaza_raspuns/3, cum/1.
+
+:- use_module(library(file_systems),[]),file_systems:current_directory(_,'D:/0. Facultate/[3] Sem II/Expert/Proiect').
+%:- use_module(library(file_systems),[]),file_systems:current_directory(_,'D:/Faculate/Anul_III/Info/Sistema expert - PROLOG/Proiect/Proiect - propriuzis/prolog_last_stage').
 
 :- use_module(library(lists)).
 :- use_module(library(file_systems)).
@@ -32,15 +35,15 @@ not(_).
 /*--------------------------------------------------------------------------------
  * 		   PORNIRE SISTEM
  *--------------------------------------------------------------------------------*/
-go :-
+meniu_principal :-
 	retractall(deja_intrebat(_)),
 	retractall(fapt(_,_,_)),
-	executa([incarca]),
+	executa1([incarca]),
 	repeat,
 	nl, write('     Meniu principal: '),
 	nl, write(' (Incarca | Consulta | Afiseaza_fapte | Cum.. | Exit)'),
 	nl, citeste_linie([H|T]),nl,
-	executa([H|T]), H == exit.
+	executa1([H|T]), H == exit.
 
 % --------------- CITIRE DIN CONSOLA -------------------------------------------
 citeste_linie([Cuv|Lista_cuv]) :- 
@@ -63,7 +66,7 @@ citeste_linie([Cuv|Lista_cuv]) :-
 /*--------------------------------------------------------------------------------
  * 		   INCARCA SI PROCESEAZA REGULI
  *--------------------------------------------------------------------------------*/
-executa([incarca]) :- incarca(1), incarca(2), !, write('~*~ Fisier incarcat cu succes ~*~'),nl.
+executa1([incarca]) :- incarca(1), incarca(2), !, write('~*~ Fisier incarcat cu succes ~*~'),nl.
 	
 incarca(1) :- F = 'reguli_bere.txt',
 	%write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
@@ -114,19 +117,32 @@ citeste_separator(N) :- get_code(_), N1 is N-1, citeste_separator(N1).
 % -------------- PROCESARE PROPOZITII ------------------------------------------
 proceseaza([end_of_file]) :- !.
 proceseaza(L) :- trad(R,L,[]),
-	(R = intrebare(Atr,M,P) ->
+	(R == intrebare(Atr,M,P) ->
 		append(M,[nu_stiu,nu_conteaza],Mfinal),
 		assertz(intrebare(Atr,Mfinal,P))
 	;
-		assertz(R)
+		(R == solutie(Nume,Desc,Img,Props) ->
+			atom_codes(Img,ImgCodes),
+			append([39],ImgCodes,ApostrofImg),
+			append(ApostrofImg,[39],ApostrofImgApostrof),
+			atom_codes(CaleImg,ApostrofImgApostrof),
+			assertz(solutie(Nume,Desc,CaleImg,Props))
+		;
+			assertz(R)
+		)		
 	), !.
 
 /*   SOLUTII   */
-trad( solutie(Nume,Desc,Img,Props) ) --> sol(Nume), descriere(Desc), imagine(Img), lista_proprietati(Props),['/'].
+trad( solutie(Nume,Desc,Img,Props) ) --> 
+	sol(Nume), 
+	descriere(Desc), 
+	imagine(Img),
+	lista_proprietati(Props),
+	['/'].
 	
 	sol(Nume) --> ['[',valoare,scop,'-->',Nume,']'].
 
-	descriere(Desc) --> ['[',descriere,'-->',Desc,']'].
+	descriere(Desc) --> ['[',descriere,'-->',Desc].
 
 	imagine(Img) --> ['[',imagine,solutie,'-->',Img,']'].
 
@@ -182,7 +198,7 @@ trad('-X- Eroare la parsare -X-'-L,L,_).
 /*--------------------------------------------------------------------------------
  * 		   CONSULTA SISTEMUL
  *--------------------------------------------------------------------------------*/
-executa([consulta]) :- 
+executa1([consulta]) :- 
 	retractall(deja_intrebat(_)),
 	retractall(fapt(_,_,_)),
 	scopuri_princ,nl,nl, !.
@@ -191,7 +207,7 @@ executa([consulta]) :-
 		scop(Atr),
 		determina(Atr), 
 		
-			write(' ____________________'),nl,
+			write(' _________________________________________'),nl,
 			write('|'),nl,
 		( fapt(av(Atr,_),_,_) -> 
 			ord_sol_fc(Atr),
@@ -202,7 +218,7 @@ executa([consulta]) :-
 		;
 			format('| Nu avem nicio ~a care sa se',[Atr]),nl,
 			write('| potriveasca cu preferintele tale.'),nl,
-			write('|____________________'),nl
+			write('|_________________________________________'),nl
 		),
 		fail.
 		
@@ -213,14 +229,15 @@ executa([consulta]) :-
 /* realizare NOT fapt cu NotFC-> realizare fapt cu FC si NotFC = -FC
  * realizare fapt existent -> all good
  * realizare fapt ce poate fi interogat (not deja_intrebat, exista intrebare) -> interogheaza
+ * realizare fapt ce trebuie demonstrat (exsta o regula) -> demonstreaza premise, ajusteaza factor in regula, actualizeaza KB
  */
 determina(Atr) :- realizare_scop(av(Atr,_),_,[scop(Atr)]),!.
 determina(_).
 
 %---#NOT FAPT 
-	/*realizare_scop(not Scop, Not_FC, Istorie) :-
+	realizare_scop(not Scop, Not_FC, Istorie) :-
 		realizare_scop(Scop, FC, Istorie),
-		Not_FC is - FC, !.*/
+		Not_FC is - FC, !.
 
 %---#FAPT EXISTENT
 	realizare_scop(Scop, FC, _) :-
@@ -237,14 +254,6 @@ determina(_).
 			interogheaza(Atr, Mesaj, Optiuni, Istorie),nl,
 			asserta( deja_intrebat(av(Atr,_)) ).
 
-%INTREBARI YES/NO 
-			/*interogheaza(Atr, Mesaj, [da,nu], Istorie) :-
-				!, write('Q: '), write(Mesaj),nl,
-				citeste_opt([da,nu]),
-				de_la_utiliz(X, Istorie, [da,nu]),
-				det_val_fc(X, Val, FC),
-				asserta( fapt(av(Atr,Val), FC, [utiliz]) ).*/
-
 %INTREBARI OPTIUNI
 			interogheaza(Atr, Mesaj, Optiuni, Istorie) :-
 				format('Q: ~a',[Mesaj]),nl,
@@ -254,13 +263,15 @@ determina(_).
 					append(Opt,[nu_stiu,nu_conteaza],Optiuni),
 					assert_fapt(Atr, Opt)
 				;
-					assert_fapt(Atr, X)
+					(X == [nu_stiu] ->
+						true
+					;
+						assert_fapt(Atr, X)
+					)
 				).
 
 %	%AFISEAZA OPTIUNI
 				citeste_opt(Optiuni) :-
-					%append(['('], Optiuni, Opt1),
-					%append(Opt1, [')'], Opt),
 					write('( '),
 					scrie_lista_optiuni(Optiuni),
 					write(' )').
@@ -276,12 +287,28 @@ determina(_).
 						proceseaza_raspuns([de_ce], Istorie, _) :- nl,
 							write('|   Pentru regula:'),nl,
 							afis_istorie(Istorie), !, fail.
+
+							afis_istorie([]) :-nl.
+							afis_istorie([scop(X)|T]) :- write('|\n'),scrie_lista_cu_spatiu(['|','-->',scopul,este,X]),!, afis_istorie(T).
+							afis_istorie([N|T]) :- afis_regula(N),!,afis_istorie(T).
 						
 						proceseaza_raspuns([X], _, Lista_opt):-
 							member(X, Lista_opt).
 
 						proceseaza_raspuns([X, fc, FC], _, Lista_opt):-
 							member(X, Lista_opt), float(FC).
+
+%				%ADAUGA RASPUNS IN KB
+							assert_fapt(Atr,[Val,fc,FC]) :- !,
+								asserta( fapt(av(Atr,Val),FC,[utiliz]) ).
+
+							%pentru raspunsul nu_conteaza adaugam fapte pentru toate optiunile atributului
+							assert_fapt(Atr,[Val1|RestValori]) :- !,
+								asserta( fapt(av(Atr,Val1),100,[utiliz]) ),
+								assert_fapt(Atr,RestValori).
+
+							assert_fapt(_,[]).
+
 			
 %---#FAPT DE DEMONSTRAT
 	realizare_scop(Scop, FC_curent, Istorie) :-
@@ -325,23 +352,10 @@ determina(_).
  * 		CALCUL FACTOR PENTRU 2 CAI 		 *
  * * * * * * * * * * * * * * * * * * * * */
 				combina(FC1 ,FC2, FC) :-
-/* 2 pozitive */	FC1 >= 0, FC2 >= 0,
+/* 2 pozitive */	%FC1 >= 0, FC2 >= 0,
 					X is FC2 * (100 - FC1) / 100 + FC1,
 					FC is round(X).
 
-				%combina(FC1, FC2, FC) :-
-/* 2 negative */	%FC1 < 0, FC2 < 0,
-					%X is - ( -FC1 -FC2 * (100 + FC1) / 100 ),
-					%FC is round(X).
-
-				%combina(FC1, FC2, FC) :-
-/* 1 pozitiva */	%(FC1 < 0 ; FC2 < 0),
-/* 1 negativa */	%(FC1 > 0 ; FC2 > 0),
-					%FCM1 is abs(FC1), 
-					%FCM2 is abs(FC2),
-					%MFC is min(FCM1, FCM2),
-					%X is 100 * (FC1 + FC2) / (100 - MFC),
-					%FC is round(X).
 
 
 % --------------- AFISEAZA CONCLUZII -------------------------------------------
@@ -356,157 +370,176 @@ ord_sol_alfa(Atr) :- setof(sol(X,FC,I), Atr^retract(fapt(av(Atr,X),FC,I)), L), a
 afiseaza_scop(Atr) :-nl,
 	fapt(av(Atr,Val),FC,_),
 	solutie(Val,Desc,Img,_),
-	FC >= 20, scrie_scop(av(Atr,Val),FC,Desc,Img),nl,fail.
+	FC >= 20, scrie_scop(av(Atr,Val),FC,Desc,Img),nl,
+%############################
+	scrie_dem_in_fisier(av(Atr,Val)),
+%############################
+	fail.
 
-afiseaza_scop(_) :- write('|____________________'),nl,
+afiseaza_scop(_) :- write('|_________________________________________'),nl,
 	meniu_secundar,!.
-	
-afiseaza_scop_secundar(Atr) :-nl,
-	fapt(av(Atr,Val),FC,_),
-	solutie(Val,Desc,Img,_),
-	FC >= 20, scrie_scop(av(Atr,Val),FC,Desc,Img),nl,fail.
 
-afiseaza_scop_secundar(_) :- write('|____________________'),nl,!.
 
 scrie_scop(av(_,Val),FC,Desc,Img) :-
 	FC1 is integer(FC),
-	format('| -> ~a  ####  avand fc egal cu ~d',[Val,FC1]),nl,
+	format('| -> ~a  ####  avand fc egal cu ~d ~n|~n',[Val,FC1]),
 	format('|   [~a]',[Img]), nl,
 	format('|    Despre solutie: ~a',[Desc]), nl, 
 	 write('| ***************************').
 
 
-afiseaza_props(Atr) :-nl,
-	fapt(av(Atr,Val),FC,_),
-	solutie(Val,_,_,Props),
-	FC >= 20, scrie_scop(av(Atr,Val),FC,Props),nl,fail.
 
-afiseaza_props(_) :- write('|____________________'),nl,!.
-
-scrie_scop(av(_,Val),FC,Props) :-
-	FC1 is integer(FC),
-	format('| -> ~a  ####  avand fc egal cu ~d',[Val,FC1]),nl,
-	write('| Proprietati: '), 
-	scrie_props(Props),nl,
-	write('| ***************************').
-
-scrie_props([av(A1,V1)|Props]):-
-	%nl, format('|~t~a~14+ : ~a~t~14+~30|',[A1,V1]),
-	nl, format('|     ~a : ~a',[A1,V1]),
-	scrie_props(Props).
-scrie_props([]).
-
+% --------------------------------------------------------------------------
 % --------------- MENIU SECUNDAR -------------------------------------------
-	meniu_secundar :- 
-		repeat,
-		nl, write('     Meniu secundar: '),
-		nl, write(' (Afis_alfabetic | Afis_prop | M_anterior)'),
-		nl, citeste_linie([H]),nl,
-		executa2([H]), H == m_anterior.
+% --------------------------------------------------------------------------
+meniu_secundar :- 
+	repeat,
+	nl, write('     Meniu secundar: '),
+	nl, write(' (Afis_alfabetic | Afis_prop | M_anterior)'),
+	nl, citeste_linie([H]),nl,
+	executa2([H]), H == m_anterior.
 
+%%
 executa2([afis_alfabetic]) :- scop(Atr), 
-	ord_sol_alfa(Atr),
-	write(' ____________________'),nl,
+	write(' __________________________________'),nl,
 	write('|'),nl,
 	write('| [ Afisare in ordine alfabetica ] -----------------------'),nl,
 	write('|'),nl,
 	write('| ***************************'),
+	ord_sol_alfa(Atr),
 	afiseaza_scop_secundar(Atr), !.
 
+	afiseaza_scop_secundar(Atr) :-nl,
+		fapt(av(Atr,Val),FC,_),
+		solutie(Val,Desc,Img,_),
+		FC >= 20, scrie_scop(av(Atr,Val),FC,Desc,Img),nl,fail.
+
+	afiseaza_scop_secundar(_) :- write('|__________________________________'),nl,!.
+
+%%
 executa2([afis_prop]) :- scop(Atr),
-	write(' ____________________'),nl,
+	write(' _________________________________________'),nl,
 	write('|'),nl,
 	write('| [ Lista de proprietati ale solutiilor ] ----------------'),nl,
 	write('|'),nl,
 	write('| ***************************'),
 	afiseaza_props(Atr), !.
 
+	afiseaza_props(Atr) :-nl,
+		fapt(av(Atr,Val),FC,_),
+		solutie(Val,_,_,Props),
+		FC >= 20, scrie_scop(av(Atr,Val),FC,Props),nl,fail.
+
+	afiseaza_props(_) :- write('|_________________________________________'),nl,!.
+
+		scrie_scop(av(_,Val),FC,Props) :-
+			FC1 is integer(FC),
+			format('| -> ~a  ####  avand fc egal cu ~d',[Val,FC1]),nl,
+			write('| Proprietati: '), 
+			scrie_props(Props),nl,
+			write('| ***************************').
+
+			scrie_props([av(A1,V1)|Props]):-
+				nl, format('|     ~a : ~a;',[A1,V1]),
+				scrie_props(Props).
+			scrie_props([]).
+
+%%
 executa2([m_anterior]):-!.
+
+%%
 executa2([_]) :- write('-X- Comanda incorecta -X-'),nl,!.
+
+
+/****************************************************************************
+ ****************************************************************************
+ ****************************************************************************
+ *--------------- Scrie demonstratie in fisier -----------------------------*/
+	scrie_dem_in_fisier(Scop):- 
+		ia_director('demonstratii_solutii'),
+		gen_nume_fisier(Scop,NumeFisier),
+		atom_concat( 'demonstratii_solutii/', NumeFisier, Path),
+		telling(Curent_input),
+		tell(Path),
+			transforma_scop(Scop,L),
+			executa1([cum|L]),
+		told,
+		tell(Curent_input),!.
+		
+		ia_director(Nume):-
+			(directory_exists(Nume) -> 
+				true
+			; 
+				make_directory(Nume)
+			).
+		
+		gen_nume_fisier(av(Atr,Solutie),NumeFisier):-
+			fapt(av(Atr,Solutie),FC,_),
+			now(Timestamp),
+			creaza_nume_fisier(Timestamp,Solutie,FC,NumeFisier).
+
+			creaza_nume_fisier(Timestamp, Solutie, FC, NumeFisier):-
+				conversie_nr_atom(Timestamp, Time),
+				conversie_nr_atom(FC, FcNr),
+				atom_concat( 'demonstratie[', Time, DemTime),
+				atom_concat( DemTime, '][', DemTimeParanteze),
+				atom_concat( DemTimeParanteze, Solutie, DemTimeSol),
+				atom_concat( DemTimeSol, '][', DemTimeSolParanteze),
+				atom_concat( DemTimeSolParanteze, FcNr, DemTimeSolFc),
+				atom_concat( DemTimeSolFc, '].txt', NumeFisier).
+				
+				conversie_nr_atom(Nr,Atom):-
+					number_chars(Nr,Lchr),
+					atom_chars(Atom,Lchr).
+
+
+
+
 
 /*--------------------------------------------------------------------------------
  * 		   AFISEAZA FAPTE STIUTE
  *--------------------------------------------------------------------------------*/
-executa([afiseaza_fapte]) :-
+executa1([afiseaza_fapte]) :-
 	afisare_fapte,!.
 	
-afisare_fapte :-
-	    write(' ____________________'),
-	nl,	write('|'),
-	nl, write('| Fapte existente in baza de cunostinte:'),
-	nl, write('|'),
-	nl, write('|  (Atribut,Valoare) ~ FactorCertitudine'),
-	nl, listeaza_fapte,
-	    write('|____________________'),
-	nl,nl.
+	afisare_fapte :-
+		write(' ________________________________________'), nl,
+		write('|'), nl,
+		write('| Fapte existente in baza de cunostinte:'), nl,
+		write('|'), nl,
+		write('|  (Atribut,Valoare) ~ FactorCertitudine'), nl,
+		write('|'), nl, listeaza_fapte,
+		write('|________________________________________'),
+		nl,nl.
 
-listeaza_fapte:-  
-	(fapt(av(Atr,Val),FC,_) ; fapt(not av(Atr,_),FC,_), Val = 'nu'), 
-	FC1 is integer(FC),
-	format('|(~a,~a) ~~ certitudine ~d',[Atr,Val,FC1]),
-	nl,fail.
-	
-listeaza_fapte.
+		listeaza_fapte:-  
+			(	fapt(av(Atr,Val),FC,_) 
+			; 
+				fapt(not av(Atr,_),FC,_), 
+				Val = 'nu'
+			), 
+			FC1 is integer(FC),
+			format('|(~a,~a) ~~ certitudine ~d',[Atr,Val,FC1]),
+			nl,fail.
+			
+		listeaza_fapte.
+
+
+
 
 
 /*--------------------------------------------------------------------------------
  * 		   CUM S-A AJUNS LA O CONCLUZIE - ISTORIC
  *--------------------------------------------------------------------------------*/
-executa([cum|L]) :- 
-	write(' ____________________'),nl,
+executa1([cum|L]) :- 
+	write(' __________________________'),nl,
 	write('|     Demonstratie:'),nl,
 	cum(L),!,
-	write('|____________________'),nl,
-	write_in_file(L).
-	
-	
-% --------------- Scrie in fisier -------------------------------------------
-	write_in_file([]).
-	write_in_file(L):- 
-		isdirector('output_sys_exp'),
-		generate_file_name(L,NumeFisier),
-		atom_concat( 'output_sys_exp/', NumeFisier, Path),
-		telling(Curent_input),
-		tell(Path),
-			write(' ____________________'),nl,
-			write('|     Demonstratie:'),nl,
-			cum(L),!,
-			write('|____________________'),nl,
-		told,
-		tell(Curent_input).
-		
-		isdirector(Nume):-
-			directory_exists(Nume) -> 
-				true; 
-				make_directory(Nume).
-		
-		generate_file_name(L,NumeFisier):-
-			transforma_scop(Scop,L),
-			fapt(Scop,FC,_),
-			Scop =..[_,bere,Solutie],
-			now(Timestamp),
-			create_file_name(Timestamp,Solutie,FC,NumeFisier).
-
-			create_file_name(Timestamp, Solutie, FC, NumeFisier):-
-				conversie_nr_atom(Timestamp, Time),
-				conversie_nr_atom(FC, FcNr),
-				atom_concat( 'demonstratie[', Time, DemTime),
-				atom_concat( DemTime, '][', DemTimeParanteze ),
-				atom_concat( DemTimeParanteze, Solutie, DemTimeSol),
-				atom_concat( DemTimeSol, '][', DemTimeSolParan),
-				atom_concat( DemTimeSolParan, FcNr, DemTimeSolFc),
-				atom_concat( DemTimeSolFc, '].txt', NumeFisier).
-				
-				conversie_nr_atom(Nr,Atom):-
-					number_chars(Nr,Lchr),
-					atom_chars(Atom,Lchr).	
-	
-% --------------- Scrie in fisier -------------------------------------------
+	write('|__________________________'),nl.
 	
 cum([]) :- nl,write('Cum ce? '),nl,
 	citeste_linie(Linie),nl,
-	transforma_scop(Scop,Linie), cum(Scop),
-	write_in_file(Linie).
+	transforma_scop(Scop,Linie), cum(Scop).
 
 cum(L) :- transforma_scop(Scop,L), cum(Scop).
 
@@ -531,8 +564,6 @@ cum(Scop) :-
 	append(L,[a,fost,derivat,cu,ajutorul,'regulilor:'|Reguli1],LL),
 	scrie_lista_cu_spatiu(LL),
 	afis_reguli(Reguli),fail.
-
-	lista_float_int([],[]).
 		
 	lista_float_int([Regula|Reguli],[Regula1|Reguli1]):-
 		(Regula \== utiliz,
@@ -540,8 +571,9 @@ cum(Scop) :-
 		Regula ==utiliz, Regula1=Regula),
 		lista_float_int(Reguli,Reguli1).
 
+	lista_float_int([],[]).
+
 	transforma_scop(av(A,da),[A]) :- !.
-	%transforma_scop(not av(A,da), [nu,A]) :- !.
 	transforma_scop(av(A,nu), [nu,A]) :- !.
 	transforma_scop(av(A,V),[A,este,V]).
 		
@@ -554,18 +586,31 @@ cum(Scop) :-
 		afis_regula(N) :-
 			regula(N, premise(Lista_premise), concluzie(Scop,FC)),
 			NR is integer(N),
-			write('|\n'),
-			scrie_lista_fara_spatiu(['| regula@',NR]),
-			write('| lista_premise@(\n'),
+			 write('| \n'),
+			format('| regula@ ~d~n',[NR]),
+			 write('| lista_premise@ ( \n'),
 			scrie_lista_premise(Lista_premise),
-			scrie_lista_fara_spatiu(['| concluzie@']),
-			transforma_concluzie(Scop,Scop_tr),
+			 write('| concluzie@ ( '),
+			transforma_concluzie(Scop,Concluzie),
+			scrie_lista_fara_spatiu(Concluzie),
 			FC1 is integer(FC),
-			append(['|     ('],Scop_tr,L1),
-			append(L1,[' , fc@'],L2),
-			append(L2,[FC1],L3),
-			append(L3,['@)'],Concluzie),
-			scrie_lista_fara_spatiu(Concluzie).
+			format(', fc@ ~d @ )~n',[FC1]).
+
+			scrie_lista_premise([H|T]) :-
+				transforma_premisa(H,H_tr),
+				write('|'), spatii(4), scrie_lista_fara_spatiu(H_tr), nl,
+				scrie_lista_premise(T).
+
+			scrie_lista_premise([]) :- write('| )\n').
+
+				transforma_premisa(av(A,da),['@ ',A,' @']) :- !.
+				transforma_premisa(av(A,nu), ['@! ',A,' @']) :- !.
+				transforma_premisa(av(A,V),[A,' @ ',V,' @ ']).
+
+				transforma_concluzie(av(A,da),['@ ',A]) :- !.
+				transforma_concluzie(av(A,nu), ['@! ',A]) :- !.
+				transforma_concluzie(av(A,V),[A,' @','= ',V]).
+
 
 		premisele(N) :-
 			regula(N, premise(Lista_premise), _),
@@ -577,89 +622,26 @@ cum(Scop) :-
 				cum_premise(X).
 cum(_).
 
-/*--------------------------------------------------------------------------------
+/*--------------------------------------------------------------------------------*
  * 		   IESIRE SISTEM
  *--------------------------------------------------------------------------------*/
-executa([exit]):-!.
+executa1([exit]):-!.
 
-
-/*--------------------------------------------------------------------------------
+/*--------------------------------------------------------------------------------*
  * 		   EROARE 
  *--------------------------------------------------------------------------------*/
-executa([_|_]) :- write('-X- Comanda incorecta -X-'),nl.
-	
-	
-%_____________________________________________________________________________________________________________________________________________
+executa1([_|_]) :- write('-X- Comanda incorecta -X-'),nl.
+
+% _____________________________________________________________________________________________________________________________________________	
+% _____________________________________________________________________________________________________________________________________________
+% XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 
 
-scrie_lista_premise([]) :- write('| )\n').
 
-scrie_lista_premise([H|T]) :-
-	transforma_premisa(H,H_tr),
-	write('|'), spatii(5), scrie_lista_fara_spatiu(H_tr),
-	scrie_lista_premise(T).
-
-
-transforma_premisa(av(A,da),['@',A,'@']) :- !.
-%transforma_premisa(not av(A,da), ['@!',A,'@']) :- !.
-transforma_premisa(av(A,nu), ['@!',A,'@']) :- !.
-transforma_premisa(av(A,V),[A,'@',V,'@']).
-
-transforma_concluzie(av(A,da),['@',A]) :- !.
-%transforma_concluzie(not av(A,da), ['@!',A]) :- !.
-transforma_concluzie(av(A,nu), ['@!',A]) :- !.
-transforma_concluzie(av(A,V),[A,'@','=',V]).
-
-
-
-% APARUT FIINDCA NU SE MAI ADAUGA SEPARAT ATRIBUTELE BOOLEENE
-/*assert_fapt(Atr,[nu,fc,FC]) :-
-	!,NFC is -FC, asserta( fapt(av(Atr,da),NFC,[utiliz]) ).*/
-
-assert_fapt(Atr,[Val,fc,FC]) :-
-	!,asserta( fapt(av(Atr,Val),FC,[utiliz]) ).
-
-%pentru raspunsul nu_conteaza adaugam fapte pentru toate optiunile atributului
-assert_fapt(Atr,[Val1|RestValori]) :-
-	!,asserta( fapt(av(Atr,Val1),100,[utiliz]) ),
-	assert_fapt(Atr,RestValori).
-
-% APARUT FIINDCA NU SE MAI ADAUGA SEPARAT ATRIBUTELE BOOLEENE
-/*assert_fapt(Atr,[nu]) :-
-	asserta( fapt(av(Atr,da),-100,[utiliz])).*/
-
-assert_fapt(_,[]).
-
-
-/*det_val_fc([nu],da,-100).
-
-det_val_fc([nu,FC],da,NFC) :- NFC is -FC.
-
-det_val_fc([nu,fc,FC],da,NFC) :- NFC is -FC.
-
-det_val_fc([Val,FC],Val,FC).
-
-det_val_fc([Val,fc,FC],Val,FC).
-
-det_val_fc([Val],Val,100).*/
-
-        
-afis_istorie([]) :-nl.
-
-afis_istorie([scop(X)|T]) :-
-	write('|\n'),scrie_lista_cu_spatiu(['|','-->',scopul,este,X]),!,
-	afis_istorie(T).
-
-afis_istorie([N|T]) :-
-	afis_regula(N),!,afis_istorie(T).
-
-
-
-
-/*--------------------------------------------------------------------------------
- * 		   FUNCTII "GLOBALE" 
+/*--------------------------------------------------------------------------------*
+ * 		   			FUNCTII "GLOBALE" 											  *
  *--------------------------------------------------------------------------------*/
 
 spatii(0).
@@ -668,7 +650,7 @@ spatii(N):- N > 0, write(' '), N1 is N-1, spatii(N1).
 scrie_lista_cu_spatiu([]):-nl.
 scrie_lista_cu_spatiu([H|T]) :- write(H), spatii(1), scrie_lista_cu_spatiu(T).
 
-scrie_lista_fara_spatiu([]):-nl.
+scrie_lista_fara_spatiu([]).
 scrie_lista_fara_spatiu([H|T]) :- write(H), scrie_lista_fara_spatiu(T).
 
 scrie_lista_optiuni([H|[]]) :- write(H).
@@ -690,14 +672,13 @@ citeste_cuvant(-1,end_of_file,-1):-!.
 % ------------ 2. CARACTER ACCEPTAT
 citeste_cuvant(Caracter,Cuvant,Caracter1) :-   
 	caracter_cuvant(Caracter),!, 
-	name(Cuvant, [Caracter]),get_code(Caracter1).
+	name(Cuvant, [Caracter]),
+	get_code(Caracter1).
 	
 % ------------ 3. CAND DA DE UN NUMAR
 citeste_cuvant(Caracter, Numar, Caracter1) :-
 	caracter_numar(Caracter),!, /*nu citeste negative sau cu virgula*/
 	citeste_tot_numarul(Caracter, Numar, Caracter1).
- /*daca ii dai 123abc citeste nr 123 si abc e urmatorul cuvant*/
- /*daca ii dai abc123 citeste cuvantul abc123 */
 
 % ---- CITESTE TOATE CIFRELE
 citeste_tot_numarul(Caracter,Numar,Caracter1):-
@@ -711,8 +692,8 @@ determina_lista(Lista,Caracter1):-
 		determina_lista(Lista1,Caracter1),
 		append([Caracter],Lista1,Lista)
 	; 
-		Lista=[],
-		Caracter1=Caracter
+		Lista = [],
+		Caracter1 = Caracter
 	).
  
 % ---- TRANSFORMA LISTA DE CIFRE IN NUMAR
@@ -720,8 +701,10 @@ transforma_lista_numar([],0).
 
 transforma_lista_numar([H|T],N):-
 	transforma_lista_numar(T,NR), 
-	lungime(T,L), Aux is exp(10,L),
-	HH is H-48,N is HH*Aux+NR.
+	lungime(T,L), 
+	Aux is exp(10,L),
+	HH is H-48,
+	N is HH*Aux+NR.
 
 lungime([],0).
 lungime([_|T],L) :- lungime(T,L1), L is L1+1.
@@ -730,15 +713,19 @@ lungime([_|T],L) :- lungime(T,L1), L is L1+1.
 citeste_cuvant(Caracter,Cuvant,Caracter1) :-
 	Caracter == 39,!, % 39 este codul ASCII pt apostrof
 	pana_la_urmatorul_apostrof(Lista_caractere),
-	L=[Caracter|Lista_caractere],
-	name(Cuvant, L),get_code(Caracter1).
+	%L = [Caracter|Lista_caractere],
+	%name(Cuvant, L),
+	name(Cuvant, Lista_caractere),
+	get_code(Caracter1).
 
 pana_la_urmatorul_apostrof(Lista_caractere):-
 	get_code(Caracter),
-	(Caracter == 39,Lista_caractere=[Caracter];
-	Caracter \== 39,
-	pana_la_urmatorul_apostrof(Lista_caractere1),
-	Lista_caractere=[Caracter|Lista_caractere1]).
+	(Caracter == 39 -> 
+		Lista_caractere = []
+	;
+		pana_la_urmatorul_apostrof(Lista_caractere1),
+		Lista_caractere = [Caracter|Lista_caractere1]
+	).
 
 % ------------ 5. CITIRE CUVANT NORMAL
 citeste_cuvant(Caracter,Cuvant,Caracter1) :- /*dai Iasi si retine iasi */
@@ -760,37 +747,20 @@ citeste_intreg_cuvantul(Lista_Caractere,Caracter1) :-
 			Caracter_modificat is Caracter
 		),
 		citeste_intreg_cuvantul(Lista_Caractere1, Caracter1),
-		Lista_Caractere=[Caracter_modificat|Lista_Caractere1]
+		Lista_Caractere = [Caracter_modificat|Lista_Caractere1]
 	;
-		Lista_Caractere=[], 
-		Caracter1=Caracter
-	).
-
-% ------------ 6. CITIRE CUVANT /////
-/*citeste_cuvant(Caracter,Cuvant,Caracter1) :- /* ///// */
-	/*caracter_slash(Caracter),!,                                           
-	citeste_intreg_slash(Caractere,Caracter1),
-	name(Cuvant,[Caracter|Caractere]).
-
-citeste_intreg_slash(Lista_Caractere,Caracter1) :-
-	get_code(Caracter),
-	(caracter_slash(Caracter) ->
-		citeste_intreg_slash(Lista_Caractere1, Caracter1),
-		Lista_Caractere = [Caracter|Lista_Caractere1]
-	; 
 		Lista_Caractere = [], 
 		Caracter1 = Caracter
-	).*/
+	).
 
-% ------------ 7. ORICE ALTCEVA ESTE IGNORAT
-citeste_cuvant(_,Cuvant,Caracter1) :- get_code(Caracter),       
+% ------------ 6. ORICE ALTCEVA ESTE IGNORAT
+citeste_cuvant(_,Cuvant,Caracter1) :- 
+	get_code(Caracter),       
 	citeste_cuvant(Caracter,Cuvant,Caracter1).
- 
 
-% ------ CARACTERE ACCEPTATE   !   (   )   ,   .   ?   =   @   |   [  ]  ;  /
-caracter_cuvant(C):-member(C,[33, 40, 41, 44, 46, 63, 61, 64, 124,91,93,59,47]).
 
-%caracter_slash(C):- C = 47. % /
+% ------ CARACTERE ACCEPTATE   !   (   )   ,   .   ?   =   @   |    [   ]   ;   /
+caracter_cuvant(C):-member(C,[33, 40, 41, 44, 46, 63, 61, 64, 124, 91, 93, 59, 47]).
 
 caracter_numar(C):- C >= 48,C =< 57. % [0,9]
 
@@ -807,23 +777,5 @@ caractere_in_interiorul_unui_cuvant(C):-
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-[valoare scop --> ursus_cooler]
-[descriere --> 'Bere fara alcool cu aroma racoritoare de lamaie']
-[imagine solutie --> cale_relativa_imagine3]
-[proprietati --> cu_alcool = nu ; 
-                 cu_aroma = da ;
-                 aroma = lamaie ]
 
-/////////////////////
-
-[valoare scop --> mikkeller_organic_shandy]
-[descriere --> 'Bere artizanala cu alcool scazut si aroma de lamaie']
-[imagine solutie --> cale_relativa_imagine4]
-[proprietati --> cu_alcool = da ; 
-                 nivel_alcool = scazut ;
-                 tip_bere = artizanala ;
-                 cu_aroma = da ;
-                 aroma = lamaie]
-
-/////////////////////
 */

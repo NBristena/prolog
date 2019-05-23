@@ -1,14 +1,14 @@
 [valoare scop --> warsteiner_fresh]
-[descriere --> 'Bere clasica fara alcool']
-[imagine solutie --> cale_relativa_imagine1]
+[descriere --> 'bere clasica fara alcool'
+[imagine solutie --> 'cale_relativa_imagine1']
 [proprietati --> cu_alcool = nu ; 
                  cu_aroma = nu ]
 
 /////////////////////
 
 [valoare scop --> john_crabbie_ginger_beer]
-[descriere --> 'Bere fara alcool cu aroma de ghimbir']
-[imagine solutie --> cale_relativa_imagine2]
+[descriere --> 'Bere fara alcool cu aroma de ghimbir'
+[imagine solutie --> 'cale_relativa_imagine2']
 [proprietati --> cu_alcool = nu ; 
                  cu_aroma = da ;
                  aroma = ghimbir ]
@@ -16,8 +16,8 @@
 /////////////////////
 
 [valoare scop --> ursus_cooler]
-[descriere --> 'Bere fara alcool cu aroma racoritoare de lamaie']
-[imagine solutie --> cale_relativa_imagine3]
+[descriere --> 'Bere fara alcool cu aroma racoritoare de lamaie'
+[imagine solutie --> 'imagini_solutii/ursus_cooler.jpg']
 [proprietati --> cu_alcool = nu ; 
                  cu_aroma = da ;
                  aroma = lamaie ]
@@ -25,12 +25,186 @@
 /////////////////////
 
 [valoare scop --> mikkeller_organic_shandy]
-[descriere --> 'Bere artizanala cu alcool scazut si aroma de lamaie']
-[imagine solutie --> cale_relativa_imagine4]
+[descriere --> 'Bere artizanala cu alcool scazut si aroma de lamaie'
+[imagine solutie --> 'cale_relativa_imagine4']
 [proprietati --> cu_alcool = da ; 
                  nivel_alcool = scazut ;
                  tip_bere = artizanala ;
                  cu_aroma = da ;
-                 aroma = lamaie]
+                 aroma = lamaie ]
+
+/////////////////////
+
+
+
+
+[valoare scop --> bud_light_orange]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> yuengling_traditional_lager]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> abita_purple_haze]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> westbrook_gose]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> birra_morretti_siciliana]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> desperados]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> zaganu_adonis]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> nenea_iancu]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> timisoreana]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> grolsch]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> vanilla_pumpkin_beer]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> lost_nation_gose]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> new_belgium_frambozen]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> hanssens_oude_kriek]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> mikkeller_beer_geek_vanilla_shake]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> pohjala_cocobanger]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> mikkeller_brunch_of_nuts]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> kasteel_rouge]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
+
+/////////////////////
+
+[valoare scop --> de_dolle_dulle_teve]
+[descriere --> '...'
+[imagine solutie --> cale_relativa_imagine]
+[proprietati --> prop1 = val1 ; 
+                 prop2 = val2 ;
+                 prop3 = val3 ]
 
 /////////////////////
