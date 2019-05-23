@@ -456,11 +456,58 @@ executa([cum|L]) :-
 	write(' ____________________'),nl,
 	write('|     Demonstratie:'),nl,
 	cum(L),!,
-	write('|____________________'),nl.
+	write('|____________________'),nl,
+	write_in_file(L).
+	
+	
+% --------------- Scrie in fisier -------------------------------------------
+	/**/
+	write_in_file([]).
+	write_in_file(L):- 
+		isdirector('output_sys_exp'),
+		generate_file_name(L,NumeFisier),
+		atom_concat( 'output_sys_exp/', NumeFisier, Path),
+		telling(Curent_input),
+		tell(Path),
+			write(' ____________________'),nl,
+			write('|     Demonstratie:'),nl,
+			cum(L),!,
+			write('|____________________'),nl,
+		told,
+		tell(Curent_input).
+		
+		isdirector(Nume):-
+			directory_exists(Nume) -> 
+				true; 
+				make_directory(Nume).
+		
+		generate_file_name(L,NumeFisier):-
+			transforma_scop(Scop,L),
+			fapt(Scop,FC,_),
+			Scop =..[_,bere,Solutie],
+			now(Timestamp),
+			create_file_name(Timestamp,Solutie,FC,NumeFisier).
+
+			create_file_name(Timestamp, Solutie, FC, NumeFisier):-
+				conversie_nr_atom(Timestamp, Time),
+				conversie_nr_atom(FC, FcNr),
+				atom_concat( 'demonstratie[', Time, DemTime),
+				atom_concat( DemTime, '][', DemTimeParanteze ),
+				atom_concat( DemTimeParanteze, Solutie, DemTimeSol),
+				atom_concat( DemTimeSol, '][', DemTimeSolParan),
+				atom_concat( DemTimeSolParan, FcNr, DemTimeSolFc),
+				atom_concat( DemTimeSolFc, '].txt', NumeFisier).
+				
+				conversie_nr_atom(Nr,Atom):-
+					number_chars(Nr,Lchr),
+					atom_chars(Atom,Lchr).	
+	
+% --------------- Scrie in fisier -------------------------------------------
 	
 cum([]) :- nl,write('Cum ce? '),nl,
 	citeste_linie(Linie),nl,
-	transforma_scop(Scop,Linie), cum(Scop).
+	transforma_scop(Scop,Linie), cum(Scop),
+	write_in_file(Linie).
 
 cum(L) :- transforma_scop(Scop,L), cum(Scop).
 
