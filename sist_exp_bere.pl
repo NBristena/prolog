@@ -38,7 +38,7 @@ not(_).
 meniu_principal :-
 	retractall(deja_intrebat(_)),
 	retractall(fapt(_,_,_)),
-	executa1([incarca]),
+	once(executa1([incarca])),
 	repeat,
 	nl, write('     Meniu principal: '),
 	nl, write(' (Incarca | Consulta | Afiseaza_fapte | Cum.. | Exit)'),
@@ -117,11 +117,11 @@ citeste_separator(N) :- get_code(_), N1 is N-1, citeste_separator(N1).
 % -------------- PROCESARE PROPOZITII ------------------------------------------
 proceseaza([end_of_file]) :- !.
 proceseaza(L) :- trad(R,L,[]),
-	(R == intrebare(Atr,M,P) ->
+	(R = intrebare(Atr,M,P) ->
 		append(M,[nu_stiu,nu_conteaza],Mfinal),
 		assertz(intrebare(Atr,Mfinal,P))
 	;
-		(R == solutie(Nume,Desc,Img,Props) ->
+		(R = solutie(Nume,Desc,Img,Props) ->
 			atom_codes(Img,ImgCodes),
 			append([39],ImgCodes,ApostrofImg),
 			append(ApostrofImg,[39],ApostrofImgApostrof),
@@ -401,7 +401,7 @@ meniu_secundar :-
 
 %%
 executa2([afis_alfabetic]) :- scop(Atr), 
-	write(' __________________________________'),nl,
+	write(' _________________________________________'),nl,
 	write('|'),nl,
 	write('| [ Afisare in ordine alfabetica ] -----------------------'),nl,
 	write('|'),nl,
@@ -414,7 +414,7 @@ executa2([afis_alfabetic]) :- scop(Atr),
 		solutie(Val,Desc,Img,_),
 		FC >= 20, scrie_scop(av(Atr,Val),FC,Desc,Img),nl,fail.
 
-	afiseaza_scop_secundar(_) :- write('|__________________________________'),nl,!.
+	afiseaza_scop_secundar(_) :- write('|_________________________________________'),nl,!.
 
 %%
 executa2([afis_prop]) :- scop(Atr),
@@ -503,13 +503,13 @@ executa1([afiseaza_fapte]) :-
 	afisare_fapte,!.
 	
 	afisare_fapte :-
-		write(' ________________________________________'), nl,
+		write(' _________________________________________'), nl,
 		write('|'), nl,
 		write('| Fapte existente in baza de cunostinte:'), nl,
 		write('|'), nl,
 		write('|  (Atribut,Valoare) ~ FactorCertitudine'), nl,
 		write('|'), nl, listeaza_fapte,
-		write('|________________________________________'),
+		write('|_________________________________________'),
 		nl,nl.
 
 		listeaza_fapte:-  
@@ -532,10 +532,10 @@ executa1([afiseaza_fapte]) :-
  * 		   CUM S-A AJUNS LA O CONCLUZIE - ISTORIC
  *--------------------------------------------------------------------------------*/
 executa1([cum|L]) :- 
-	write(' __________________________'),nl,
+	write(' _________________________________________'),nl,
 	write('|     Demonstratie:'),nl,
 	cum(L),!,
-	write('|__________________________'),nl.
+	write('|_________________________________________'),nl.
 	
 cum([]) :- nl,write('Cum ce? '),nl,
 	citeste_linie(Linie),nl,
@@ -777,5 +777,6 @@ caractere_in_interiorul_unui_cuvant(C):-
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
 
 */

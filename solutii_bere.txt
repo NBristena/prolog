@@ -1,6 +1,6 @@
 [valoare scop --> warsteiner_fresh]
 [descriere --> 'bere clasica fara alcool'
-[imagine solutie --> 'cale_relativa_imagine1']
+[imagine solutie --> 'imagini_solutii/warsteiner_fresh.jpg']
 [proprietati --> cu_alcool = nu ; 
                  cu_aroma = nu ]
 
@@ -8,7 +8,7 @@
 
 [valoare scop --> john_crabbie_ginger_beer]
 [descriere --> 'Bere fara alcool cu aroma de ghimbir'
-[imagine solutie --> 'cale_relativa_imagine2']
+[imagine solutie --> 'imagini_solutii/john_crabbie_ginger_beer.jpg']
 [proprietati --> cu_alcool = nu ; 
                  cu_aroma = da ;
                  aroma = ghimbir ]
@@ -26,7 +26,7 @@
 
 [valoare scop --> mikkeller_organic_shandy]
 [descriere --> 'Bere artizanala cu alcool scazut si aroma de lamaie'
-[imagine solutie --> 'cale_relativa_imagine4']
+[imagine solutie --> 'imagini_solutii/mikkeller_organic_shandy.jpg']
 [proprietati --> cu_alcool = da ; 
                  nivel_alcool = scazut ;
                  tip_bere = artizanala ;
@@ -38,9 +38,10 @@
 
 
 
+
 [valoare scop --> bud_light_orange]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/bud_light_orange.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -48,8 +49,8 @@
 /////////////////////
 
 [valoare scop --> yuengling_traditional_lager]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/yuengling_traditional_lager.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -57,8 +58,8 @@
 /////////////////////
 
 [valoare scop --> abita_purple_haze]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/abita_purple_haze.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -66,8 +67,8 @@
 /////////////////////
 
 [valoare scop --> westbrook_gose]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/westbrook_gose.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -75,8 +76,8 @@
 /////////////////////
 
 [valoare scop --> birra_morretti_siciliana]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/birra_morretti_siciliana.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -84,8 +85,8 @@
 /////////////////////
 
 [valoare scop --> desperados]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/desperados.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -93,8 +94,8 @@
 /////////////////////
 
 [valoare scop --> zaganu_adonis]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/zaganu_adonis.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -102,8 +103,8 @@
 /////////////////////
 
 [valoare scop --> nenea_iancu]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/nenea_iancu.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -111,8 +112,8 @@
 /////////////////////
 
 [valoare scop --> timisoreana]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/timisoreana.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -120,8 +121,8 @@
 /////////////////////
 
 [valoare scop --> grolsch]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/grolsch.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -129,8 +130,8 @@
 /////////////////////
 
 [valoare scop --> vanilla_pumpkin_beer]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/vanilla_pumpkin_beer.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -138,8 +139,8 @@
 /////////////////////
 
 [valoare scop --> lost_nation_gose]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/lost_nation_gose.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -147,8 +148,8 @@
 /////////////////////
 
 [valoare scop --> new_belgium_frambozen]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/new_belgium_frambozen.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -156,8 +157,8 @@
 /////////////////////
 
 [valoare scop --> hanssens_oude_kriek]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/hanssens_oude_kriek.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -165,8 +166,8 @@
 /////////////////////
 
 [valoare scop --> mikkeller_beer_geek_vanilla_shake]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/mikkeller_beer_geek_vanilla_shake.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -174,8 +175,8 @@
 /////////////////////
 
 [valoare scop --> pohjala_cocobanger]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/pohjala_cocobanger.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -183,8 +184,8 @@
 /////////////////////
 
 [valoare scop --> mikkeller_brunch_of_nuts]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/mikkeller_brunch_of_nuts.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -192,8 +193,8 @@
 /////////////////////
 
 [valoare scop --> kasteel_rouge]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/kasteel_rouge.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
@@ -201,8 +202,8 @@
 /////////////////////
 
 [valoare scop --> de_dolle_dulle_teve]
-[descriere --> '...'
-[imagine solutie --> cale_relativa_imagine]
+[descriere --> '- insert descriere here -'
+[imagine solutie --> 'imagini_solutii/de_dolle_dulle_teve.jpg']
 [proprietati --> prop1 = val1 ; 
                  prop2 = val2 ;
                  prop3 = val3 ]
