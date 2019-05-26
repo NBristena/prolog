@@ -19,10 +19,73 @@ curata_bc :- current_predicate(P), abolish(P,[force(true)]), fail ; true.
 :- dynamic fapt/3.
 :- dynamic deja_intrebat/1.
 :- dynamic solutie/4.
+:- dynamic stats/3.
 
 :- op(900,fy,not).
 not(P) :- P, !, fail.
 not(_).
+
+
+
+
+
+
+
+
+
+cap_tabel :- 
+	nl,
+	format(' ~`_t~47|~n',[]),
+	format('|~t|~7+ ~t|~30+ ~t|~10+~n',[]),
+	format('|~t~a~t|~7+ ~t~a~t|~30+ ~t~a~t|~10+~n',[frecv, numeSolutie, medieFC]),
+	% format('|~t~21+|~t~20+|~t~20+|~n',[]),
+	% format('|~`=t~21+|~`=t~20+|~`=t~20+|~n',[]).
+	format('|~`_t|~7+~`_t|~30+~`_t|~10+~n',[]),
+	format('|~t|~7+ ~t|~30+ ~t|~10+~n',[]).
+
+	% format('|~t~20+ | ~t~20+ | ~t~20+ |~n',[]),
+	% format('|~t~a~t~20+ | ~t~a~t~20+ | ~t~a~t~20+ |',[multa, muie, ciocan]),nl,
+	% format('|~`_t~21+|~`_t~20+|~`_t~20+|~n',[]).
+
+	%  nl,nl,write('my moods while working for this project: ')
+	% nl,write('<(^.^)>'),
+	% nl,write(':) c:'),
+	
+	% nl,write('cei 3 frati bucalati:'),
+	% nl,write(' . .'),
+	% nl,write(' OuO'),
+	% nl,write(' ..     ..'),
+	% nl,write('OuO     OuO'),
+	% nl,nl,
+	% nl,write('cei 3 frati batuti de soarta: (PS ala e un zambet)'),
+	% nl,write('  . .'),
+	% nl,write('   U '),
+	% nl,write('..    ..'),
+	% nl,write('U      U'),
+	% nl,nl,
+	
+	% format('|~t~20+ | ~t~20+ | ~t~20+ |~n',[]),
+	% format('|~t~a~t~20+ | ~t~a~t~20+ | ~t~a~t~20+ |',[numeSolutie, nrAparitii, medieFactor]),nl,
+	% format('|~`_t~21+|~`_t~20+|~`_t~20+|~n',[]),
+	% nl.
+
+
+rand_tabel([stats(F,S,FCM)]):- 
+	format('|~t~d~t|~7+ ~t~a~t|~30+ ~t~d~t|~10+~n',[F, S, FCM]),
+	format('|~`_t|~7+~`_t|~30+~`_t|~10+~n',[]).
+
+rand_tabel([stats(F,S,FCM)|Rest]):-
+	format('|~t~d~t|~7+ ~t~a~t|~30+ ~t~d~t|~10+~n',[F, S, FCM]),
+	format('|~`-t|~7+~`-t|~30+~`-t|~10+~n',[]),
+	rand_tabel(Rest).
+
+
+
+
+
+
+
+
 
 
 
@@ -86,8 +149,8 @@ incarca(2,F) :-
 	retractall(solutie(_,_,_,_)),
 	see(F), incarca_fisier, seen, !.
 
-incarca(_,F) :-
-	retractall(statistica(_,_,_)),
+incarca(3,F) :-
+	retractall(stats(_,_,_)),
 	see(F), incarca_fisier, seen, !.
 
 	incarca_fisier :-
@@ -128,25 +191,19 @@ proceseaza(L) :- trad(R,L,[]),
 			atom_codes(CaleImg,ApostrofImgApostrof),
 			assertz(solutie(Nume,Desc,CaleImg,Props))
 		;
-			assertz(R)
-		)		
+			(R = stat(Bere,FC) ->
+				(retract(stats(Frecv0,Bere,FCinit)) ->
+					Frecv is Frecv0 + 1,
+					FCM is (FCinit + FC) / Frecv,
+					assertz(stats(Frecv,Bere,FCM))
+				;
+					assertz(stats(1,Bere,FC))
+				)
+			;
+				assertz(R)
+			)
+		)
 	), !.
-
-/*   SOLUTII   */
-trad( solutie(Nume,Desc,Img,Props) ) --> sol(Nume), descriere(Desc), imagine(Img), lista_proprietati(Props), ['/'].
-	
-	sol(Nume) --> ['[',valoare,scop,'-->',Nume,']'].
-
-	descriere(Desc) --> ['[',descriere,'-->',Desc].
-
-	imagine(Img) --> ['[',imagine,solutie,'-->',Img,']'].
-
-	lista_proprietati(Props) --> ['[',proprietati,'-->'], lista_de_proprietati(Props).
-		 
-		lista_de_proprietati([Prop]) -->  propoz_props(Prop),[']'].
-		lista_de_proprietati([Prima|Celelalte]) --> propoz_props(Prima),[';'], lista_de_proprietati(Celelalte).
-			
-			propoz_props(av(Atr,Val)) --> [Atr,'=',Val].
 			
 /*   SCOP   */
 trad(scop(X)) --> [scop,'@',X].
@@ -182,6 +239,26 @@ trad( regula(N,premise(Daca),concluzie(Atunci,F)) ) --> identificator(N), daca(D
 		propoz_atunci(av(Atr,Val)) --> [Atr,'@','=',Val].
 		propoz_atunci(av(Atr,da)) --> ['@',Atr].
 		propoz_atunci(av(Atr,nu)) --> ['@','!',Atr].
+
+/*   SOLUTII   */
+trad( solutie(Nume,Desc,Img,Props) ) --> sol(Nume), descriere(Desc), imagine(Img), lista_proprietati(Props), ['/'].
+	
+	sol(Nume) --> ['[',valoare,scop,'-->',Nume,']'].
+
+	descriere(Desc) --> ['[',descriere,'-->',Desc].
+
+	imagine(Img) --> ['[',imagine,solutie,'-->',Img,']'].
+
+	lista_proprietati(Props) --> ['[',proprietati,'-->'], lista_de_proprietati(Props).
+		 
+		lista_de_proprietati([Prop]) -->  propoz_props(Prop),[']'].
+		lista_de_proprietati([Prima|Celelalte]) --> propoz_props(Prima),[';'], lista_de_proprietati(Celelalte).
+			
+			propoz_props(av(Atr,Val)) --> [Atr,'=',Val].
+
+
+/*   Statistici   */
+trad( stat(Bere,FC) ) --> [_,'-->',Bere,fc,FC].
 
 /*   ERORI   */
 trad('-X- Eroare la parsare -X-'-L,L,_).
@@ -228,16 +305,16 @@ executa1([consulta]) :-
 determina(Atr) :- realizare_scop(av(Atr,_),_,[scop(Atr)]),!.
 determina(_).
 
-%--# NOT FAPT 
+%---#NOT FAPT 
 	realizare_scop(not Scop, Not_FC, Istorie) :-
 		realizare_scop(Scop, FC, Istorie),
 		Not_FC is - FC, !.
 
-%--# FAPT EXISTENT
+%---#FAPT EXISTENT
 	realizare_scop(Scop, FC, _) :-
 		fapt(Scop, FC, _), !.
 
-%--# FAPT DE INTREBAT
+%---#FAPT DE INTREBAT
 	realizare_scop(Scop, FC, Istorie) :-
 		pot_interoga(Scop, Istorie),
 		!,realizare_scop(Scop, FC, Istorie).
@@ -264,24 +341,26 @@ determina(_).
 					)
 				).
 
-%   AFISEAZA OPTIUNI
+%	%AFISEAZA OPTIUNI
 				citeste_opt(Optiuni) :-
-					write('( '), scrie_lista_optiuni(Optiuni).
+					write('( '),
+					scrie_lista_optiuni(Optiuni),
+					write(' )').
 
-%		CITESTE RASPUNS
+%		%CITESTE RASPUNS
 					de_la_utiliz(X, Istorie, Lista_opt) :-
 						repeat,
 							nl,write(': '), 
 							citeste_linie(X),
 						proceseaza_raspuns(X, Istorie, Lista_opt).
 
-%			PROCESEAZA RASPUNS
+%			%PROCESEAZA RASPUNS
 						proceseaza_raspuns([de_ce], Istorie, _) :- nl,
 							write('|   Pentru regula:'),nl,
 							afis_istorie(Istorie), !, fail.
 
 							afis_istorie([]) :-nl.
-							afis_istorie([scop(X)|T]) :- write('|\n'),scrie_lista_cu_spatiu(['|','-->',scopul,este,X]),nl,!, afis_istorie(T).
+							afis_istorie([scop(X)|T]) :- write('|\n'),scrie_lista_cu_spatiu(['|','-->',scopul,este,X]),!, afis_istorie(T).
 							afis_istorie([N|T]) :- afis_regula(N),!,afis_istorie(T).
 						
 						proceseaza_raspuns([X], _, Lista_opt):-
@@ -290,7 +369,7 @@ determina(_).
 						proceseaza_raspuns([X, fc, FC], _, Lista_opt):-
 							member(X, Lista_opt), float(FC).
 
-%				ADAUGA RASPUNS IN KB
+%				%ADAUGA RASPUNS IN KB
 							assert_fapt(Atr,[Val,fc,FC]) :- !,
 								asserta( fapt(av(Atr,Val),FC,[utiliz]) ).
 
@@ -302,7 +381,7 @@ determina(_).
 							assert_fapt(_,[]).
 
 			
-%--# FAPT DE DEMONSTRAT
+%---#FAPT DE DEMONSTRAT
 	realizare_scop(Scop, FC_curent, Istorie) :-
 		fg(Scop, FC_curent, Istorie).
 		
@@ -314,7 +393,7 @@ determina(_).
 			FC_curent == 100,!.
 		fg(Scop, FC, _) :- fapt(Scop, FC, _).
 			
-%	DEMONSTREAZA PREMISE			
+% 	DEMONSTREAZA PREMISE			
 			demonstreaza(N, ListaPremise, Val_finala, Istorie) :-
 				dem(ListaPremise, 100, Val_finala, [N|Istorie]),!.
 
@@ -368,12 +447,14 @@ afiseaza_scop(Atr) :-nl,
 %############################
 	fail.
 
-afiseaza_scop(_) :- meniu_secundar,!.
+afiseaza_scop(_) :- 
+	% write('|_________________________________________'),nl,
+	meniu_secundar,!.
 
 
 scrie_scop(av(_,Val),FC,Desc,Img) :-
 	FC1 is integer(FC),
-	format('|~n',[]),
+	 write('|\n'),
 	format('| -> ~a  ####  avand fc egal cu ~d ~n|~n',[Val,FC1]),
 	format('|   [~a]',[Img]), nl,
 	format('|    Despre solutie: ~a',[Desc]), nl, 
@@ -477,35 +558,49 @@ executa2([afis_prop]) :- scop(Atr),
 %%
 executa2([exit]):-
 	numara_solutii(NrSol,SolList),
-	cere_date(NrSol,SolList),!.
+	(NrSol > 1 ->
+		cere_date(2,SolList)
+	;
+		(NrSol =:= 1 ->
+			cere_date(1,SolList)
+		;
+			true
+		)
+	),
+	%thanks,
+	!.
 
 	numara_solutii(NrSol,SolList):- scop(Atr), 
 		findall(Sol,(fapt(av(Atr,Sol),FC,_), FC > 19),List), 
 		append(List,[niciuna],SolList), 
 		length(List,NrSol).
 
-	cere_date(NrSol,SolList) :- ( NrSol =:= 0 -> Rasp = fail ;
-		(NrSol =:= 1 ->
-			nl, write(' Alegi berea pe care ti-am recomandat-o?'),
-			nl, write('( da | nu )'),nl,
-			repeat,
-			citeste_linie([DaNu]),
-			(DaNu = da ->
-				[Rasp|_] = SolList,!
-			;
-				(DaNu = nu ->
-					Rasp = niciuna,!
-				;
-					fail
-				)
-			)
+	cere_date(NrSol,SolList) :- 
+		(NrSol =:= 0 -> 
+			Rasp = fail 
 		;
-			nl, write(' Ce bere alegi din cele recomandate?'),
-			nl, citeste_opt(SolList),nl,
-			repeat,
-			citeste_linie([Rasp]),
-			member(Rasp,SolList)
-		)),
+			(NrSol =:= 1 ->
+				nl, write(' Alegi berea pe care ti-am recomandat-o?'),
+				nl, write('( da | nu )'),nl,
+				repeat,
+				citeste_linie([DaNu]),
+				(DaNu = da ->
+					[Rasp|_] = SolList,!
+				;
+					(DaNu = nu ->
+						Rasp = niciuna,!
+					;
+						fail
+					)
+				)
+			;
+				nl, write(' Ce bere alegi din cele recomandate?'),
+				nl, citeste_opt(SolList),nl,
+				repeat,
+				citeste_linie([Rasp]),
+				member(Rasp,SolList)
+			)
+		),
 		((Rasp \== niciuna , Rasp \== fail) ->
 			scop(Atr),
 			fapt(av(Atr,Rasp),FC,_)
@@ -517,7 +612,7 @@ executa2([exit]):-
 		scrie_rez_in_fisier(Rasp,FC):- 
 			open('rezultate.txt',append,Stream),
 			datime(datime(Y,M,D,H,Mi,S)),
-			format(Stream,'~d_~d_~d_~d_~d_~d~t~19| --> ~a fc ~d.~n',[Y,M,D,H,Mi,S,Rasp,FC]),		
+			format(Stream,'dt~d_~d_~d_~d_~d_~d~t~21| --> ~a fc ~d.~n',[Y,M,D,H,Mi,S,Rasp,FC]),		
 			close(Stream),!.
 
 %%
@@ -611,11 +706,11 @@ cum(Scop) :-
 		afis_regula(N) :-
 			regula(N, premise(Lista_premise), concluzie(Scop,FC)),
 			NR is integer(N),
-			format('|~n',[]),
+			 write('| \n'),
 			format('| regula@ ~d~n',[NR]),
-			format('| lista_premise@ (~n',[]), 
+			 write('| lista_premise@ ( \n'),
 			scrie_lista_premise(Lista_premise),
-			format('| concluzie@ ( ',[]),
+			 write('| concluzie@ ( '),
 			transforma_concluzie(Scop,Concluzie),
 			scrie_lista_fara_spatiu(Concluzie),
 			FC1 is integer(FC),
@@ -661,6 +756,18 @@ executa1([_|_]) :- write('-X- Comanda incorecta -X-'),nl.
 % _____________________________________________________________________________________________________________________________________________
 % XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
+statistica :- incarca(3,'rezultate.txt'),
+	cap_tabel,
+	setof(stats(F,S,FC),(stats(F,S,FC)),L1),
+	reverse(L1,L2),
+	rand_tabel(L2).
+
+
+
+
+
+
+
 
 
 
@@ -672,14 +779,14 @@ executa1([_|_]) :- write('-X- Comanda incorecta -X-'),nl.
 spatii(0).
 spatii(N):- N > 0, write(' '), N1 is N-1, spatii(N1).
 
-scrie_lista_cu_spatiu([]).
+scrie_lista_cu_spatiu([]):-nl.
 scrie_lista_cu_spatiu([H|T]) :- write(H), spatii(1), scrie_lista_cu_spatiu(T).
 
 scrie_lista_fara_spatiu([]).
 scrie_lista_fara_spatiu([H|T]) :- write(H), scrie_lista_fara_spatiu(T).
 
-scrie_lista_optiuni([H|[]]) :- format('~a )',[H]).
-scrie_lista_optiuni([H|T]) :- format('~a | ',[H]), scrie_lista_optiuni(T).
+scrie_lista_optiuni([H|[]]) :- write(H).
+scrie_lista_optiuni([H|T]) :- write(H), write(' | '), scrie_lista_optiuni(T).
 
 
 % --------------------- CITIRE -------------------------------------------------
@@ -802,11 +909,12 @@ caractere_in_interiorul_unui_cuvant(C):-
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-Nr dati cand SE da fail
-Nr dati cand user nu a fost multumit
-
 ----------------------------------
 NumeSOl | NrAparitii | MedieFactor
 ----------------------------------
+Nr dati cand SE da fail
+Nr dati cand user nu a fost multumit
+
+
 
 */
