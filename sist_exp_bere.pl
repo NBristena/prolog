@@ -29,68 +29,6 @@ not(_).
 
 
 
-
-
-
-
-cap_tabel :- 
-	nl,
-	format(' ~`_t~47|~n',[]),
-	format('|~t|~7+ ~t|~30+ ~t|~10+~n',[]),
-	format('|~t~a~t|~7+ ~t~a~t|~30+ ~t~a~t|~10+~n',[frecv, numeSolutie, medieFC]),
-	% format('|~t~21+|~t~20+|~t~20+|~n',[]),
-	% format('|~`=t~21+|~`=t~20+|~`=t~20+|~n',[]).
-	format('|~`_t|~7+~`_t|~30+~`_t|~10+~n',[]),
-	format('|~t|~7+ ~t|~30+ ~t|~10+~n',[]).
-
-	% format('|~t~20+ | ~t~20+ | ~t~20+ |~n',[]),
-	% format('|~t~a~t~20+ | ~t~a~t~20+ | ~t~a~t~20+ |',[multa, muie, ciocan]),nl,
-	% format('|~`_t~21+|~`_t~20+|~`_t~20+|~n',[]).
-
-	%  nl,nl,write('my moods while working for this project: ')
-	% nl,write('<(^.^)>'),
-	% nl,write(':) c:'),
-	
-	% nl,write('cei 3 frati bucalati:'),
-	% nl,write(' . .'),
-	% nl,write(' OuO'),
-	% nl,write(' ..     ..'),
-	% nl,write('OuO     OuO'),
-	% nl,nl,
-	% nl,write('cei 3 frati batuti de soarta: (PS ala e un zambet)'),
-	% nl,write('  . .'),
-	% nl,write('   U '),
-	% nl,write('..    ..'),
-	% nl,write('U      U'),
-	% nl,nl,
-	
-	% format('|~t~20+ | ~t~20+ | ~t~20+ |~n',[]),
-	% format('|~t~a~t~20+ | ~t~a~t~20+ | ~t~a~t~20+ |',[numeSolutie, nrAparitii, medieFactor]),nl,
-	% format('|~`_t~21+|~`_t~20+|~`_t~20+|~n',[]),
-	% nl.
-
-
-rand_tabel([stats(F,S,FCM)]):- 
-	format('|~t~d~t|~7+ ~t~a~t|~30+ ~t~d~t|~10+~n',[F, S, FCM]),
-	format('|~`_t|~7+~`_t|~30+~`_t|~10+~n',[]).
-
-rand_tabel([stats(F,S,FCM)|Rest]):-
-	format('|~t~d~t|~7+ ~t~a~t|~30+ ~t~d~t|~10+~n',[F, S, FCM]),
-	format('|~`-t|~7+~`-t|~30+~`-t|~10+~n',[]),
-	rand_tabel(Rest).
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*--------------------------------------------------------------------------------
  * 		   PORNIRE SISTEM
  *--------------------------------------------------------------------------------*/
@@ -756,13 +694,67 @@ executa1([_|_]) :- write('-X- Comanda incorecta -X-'),nl.
 % _____________________________________________________________________________________________________________________________________________
 % XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-statistica :- incarca(3,'rezultate.txt'),
-	cap_tabel,
-	setof(stats(F,S,FC),(stats(F,S,FC)),L1),
-	reverse(L1,L2),
-	rand_tabel(L2).
+statistica :- incarca(3,'rezultate.txt'),nl,nl,
+	write('Statistica solutii:\n'),
+	(setof(stats(Frecv,Sol,FCM),(stats(Frecv,Sol,FCM), FCM =\= 0),L1) ->
+		cap_tabel_sol,
+		reverse(L1,L2),
+		rand_tabel_sol(L2)
+	;
+		write('\n\tNu exista destule date.\n\n')
+	),
+	write('Statistica probleme:\n\n'),
+	(setof(stats(S,F),FC^(stats(F,S,FC), FC =:= 0),L) ->
+		cap_tabel_probl,
+		rand_tabel_probl(L)
+	;
+		write('\tNu exista destule date.\n\n')
+	).
+
+cap_tabel_sol :- 
+	format(' ~`_t~51|~n',[]),
+	format('|~t|~9+~t~33+|~t|~10+~n',[]),
+	format('|~t~a~t|~9+~t~a~t~33+|~t~a~t|~10+~n',[frecv, 'Nume solutie', 'FC mediu']),
+	format('|~`_t|~9+~`_t~33+|~`_t|~10+~n',[]),
+	format('|~t|~9+~t~33+|~t|~10+~n',[]).
+
+rand_tabel_sol([stats(Frecv,Sol,FCM)]):- 
+	format('|~t~d~t|~9+~t~a~t~33+|~t~d~t|~10+~n',[Frecv, Sol, FCM]),
+	format('|~`_t|~9+~`_t~33+|~`_t|~10+~n~n',[]).
+
+rand_tabel_sol([stats(Frecv,Sol,FCM)|Rest]):-
+	format('|~t~d~t|~9+~t~a~t~33+|~t~d~t|~10+~n',[Frecv, Sol, FCM]),
+	format('|~`-t+~9+~`-t~33++~`-t|~10+~n',[]),
+	rand_tabel_sol(Rest).
 
 
+cap_tabel_probl :- 
+	format('!~`^t!~9+~`^t~42+!~n',[]),
+	format('!~t~a~t!~9+~t~a~t~42+!~n',[frecv, 'Tip problema']),
+	format('!~t!~9+~t~42+!~n',[]),
+	format('!~`^t!~9+~`^t~42+!~n',[]).
+
+rand_tabel_probl([stats(Sol,Frecv)]):- rand(Sol,Frecv),nl.
+
+rand_tabel_probl([stats(Sol,Frecv)|Rest]):- rand(Sol,Frecv), rand_tabel_probl(Rest).
+
+rand(Sol,Frecv):-
+	( Sol == niciuna ->
+		format('!~t~d~t!~9+ ~tClientii nu au fost de acord cu~t ~42+!~n',[Frecv]),
+		(Frecv > 1 ->
+			format('!~t dati~t!~9+ ~tsolutia recomandata de sistem~t ~42+!~n',[])
+		;
+			format('!~t data~t!~9+ ~tsolutia recomandata de sistem~t ~42+!~n',[])
+		)
+	;
+		format('!~t~d~t!~9+ ~tSistemul nu a gasit nicio solutie~t ~42+!~n',[Frecv]),
+		(Frecv > 1 ->
+			format('!~t dati~t!~9+ ~tpentru preferintele unui client~t ~42+!~n',[])
+		;
+			format('!~t data~t!~9+ ~tpentru preferintele unui client~t ~42+!~n',[])
+		)
+	),
+	format('+~`-t+~9+~`-t~42++~n',[]).
 
 
 
@@ -914,6 +906,18 @@ NumeSOl | NrAparitii | MedieFactor
 ----------------------------------
 Nr dati cand SE da fail
 Nr dati cand user nu a fost multumit
+
+
+dt2019_5_26_5_2_54    --> fail fc 0.
+dt2019_5_26_5_3_8     --> warsteiner_fresh fc 90.
+dt2019_5_26_5_3_18    --> niciuna fc 0.
+dt2019_5_26_5_7_24    --> fail fc 0.
+dt2019_5_26_5_9_26    --> nenea_iancu fc 40.
+dt2019_5_26_5_10_42   --> grolsch fc 28.
+dt2019_5_26_5_11_34   --> ursus_cooler fc 80.
+dt2019_5_26_5_12_4    --> warsteiner_fresh fc 80.
+dt2019_5_26_5_12_35   --> ursus_cooler fc 81.
+dt2019_5_26_14_11_13  --> warsteiner_fresh fc 90.
 
 
 
