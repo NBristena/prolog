@@ -1,10 +1,3 @@
-/* SET WORKING DIRECTORY
-:-use_module(library(file_systems),[]),file_systems:current_directory(_,'D:/0. Facultate/[3] Sem II/Expert/Proiect').
-
-:- use_module(library(file_systems),[]),file_systems:current_directory(_,'D:/Faculate/Anul_III/Info/Sistema expert - PROLOG/Proiect/Proiect - propriuzis/prolog_last_stage').
-*/
-
-
 /*-----------------------------------------------------------------------------
  * 		INITIALIZARE
  *-----------------------------------------------------------------------------*/
@@ -26,19 +19,24 @@ curata_bc :- current_predicate(P), abolish(P,[force(true)]), fail ; true.
 :- dynamic fapt/3.
 :- dynamic deja_intrebat/1.
 :- dynamic solutie/4.
+:- dynamic stats/3.
 
 :- op(900,fy,not).
 not(P) :- P, !, fail.
 not(_).
 
 
+
+
+
 /*--------------------------------------------------------------------------------
  * 		   PORNIRE SISTEM
  *--------------------------------------------------------------------------------*/
-meniu_principal :-
+go :-
 	retractall(deja_intrebat(_)),
 	retractall(fapt(_,_,_)),
-	once(executa1([incarca])),
+	once(executa1([incarca])),nl,nl,
+	executa1([consulta]),
 	repeat,
 	nl, write('     Meniu principal: '),
 	nl, write(' (Incarca | Consulta | Afiseaza_fapte | Cum.. | Exit)'),
@@ -66,17 +64,16 @@ citeste_linie([Cuv|Lista_cuv]) :-
 /*--------------------------------------------------------------------------------
  * 		   INCARCA SI PROCESEAZA REGULI
  *--------------------------------------------------------------------------------*/
-executa1([incarca]) :- incarca(1), incarca(2), !, write('~*~ Fisier incarcat cu succes ~*~'),nl.
+executa1([incarca]) :- incarca, !, write('~*~ Fisier incarcat cu succes ~*~'),nl.
 	
-incarca(1) :- F = 'reguli_bere.txt',
+incarca :- 
+	F1 = 'reguli_bere.txt',
 	%write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
-	file_exists(F), !, incarca(1,F).
-
-incarca(2) :- F = 'solutii_bere.txt',
-	%write('Introduceti numele fisierului intre apostroafe, urmat de un punct:'),nl, read(F),
-	file_exists(F), !, incarca(2,F).
+	file_exists(F1), !, incarca(1,F1),
+	F2 = 'solutii_bere.txt',
+	file_exists(F2), !, incarca(2,F2).
 	
-incarca(_) :- nl,
+incarca :- nl,
 	write(' !X! Fisierul introdus nu exista !X!'),nl,nl,
 	incarca.
 
@@ -88,6 +85,10 @@ incarca(1,F) :-
 	
 incarca(2,F) :-
 	retractall(solutie(_,_,_,_)),
+	see(F), incarca_fisier, seen, !.
+
+incarca(3,F) :-
+	retractall(stats(_,_,_)),
 	see(F), incarca_fisier, seen, !.
 
 	incarca_fisier :-
@@ -128,30 +129,19 @@ proceseaza(L) :- trad(R,L,[]),
 			atom_codes(CaleImg,ApostrofImgApostrof),
 			assertz(solutie(Nume,Desc,CaleImg,Props))
 		;
-			assertz(R)
-		)		
+			(R = stat(Bere,FC) ->
+				(retract(stats(Frecv0,Bere,FCinit)) ->
+					Frecv is Frecv0 + 1,
+					FCM is (FCinit + FC) / Frecv,
+					assertz(stats(Frecv,Bere,FCM))
+				;
+					assertz(stats(1,Bere,FC))
+				)
+			;
+				assertz(R)
+			)
+		)
 	), !.
-
-/*   SOLUTII   */
-trad( solutie(Nume,Desc,Img,Props) ) --> 
-	sol(Nume), 
-	descriere(Desc), 
-	imagine(Img),
-	lista_proprietati(Props),
-	['/'].
-	
-	sol(Nume) --> ['[',valoare,scop,'-->',Nume,']'].
-
-	descriere(Desc) --> ['[',descriere,'-->',Desc].
-
-	imagine(Img) --> ['[',imagine,solutie,'-->',Img,']'].
-
-	lista_proprietati(Props) --> ['[',proprietati,'-->'], lista_de_proprietati(Props).
-		 
-		lista_de_proprietati([Prop]) -->  propoz_props(Prop),[']'].
-		lista_de_proprietati([Prima|Celelalte]) --> propoz_props(Prima),[';'], lista_de_proprietati(Celelalte).
-			
-			propoz_props(av(Atr,Val)) --> [Atr,'=',Val].
 			
 /*   SCOP   */
 trad(scop(X)) --> [scop,'@',X].
@@ -188,6 +178,26 @@ trad( regula(N,premise(Daca),concluzie(Atunci,F)) ) --> identificator(N), daca(D
 		propoz_atunci(av(Atr,da)) --> ['@',Atr].
 		propoz_atunci(av(Atr,nu)) --> ['@','!',Atr].
 
+/*   SOLUTII   */
+trad( solutie(Nume,Desc,Img,Props) ) --> sol(Nume), descriere(Desc), imagine(Img), lista_proprietati(Props), ['/'].
+	
+	sol(Nume) --> ['[',valoare,scop,'-->',Nume,']'].
+
+	descriere(Desc) --> ['[',descriere,'-->',Desc].
+
+	imagine(Img) --> ['[',imagine,solutie,'-->',Img,']'].
+
+	lista_proprietati(Props) --> ['[',proprietati,'-->'], lista_de_proprietati(Props).
+		 
+		lista_de_proprietati([Prop]) -->  propoz_props(Prop),[']'].
+		lista_de_proprietati([Prima|Celelalte]) --> propoz_props(Prima),[';'], lista_de_proprietati(Celelalte).
+			
+			propoz_props(av(Atr,Val)) --> [Atr,'=',Val].
+
+
+/*   Statistici   */
+trad( stat(Bere,FC) ) --> [_,'-->',Bere,fc,FC].
+
 /*   ERORI   */
 trad('-X- Eroare la parsare -X-'-L,L,_).
 
@@ -207,18 +217,17 @@ executa1([consulta]) :-
 		scop(Atr),
 		determina(Atr), 
 		
-			write(' _________________________________________'),nl,
-			write('|'),nl,
+			 write(' ___________________________________________\n|\n'),
 		( fapt(av(Atr,_),_,_) -> 
 			ord_sol_fc(Atr),
-			format('| Optiunile dumneavoastra pentru ~a sunt:',[Atr]), nl, 
-			write('|'), nl,
-			write('| ***************************'), 
+			format('|   Optiunile dumneavoastra pentru ~a sunt:~n',[Atr]),
+			format('|~`_t~14|',[]), 
 			afiseaza_scop(Atr)
 		;
-			format('| Nu avem nicio ~a care sa se',[Atr]),nl,
-			write('| potriveasca cu preferintele tale.'),nl,
-			write('|_________________________________________'),nl
+			format('|   Nu avem nicio ~a care sa se~n',[Atr]),
+			format('|   potriveasca cu preferintele tale.~n',[]),
+			 write('|___________________________________________\n'),
+			cere_date(0,_)
 		),
 		fail.
 		
@@ -376,84 +385,21 @@ afiseaza_scop(Atr) :-nl,
 %############################
 	fail.
 
-afiseaza_scop(_) :- write('|_________________________________________'),nl,
+afiseaza_scop(_) :- 
+	% write('|_________________________________________'),nl,
 	meniu_secundar,!.
 
 
 scrie_scop(av(_,Val),FC,Desc,Img) :-
 	FC1 is integer(FC),
+	 write('|\n'),
 	format('| -> ~a  ####  avand fc egal cu ~d ~n|~n',[Val,FC1]),
 	format('|   [~a]',[Img]), nl,
 	format('|    Despre solutie: ~a',[Desc]), nl, 
-	 write('| ***************************').
-
-
-
-% --------------------------------------------------------------------------
-% --------------- MENIU SECUNDAR -------------------------------------------
-% --------------------------------------------------------------------------
-meniu_secundar :- 
-	repeat,
-	nl, write('     Meniu secundar: '),
-	nl, write(' (Afis_alfabetic | Afis_prop | M_anterior)'),
-	nl, citeste_linie([H]),nl,
-	executa2([H]), H == m_anterior.
-
-%%
-executa2([afis_alfabetic]) :- scop(Atr), 
-	write(' _________________________________________'),nl,
-	write('|'),nl,
-	write('| [ Afisare in ordine alfabetica ] -----------------------'),nl,
-	write('|'),nl,
-	write('| ***************************'),
-	ord_sol_alfa(Atr),
-	afiseaza_scop_secundar(Atr), !.
-
-	afiseaza_scop_secundar(Atr) :-nl,
-		fapt(av(Atr,Val),FC,_),
-		solutie(Val,Desc,Img,_),
-		FC >= 20, scrie_scop(av(Atr,Val),FC,Desc,Img),nl,fail.
-
-	afiseaza_scop_secundar(_) :- write('|_________________________________________'),nl,!.
-
-%%
-executa2([afis_prop]) :- scop(Atr),
-	write(' _________________________________________'),nl,
-	write('|'),nl,
-	write('| [ Lista de proprietati ale solutiilor ] ----------------'),nl,
-	write('|'),nl,
-	write('| ***************************'),
-	afiseaza_props(Atr), !.
-
-	afiseaza_props(Atr) :-nl,
-		fapt(av(Atr,Val),FC,_),
-		solutie(Val,_,_,Props),
-		FC >= 20, scrie_scop(av(Atr,Val),FC,Props),nl,fail.
-
-	afiseaza_props(_) :- write('|_________________________________________'),nl,!.
-
-		scrie_scop(av(_,Val),FC,Props) :-
-			FC1 is integer(FC),
-			format('| -> ~a  ####  avand fc egal cu ~d',[Val,FC1]),nl,
-			write('| Proprietati: '), 
-			scrie_props(Props),nl,
-			write('| ***************************').
-
-			scrie_props([av(A1,V1)|Props]):-
-				nl, format('|     ~a : ~a;',[A1,V1]),
-				scrie_props(Props).
-			scrie_props([]).
-
-%%
-executa2([m_anterior]):-!.
-
-%%
-executa2([_]) :- write('-X- Comanda incorecta -X-'),nl,!.
+	 write('|___________________________________________').
 
 
 /****************************************************************************
- ****************************************************************************
- ****************************************************************************
  *--------------- Scrie demonstratie in fisier -----------------------------*/
 	scrie_dem_in_fisier(Scop):- 
 		ia_director('demonstratii_solutii'),
@@ -494,6 +440,122 @@ executa2([_]) :- write('-X- Comanda incorecta -X-'),nl,!.
 
 
 
+% --------------------------------------------------------------------------
+% --------------- MENIU SECUNDAR -------------------------------------------
+% --------------------------------------------------------------------------
+meniu_secundar :- 
+	repeat,
+	nl, write('     Meniu secundar: '),
+	nl, write(' (Afis_alfabetic | Afis_prop | Exit)'),
+	nl, citeste_linie([H]),nl,
+	executa2([H]), H == exit.
+
+%%
+executa2([afis_alfabetic]) :- scop(Atr), 
+	write(' ___________________________________________'),nl,
+	write('|'),nl,
+	write('| [ Afisare in ordine alfabetica ] '),nl,
+	write('|  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'), 
+	ord_sol_alfa(Atr),
+	afiseaza_scop_secundar(Atr), !.
+
+	afiseaza_scop_secundar(Atr) :-nl,
+		fapt(av(Atr,Val),FC,_),
+		solutie(Val,Desc,Img,_),
+		FC >= 20, scrie_scop(av(Atr,Val),FC,Desc,Img),nl,fail.
+
+	afiseaza_scop_secundar(_) :- !.
+
+%%
+executa2([afis_prop]) :- scop(Atr),
+	write(' ___________________________________________'),nl,
+	write('|'),nl,
+	write('| [ Lista de proprietati ale solutiilor ] '),nl,
+	write('|  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'), 
+	afiseaza_props(Atr), !.
+
+	afiseaza_props(Atr) :-nl,
+		fapt(av(Atr,Val),FC,_),
+		solutie(Val,_,_,Props),
+		FC >= 20, scrie_scop(av(Atr,Val),FC,Props),nl,fail.
+
+	afiseaza_props(_) :- !.
+
+		scrie_scop(av(_,Val),FC,Props) :-
+			FC1 is integer(FC),
+			format('|~n| -> ~a  ####  avand fc egal cu ~d',[Val,FC1]),nl,
+			write('| Proprietati: '), 
+			scrie_props(Props),nl,
+			write('|___________________________________________').
+
+			scrie_props([av(A1,V1)|Props]):-
+				nl, format('|     ~a : ~a;',[A1,V1]),
+				scrie_props(Props).
+			scrie_props([]).
+
+%%
+executa2([exit]):-
+	numara_solutii(NrSol,SolList),
+	(NrSol > 1 ->
+		cere_date(2,SolList)
+	;
+		(NrSol =:= 1 ->
+			cere_date(1,SolList)
+		;
+			true
+		)
+	),
+	%thanks,
+	!.
+
+	numara_solutii(NrSol,SolList):- scop(Atr), 
+		findall(Sol,(fapt(av(Atr,Sol),FC,_), FC > 19),List), 
+		append(List,[niciuna],SolList), 
+		length(List,NrSol).
+
+	cere_date(NrSol,SolList) :- 
+		(NrSol =:= 0 -> 
+			Rasp = fail 
+		;
+			(NrSol =:= 1 ->
+				nl, write(' Alegi berea pe care ti-am recomandat-o?'),
+				nl, write('( da | nu )'),nl,
+				repeat,
+				citeste_linie([DaNu]),
+				(DaNu = da ->
+					[Rasp|_] = SolList,!
+				;
+					(DaNu = nu ->
+						Rasp = niciuna,!
+					;
+						fail
+					)
+				)
+			;
+				nl, write(' Ce bere alegi din cele recomandate?'),
+				nl, citeste_opt(SolList),nl,
+				repeat,
+				citeste_linie([Rasp]),
+				member(Rasp,SolList)
+			)
+		),
+		((Rasp \== niciuna , Rasp \== fail) ->
+			scop(Atr),
+			fapt(av(Atr,Rasp),FC,_)
+		;
+			FC = 0
+		),
+		scrie_rez_in_fisier(Rasp,FC),!.
+
+		scrie_rez_in_fisier(Rasp,FC):- 
+			open('rezultate.txt',append,Stream),
+			datime(datime(Y,M,D,H,Mi,S)),
+			format(Stream,'dt~d_~d_~d_~d_~d_~d~t~21| --> ~a fc ~d.~n',[Y,M,D,H,Mi,S,Rasp,FC]),		
+			close(Stream),!.
+
+%%
+executa2([_]) :- write('-X- Comanda incorecta -X-'),nl,!.
+			
 
 
 /*--------------------------------------------------------------------------------
@@ -503,13 +565,13 @@ executa1([afiseaza_fapte]) :-
 	afisare_fapte,!.
 	
 	afisare_fapte :-
-		write(' _________________________________________'), nl,
+		write(' ___________________________________________'), nl,
 		write('|'), nl,
-		write('| Fapte existente in baza de cunostinte:'), nl,
+		write('|  Fapte existente in baza de cunostinte:'), nl,
 		write('|'), nl,
 		write('|  (Atribut,Valoare) ~ FactorCertitudine'), nl,
 		write('|'), nl, listeaza_fapte,
-		write('|_________________________________________'),
+		write('|___________________________________________'),
 		nl,nl.
 
 		listeaza_fapte:-  
@@ -532,10 +594,10 @@ executa1([afiseaza_fapte]) :-
  * 		   CUM S-A AJUNS LA O CONCLUZIE - ISTORIC
  *--------------------------------------------------------------------------------*/
 executa1([cum|L]) :- 
-	write(' _________________________________________'),nl,
+	write(' ___________________________________________'),nl,
 	write('|     Demonstratie:'),nl,
 	cum(L),!,
-	write('|_________________________________________'),nl.
+	write('|___________________________________________'),nl.
 	
 cum([]) :- nl,write('Cum ce? '),nl,
 	citeste_linie(Linie),nl,
@@ -548,10 +610,8 @@ cum(not Scop) :-
 	lista_float_int(Reguli,Reguli1),
 	FC < -20,
 	transforma_scop(not Scop,PG),
-	write('|'),nl,
-	append(['|->'],PG,L),
-	append(L,[a,fost,derivat,cu, ajutorul, 'regulilor:'|Reguli1],LL),
-	scrie_lista_cu_spatiu(LL),
+	format('|~n|-> ',[]), scrie_lista_cu_spatiu(PG),
+	format('a fost derivat cu ajutorul regulilor: ~w~n',[Reguli1]),
 	afis_reguli(Reguli),fail.
 
 cum(Scop) :-
@@ -559,10 +619,8 @@ cum(Scop) :-
 	lista_float_int(Reguli,Reguli1),
 	FC > 20,
 	transforma_scop(Scop,PG),
-	write('|'),nl,
-	append(['|->'],PG,L),
-	append(L,[a,fost,derivat,cu,ajutorul,'regulilor:'|Reguli1],LL),
-	scrie_lista_cu_spatiu(LL),
+	format('|~n|-> ',[]), scrie_lista_cu_spatiu(PG),
+	format('a fost derivat cu ajutorul regulilor: ~w~n',[Reguli1]),
 	afis_reguli(Reguli),fail.
 		
 	lista_float_int([Regula|Reguli],[Regula1|Reguli1]):-
@@ -635,6 +693,72 @@ executa1([_|_]) :- write('-X- Comanda incorecta -X-'),nl.
 % _____________________________________________________________________________________________________________________________________________	
 % _____________________________________________________________________________________________________________________________________________
 % XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+statistica :- incarca(3,'rezultate.txt'),nl,nl,
+	write('Statistica solutii:\n'),
+	(setof(stats(Frecv,Sol,FCM),(stats(Frecv,Sol,FCM), FCM =\= 0),L1) ->
+		cap_tabel_sol,
+		reverse(L1,L2),
+		rand_tabel_sol(L2)
+	;
+		write('\n\tNu exista destule date.\n\n')
+	),
+	write('Statistica probleme:\n\n'),
+	(setof(stats(S,F),FC^(stats(F,S,FC), FC =:= 0),L) ->
+		cap_tabel_probl,
+		rand_tabel_probl(L)
+	;
+		write('\tNu exista destule date.\n\n')
+	).
+
+cap_tabel_sol :- 
+	format(' ~`_t~51|~n',[]),
+	format('|~t|~9+~t~33+|~t|~10+~n',[]),
+	format('|~t~a~t|~9+~t~a~t~33+|~t~a~t|~10+~n',[frecv, 'Nume solutie', 'FC mediu']),
+	format('|~`_t|~9+~`_t~33+|~`_t|~10+~n',[]),
+	format('|~t|~9+~t~33+|~t|~10+~n',[]).
+
+rand_tabel_sol([stats(Frecv,Sol,FCM)]):- 
+	format('|~t~d~t|~9+~t~a~t~33+|~t~d~t|~10+~n',[Frecv, Sol, FCM]),
+	format('|~`_t|~9+~`_t~33+|~`_t|~10+~n~n',[]).
+
+rand_tabel_sol([stats(Frecv,Sol,FCM)|Rest]):-
+	format('|~t~d~t|~9+~t~a~t~33+|~t~d~t|~10+~n',[Frecv, Sol, FCM]),
+	format('|~`-t+~9+~`-t~33++~`-t|~10+~n',[]),
+	rand_tabel_sol(Rest).
+
+
+cap_tabel_probl :- 
+	format('!~`^t!~9+~`^t~42+!~n',[]),
+	format('!~t~a~t!~9+~t~a~t~42+!~n',[frecv, 'Tip problema']),
+	format('!~t!~9+~t~42+!~n',[]),
+	format('!~`^t!~9+~`^t~42+!~n',[]).
+
+rand_tabel_probl([stats(Sol,Frecv)]):- rand(Sol,Frecv),nl.
+
+rand_tabel_probl([stats(Sol,Frecv)|Rest]):- rand(Sol,Frecv), rand_tabel_probl(Rest).
+
+rand(Sol,Frecv):-
+	( Sol == niciuna ->
+		format('!~t~d~t!~9+ ~tClientii nu au fost de acord cu~t ~42+!~n',[Frecv]),
+		(Frecv > 1 ->
+			format('!~t dati~t!~9+ ~tsolutia recomandata de sistem~t ~42+!~n',[])
+		;
+			format('!~t data~t!~9+ ~tsolutia recomandata de sistem~t ~42+!~n',[])
+		)
+	;
+		format('!~t~d~t!~9+ ~tSistemul nu a gasit nicio solutie~t ~42+!~n',[Frecv]),
+		(Frecv > 1 ->
+			format('!~t dati~t!~9+ ~tpentru preferintele unui client~t ~42+!~n',[])
+		;
+			format('!~t data~t!~9+ ~tpentru preferintele unui client~t ~42+!~n',[])
+		)
+	),
+	format('+~`-t+~9+~`-t~42++~n',[]).
+
+
+
+
 
 
 
@@ -777,6 +901,24 @@ caractere_in_interiorul_unui_cuvant(C):-
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+----------------------------------
+NumeSOl | NrAparitii | MedieFactor
+----------------------------------
+Nr dati cand SE da fail
+Nr dati cand user nu a fost multumit
+
+
+dt2019_5_26_5_2_54    --> fail fc 0.
+dt2019_5_26_5_3_8     --> warsteiner_fresh fc 90.
+dt2019_5_26_5_3_18    --> niciuna fc 0.
+dt2019_5_26_5_7_24    --> fail fc 0.
+dt2019_5_26_5_9_26    --> nenea_iancu fc 40.
+dt2019_5_26_5_10_42   --> grolsch fc 28.
+dt2019_5_26_5_11_34   --> ursus_cooler fc 80.
+dt2019_5_26_5_12_4    --> warsteiner_fresh fc 80.
+dt2019_5_26_5_12_35   --> ursus_cooler fc 81.
+dt2019_5_26_14_11_13  --> warsteiner_fresh fc 90.
+
 
 
 */

@@ -1,0 +1,10 @@
+dt2019_5_26_5_2_54    --> fail fc 0.
+dt2019_5_26_5_3_8     --> warsteiner_fresh fc 90.
+dt2019_5_26_5_3_18    --> niciuna fc 0.
+dt2019_5_26_5_7_24    --> fail fc 0.
+dt2019_5_26_5_9_26    --> nenea_iancu fc 40.
+dt2019_5_26_5_10_42   --> grolsch fc 28.
+dt2019_5_26_5_11_34   --> ursus_cooler fc 80.
+dt2019_5_26_5_12_4    --> warsteiner_fresh fc 80.
+dt2019_5_26_5_12_35   --> ursus_cooler fc 81.
+dt2019_5_26_14_11_13  --> warsteiner_fresh fc 90.
