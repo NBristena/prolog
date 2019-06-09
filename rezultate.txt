@@ -8,3 +8,6 @@ dt2019_5_26_5_11_34   --> ursus_cooler fc 80.
 dt2019_5_26_5_12_4    --> warsteiner_fresh fc 80.
 dt2019_5_26_5_12_35   --> ursus_cooler fc 81.
 dt2019_5_26_14_11_13  --> warsteiner_fresh fc 90.
+dt2019_5_31_18_30_0   --> lost_nation_gose fc 50.
+dt2019_5_31_20_0_50   --> warsteiner_fresh fc 90.
+dt2019_5_31_20_1_4    --> niciuna fc 0.

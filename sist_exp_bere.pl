@@ -6,8 +6,8 @@ curata_bc :- current_predicate(P), abolish(P,[force(true)]), fail ; true.
 
 :- discontiguous executa1/1, executa2/1, citeste_cuvant/3, trad/3, realizare_scop/3, interogheaza/4, proceseaza_raspuns/3, cum/1.
 
-:- use_module(library(file_systems),[]),file_systems:current_directory(_,'D:/0. Facultate/[3] Sem II/Expert/Proiect').
-%:- use_module(library(file_systems),[]),file_systems:current_directory(_,'D:/Faculate/Anul_III/Info/Sistema expert - PROLOG/Proiect/Proiect - propriuzis/prolog_last_stage').
+%:- use_module(library(file_systems),[]),file_systems:current_directory(_,'D:/0. Facultate/[3] Sem II/Expert/Proiect').
+:- use_module(library(file_systems),[]),file_systems:current_directory(_,'D:/Faculate/Anul_III/Info/Sistema expert - PROLOG/Proiect/Proiect - propriuzis/BeerAssistant').
 
 :- use_module(library(lists)).
 :- use_module(library(file_systems)).
@@ -78,6 +78,7 @@ incarca :- nl,
 	incarca.
 
 % --------------- INCARCARE FISIERE ---------------------------------------------
+
 incarca(1,F) :-
 	retractall(deja_intrebat(_)), retractall(fapt(_,_,_)),
 	retractall(scop(_)), retractall(regula(_,_,_)), retractall(intrebare(_,_,_)),
@@ -922,3 +923,381 @@ dt2019_5_26_14_11_13  --> warsteiner_fresh fc 90.
 
 
 */
+
+
+/*interfata*/
+
+:-use_module(library(sockets)).
+
+close_all:-current_stream(_,_,S),close(S),fail;true.
+
+curata_bc:-current_predicate(P), abolish(P,[force(true)]), fail;true.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+spatii(Stream,N):-N>0,write(Stream,' '),N1 is N-1, spatii(Stream,N1).
+spatii(_,0).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%aici
+scrie_lista(Stream,[]):-nl(Stream),flush_output(Stream).
+scrie_lista(Stream,[H|T]) :-
+	write(Stream,H), spatii(Stream,1),
+	scrie_lista(Stream,T).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+scopuri_princ(Stream) :-
+	write('a intrat in scopuri_princ'),nl,nl,
+	scop(Atr),determina(Stream,Atr), afiseaza_scop(Stream,Atr),fail.
+
+scopuri_princ(_).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+determina(Stream,Atr) :-
+	write('a intrat in determina'),nl,nl,write(Atr),nl,nl,
+	realizare_scop(Stream,av(Atr,_),_,[scop(Atr)]),!.
+	 
+determina(_,_).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+afiseaza_scop(Stream, Atr) :-
+	nl,fapt(av(Atr,Val),FC,_),
+	FC >= 20,format(Stream,"s(~p este ~p cu fc ~p)",[Atr,Val, FC]),
+	nl(Stream),flush_output(Stream),fail.
+	 
+afiseaza_scop(_,_):-write('a terminat'),nl.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+realizare_scop(Stream,not Scop,Not_FC,Istorie) :-
+	% write('a intrat in realizare_scop1'),nl,nl,
+	realizare_scop(Stream,Scop,FC,Istorie),
+	Not_FC is - FC, !.
+	 
+realizare_scop(_,Scop,FC,_) :-
+	% write('a intrat in realizare_scop2'),nl,nl,
+	fapt(Scop,FC,_), !.
+	 
+realizare_scop(Stream,Scop,FC,Istorie) :-
+	 write('a intrat in realizare_scop3'),nl,nl,write(Scop),nl,
+	pot_interoga(Stream,Scop,Istorie),
+	!,realizare_scop(Stream,Scop,FC,Istorie).
+	 
+realizare_scop(Stream,Scop,FC_curent,Istorie) :-
+	write('a intrat in realizare_scop4'),nl,nl,
+	fg(Stream,Scop,FC_curent,Istorie).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+fg(Stream,Scop,FC_curent,Istorie) :-
+	regula(N, premise(Lista), concluzie(Scop,FC)),
+	format('regula gasita: ~d',[N]),nl,nl,
+	demonstreaza(Stream,N,Lista,FC_premise,Istorie),
+	ajusteaza(FC,FC_premise,FC_nou),
+	actualizeaza(Scop,FC_nou,FC_curent,N),
+	FC_curent == 100,!.
+	 
+	fg(_,Scop,FC,_) :- fapt(Scop,FC,_).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+pot_interoga(Stream,av(Atr,_),Istorie) :-
+	not deja_intrebat(av(Atr,_)),
+	intrebare(Atr,Optiuni,Mesaj),
+	interogheaza(Stream,Atr,Mesaj,Optiuni,Istorie),nl,
+	asserta( deja_intrebat(av(Atr,_)) ).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+scrie_lista_premise(_,[]).
+ 
+scrie_lista_premise(Stream,[H|T]) :-
+    transformare(H,H_tr),
+    spatii(Stream,5),scrie_lista(Stream,H_tr),
+    scrie_lista_premise(Stream,T).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% interogheaza(Stream,Atr,Mesaj,[da,nu],Istorie) :-
+%     !,write(Stream,i(Mesaj)),nl(Stream),flush_output(Stream),
+%     write('\n Intrebare atr boolean\n'),
+%     de_la_utiliz(Stream,X,Istorie,[da,nu]),
+%     det_val_fc(X,Val,FC),
+%     asserta( fapt(av(Atr,Val),FC,[utiliz]) ).
+ 
+%aici
+interogheaza(Stream,Atr,Mesaj,Optiuni,Istorie) :-
+    write('\n Intrebare atr val multiple\n'),
+    write(Stream,i(Mesaj)),nl(Stream),flush_output(Stream),
+	citeste_opt(Stream,Optiuni),
+	de_la_utiliz(Stream,X,Istorie,Optiuni),
+	(X == [nu_conteaza] ->
+		append(Opt,[nu_stiu,nu_conteaza],Optiuni),
+		assert_fapt(Atr, Opt)
+	;
+		(X == [nu_stiu] ->
+			true
+		;
+			assert_fapt(Atr, X)
+		)
+	).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+citeste_opt(Stream,Optiuni) :-
+    append(['('],Optiuni,Opt1),
+    append(Opt1,[')'],Opt),
+    scrie_lista(Stream,Opt).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%aici
+de_la_utiliz(Stream,X,Istorie,Lista_opt) :-
+    repeat,write('astept raspuns\n'),citeste_linie(Stream,X),format('Am citit ~p din optiunile ~p\n',[X,Lista_opt]),
+    proceseaza_raspuns(X,Istorie,Lista_opt), write('gata de la utiliz\n').
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+demonstreaza(Stream,N,ListaPremise,Val_finala,Istorie) :-
+	dem(Stream,ListaPremise,100,Val_finala,[N|Istorie]),!.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+dem(_,[],Val_finala,Val_finala,_).
+ 
+dem(Stream,[H|T],Val_actuala,Val_finala,Istorie) :-
+realizare_scop(Stream,H,FC,Istorie),
+Val_interm is min(Val_actuala,FC),
+Val_interm >= 20,
+dem(Stream,T,Val_interm,Val_finala,Istorie).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+incarca_java :- incarca_java(1,'reguli_bere.txt'),
+				incarca_java(2,'solutii_bere.txt'),
+				incarca_java(3,'rezultate.txt').
+
+incarca_java(1,F) :-
+	retractall(deja_intrebat(_)),retractall(fapt(_,_,_)),
+	retractall(scop(_)),retractall(intrebare(_,_,_)),
+	retractall(regula(_,_,_)),
+	open(F,read,StreamR),incarca_fisier(StreamR),close(StreamR),!.
+
+incarca_java(2,F) :-
+	retractall(solutie(_,_,_,_)),
+	open(F,read,StreamR),incarca_fisier(StreamR),close(StreamR),!.
+
+incarca_java(3,F) :-
+	retractall(stats(_,_,_)),
+	open(F,read,StreamR),incarca_fisier(StreamR),close(StreamR),!.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	 
+	 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+incarca_fisier(StreamR) :-
+ 
+	repeat,citeste_propozitie(StreamR, L),write(L),
+	proceseaza(L),L == [end_of_file],nl.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%stream%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+citeste_linie(Stream,[Cuv|Lista_cuv]) :-
+	get_code(Stream,Car),
+	citeste_cuvant(Stream,Car, Cuv, Car1), 
+	rest_cuvinte_linie(Stream,Car1, Lista_cuv).
+	 
+		  
+	% -1 este codul ASCII pt EOF
+	 
+	rest_cuvinte_linie(_,-1, []):-!.
+		
+	rest_cuvinte_linie(_,Car,[]) :-(Car==13;Car==10), !.
+	 
+	rest_cuvinte_linie(Stream,Car,[Cuv1|Lista_cuv]) :-
+		citeste_cuvant(Stream,Car,Cuv1,Car1),      
+		rest_cuvinte_linie(Stream,Car1,Lista_cuv).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+citeste_propozitie(Stream, [Cuv|Lista_cuv]) :-
+	get_code(Stream, Car),citeste_cuvant(Stream, Car, Cuv, Car1), 
+	rest_cuvinte_propozitie(Stream, Car1, Lista_cuv).
+
+	rest_cuvinte_propozitie(_,-1, []):-!.
+		
+	rest_cuvinte_propozitie(_,Car,[]) :-Car==46, !.
+
+	rest_cuvinte_propozitie(Stream,Char,[]) :- Char == 47, citeste_separator(Stream,19), !. %SLASH
+	
+	rest_cuvinte_propozitie(Stream,Car,[Cuv1|Lista_cuv]) :-
+		citeste_cuvant(Stream,Car,Cuv1,Car1),      
+		rest_cuvinte_propozitie(Stream,Car1,Lista_cuv).
+
+		citeste_separator(_,0):-!.
+		citeste_separator(Stream,N) :- get_code(Stream,_), N1 is N-1, citeste_separator(Stream,N1).
+ 
+citeste_cuvant(_,-1,end_of_file,-1):-!.
+ 
+citeste_cuvant(Stream,Caracter,Cuvant,Caracter1) :-   
+	caracter_cuvant(Caracter),!, 
+	name(Cuvant, [Caracter]),get_code(Stream,Caracter1).
+ 
+citeste_cuvant(Stream,Caracter, Numar, Caracter1) :-
+	caracter_numar(Caracter),!,
+	citeste_tot_numarul(Stream,Caracter, Numar, Caracter1).
+ 
+ 
+citeste_tot_numarul(Stream,Caracter,Numar,Caracter1):-
+	determina_lista(Stream,Lista1,Caracter1),
+	append([Caracter],Lista1,Lista),
+	transforma_lista_numar(Lista,Numar).
+ 
+ 
+determina_lista(Stream,Lista,Caracter1):-
+	get_code(Stream,Caracter), 
+	(caracter_numar(Caracter),
+	determina_lista(Stream,Lista1,Caracter1),
+	append([Caracter],Lista1,Lista); 
+	\+(caracter_numar(Caracter)),
+	Lista=[],Caracter1=Caracter).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+citeste_cuvant(Stream,Caracter,Cuvant,Caracter1) :-
+	Caracter==39,!,
+	pana_la_urmatorul_apostrof(Stream,Lista_caractere),
+	L=[Caracter|Lista_caractere],
+	name(Cuvant, L),get_code(Stream,Caracter1).
+			
+	 
+	pana_la_urmatorul_apostrof(Stream,Lista_caractere):-
+	get_code(Stream,Caracter),
+	(Caracter == 39,Lista_caractere=[Caracter];
+	Caracter\==39,
+	pana_la_urmatorul_apostrof(Stream,Lista_caractere1),
+	Lista_caractere=[Caracter|Lista_caractere1]).
+	 
+	 
+	citeste_cuvant(Stream,Caracter,Cuvant,Caracter1) :-          
+	caractere_in_interiorul_unui_cuvant(Caracter),!,              
+	((Caracter>64,Caracter<91),!,
+	Caracter_modificat is Caracter+32;
+	Caracter_modificat is Caracter),                              
+	citeste_intreg_cuvantul(Stream,Caractere,Caracter1),
+	name(Cuvant,[Caracter_modificat|Caractere]).
+			
+	 
+	citeste_intreg_cuvantul(Stream,Lista_Caractere,Caracter1) :-
+	get_code(Stream,Caracter),
+	(caractere_in_interiorul_unui_cuvant(Caracter),
+	((Caracter>64,Caracter<91),!, 
+	Caracter_modificat is Caracter+32;
+	Caracter_modificat is Caracter),
+	citeste_intreg_cuvantul(Stream,Lista_Caractere1, Caracter1),
+	Lista_Caractere=[Caracter_modificat|Lista_Caractere1]; \+(caractere_in_interiorul_unui_cuvant(Caracter)),
+	Lista_Caractere=[], Caracter1=Caracter).
+	 
+	 
+	citeste_cuvant(Stream,_,Cuvant,Caracter1) :-                
+	get_code(Stream,Caracter),       
+	citeste_cuvant(Stream,Caracter,Cuvant,Caracter1).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+	 /*
+	 
+	 
+	 */
+ 
+
+/*///////*/
+
+ 
+ 
+inceput:-format('Salutare\n',[]),   flush_output,
+                prolog_flag(argv, [PortSocket|_]), %preiau numarul portului, dat ca argument cu -a
+                %portul este atom, nu constanta numerica, asa ca trebuie sa il convertim la numar
+                atom_chars(PortSocket,LCifre),
+                number_chars(Port,LCifre),%transforma lista de cifre in numarul din 
+                socket_client_open(localhost: Port, Stream, [type(text)]),
+                proceseaza_text_primit(Stream,0).
+                
+                
+proceseaza_text_primit(Stream,C):-
+                write(inainte_de_citire),
+                read(Stream,CevaCitit),
+                write(dupa_citire),
+                write(CevaCitit),nl,
+                proceseaza_termen_citit(Stream,CevaCitit,C).
+                
+proceseaza_termen_citit(Stream,salut,C):-
+                write(Stream,'salut, bre!\n'),
+                flush_output(Stream),
+                C1 is C+1,
+                proceseaza_text_primit(Stream,C1).
+                
+proceseaza_termen_citit(Stream,'I hate you!',C):-
+                write(Stream,'I hate you too!!'),
+                flush_output(Stream),
+                C1 is C+1,
+                proceseaza_text_primit(Stream,C1).
+                
+%SETEZ WORKING DIRECTORY
+proceseaza_termen_citit(Stream,director(D),C):- %pentru a seta directorul curent
+                format(Stream,'Locatia curenta de lucru s-a deplasat la adresa ~p.',[D]),
+                format('Locatia curenta de lucru s-a deplasat la adresa ~p',[D]),
+                
+                X=current_directory(_,D),
+                write(X),
+                call(X),
+                nl(Stream),
+                flush_output(Stream),
+                C1 is C+1,
+                proceseaza_text_primit(Stream,C1).              
+                
+                
+proceseaza_termen_citit(Stream, incarca,C):-
+                write(Stream,'Se incearca incarcarea fisierului\n'),
+				flush_output(Stream),
+				incarca_java,
+                C1 is C+1,
+                proceseaza_text_primit(Stream,C1).
+                
+%INCEPE CONSULTAREA
+proceseaza_termen_citit(Stream, comanda(consulta),C):-
+                write(Stream,'Se incepe consultarea\n'),
+                flush_output(Stream),
+                scopuri_princ(Stream),
+                C1 is C+1,
+                proceseaza_text_primit(Stream,C1).
+                
+proceseaza_termen_citit(Stream, X, _):- % cand vrem sa-i spunem "Pa"
+                (X == end_of_file ; X == exit),
+                write(gata),nl,
+                close(Stream).
+                
+            
+proceseaza_termen_citit(Stream, Altceva,C):- %cand ii trimitem sistemului expert o comanda pe care n-o pricepe
+                write(Stream,'ce vrei, neica, de la mine?! '),write(Stream,Altceva),nl(Stream),
+                flush_output(Stream),
+                C1 is C+1,
+                proceseaza_text_primit(Stream,C1).
+ 
