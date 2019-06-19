@@ -225,7 +225,7 @@ executa1([consulta]) :-
 			format('|~`_t~14|',[]), 
 			afiseaza_scop(Atr)
 		;
-			format('|   Nu avem nicio ~a care sa se~n',[Atr]),
+			format('|   Nu am gasit nicio ~a care sa se~n',[Atr]),
 			format('|   potriveasca cu preferintele tale.~n',[]),
 			 write('|___________________________________________\n'),
 			cere_date(0,_)
@@ -902,24 +902,6 @@ caractere_in_interiorul_unui_cuvant(C):-
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-----------------------------------
-NumeSOl | NrAparitii | MedieFactor
-----------------------------------
-Nr dati cand SE da fail
-Nr dati cand user nu a fost multumit
-
-
-dt2019_5_26_5_2_54    --> fail fc 0.
-dt2019_5_26_5_3_8     --> warsteiner_fresh fc 90.
-dt2019_5_26_5_3_18    --> niciuna fc 0.
-dt2019_5_26_5_7_24    --> fail fc 0.
-dt2019_5_26_5_9_26    --> nenea_iancu fc 40.
-dt2019_5_26_5_10_42   --> grolsch fc 28.
-dt2019_5_26_5_11_34   --> ursus_cooler fc 80.
-dt2019_5_26_5_12_4    --> warsteiner_fresh fc 80.
-dt2019_5_26_5_12_35   --> ursus_cooler fc 81.
-dt2019_5_26_14_11_13  --> warsteiner_fresh fc 90.
-
 
 
 */
@@ -950,8 +932,15 @@ scrie_lista(Stream,[H|T]) :-
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 scopuri_princ(Stream) :-
-	write('a intrat in scopuri_princ'),nl,nl,
-	scop(Atr),determina(Stream,Atr), afiseaza_scop(Stream,Atr),fail.
+	%write('a intrat in scopuri_princ'),nl,nl,
+	scop(Atr),
+	determina(Stream,Atr), 
+	(fapt(av(Atr,_),_,_)->
+		afiseaza_scop(Stream,Atr)
+	;
+		afiseaza_scop_nu(Stream,Atr)
+	),
+	fail.
 
 scopuri_princ(_).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -959,7 +948,7 @@ scopuri_princ(_).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 determina(Stream,Atr) :-
-	write('a intrat in determina'),nl,nl,write(Atr),nl,nl,
+	% write('a intrat in determina'),nl,nl,write(Atr),nl,nl,
 	realizare_scop(Stream,av(Atr,_),_,[scop(Atr)]),!.
 	 
 determina(_,_).
@@ -969,10 +958,15 @@ determina(_,_).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 afiseaza_scop(Stream, Atr) :-
 	nl,fapt(av(Atr,Val),FC,_),
-	FC >= 20,format(Stream,"s(~p este ~p cu fc ~p)",[Atr,Val, FC]),
+	FC >= 20,format(Stream,"s(~p cu fc ~p)",[Val, FC]),
 	nl(Stream),flush_output(Stream),fail.
 	 
 afiseaza_scop(_,_):-write('a terminat'),nl.
+
+afiseaza_scop_nu(Stream, Atr) :-
+	nl,format(Stream,"n(Nu am gasit nicio ~p care sa se potriveasca cu preferintele tale)",[Atr]),
+	nl(Stream),flush_output(Stream).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	 
 
@@ -987,12 +981,12 @@ realizare_scop(_,Scop,FC,_) :-
 	fapt(Scop,FC,_), !.
 	 
 realizare_scop(Stream,Scop,FC,Istorie) :-
-	 write('a intrat in realizare_scop3'),nl,nl,write(Scop),nl,
+	% write('a intrat in realizare_scop3'),nl,nl,write(Scop),nl,
 	pot_interoga(Stream,Scop,Istorie),
 	!,realizare_scop(Stream,Scop,FC,Istorie).
 	 
 realizare_scop(Stream,Scop,FC_curent,Istorie) :-
-	write('a intrat in realizare_scop4'),nl,nl,
+	%write('a intrat in realizare_scop4'),nl,nl,
 	fg(Stream,Scop,FC_curent,Istorie).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	 
@@ -1039,7 +1033,8 @@ scrie_lista_premise(Stream,[H|T]) :-
  
 %aici
 interogheaza(Stream,Atr,Mesaj,Optiuni,Istorie) :-
-    write('\n Intrebare atr val multiple\n'),
+	write('\n Intrebare atr val multiple\n'),
+	write(i(Mesaj)),nl, % teste 
     write(Stream,i(Mesaj)),nl(Stream),flush_output(Stream),
 	citeste_opt(Stream,Optiuni),
 	de_la_utiliz(Stream,X,Istorie,Optiuni),
@@ -1060,7 +1055,8 @@ interogheaza(Stream,Atr,Mesaj,Optiuni,Istorie) :-
 citeste_opt(Stream,Optiuni) :-
     append(['('],Optiuni,Opt1),
     append(Opt1,[')'],Opt),
-    scrie_lista(Stream,Opt).
+	scrie_lista(Stream,Opt),
+	write(Opt),nl.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -1191,36 +1187,36 @@ citeste_cuvant(Stream,Caracter,Cuvant,Caracter1) :-
 			
 	 
 	pana_la_urmatorul_apostrof(Stream,Lista_caractere):-
-	get_code(Stream,Caracter),
-	(Caracter == 39,Lista_caractere=[Caracter];
-	Caracter\==39,
-	pana_la_urmatorul_apostrof(Stream,Lista_caractere1),
-	Lista_caractere=[Caracter|Lista_caractere1]).
+		get_code(Stream,Caracter),
+		(Caracter == 39,Lista_caractere=[Caracter];
+		Caracter\==39,
+		pana_la_urmatorul_apostrof(Stream,Lista_caractere1),
+		Lista_caractere=[Caracter|Lista_caractere1]).
 	 
 	 
 	citeste_cuvant(Stream,Caracter,Cuvant,Caracter1) :-          
-	caractere_in_interiorul_unui_cuvant(Caracter),!,              
-	((Caracter>64,Caracter<91),!,
-	Caracter_modificat is Caracter+32;
-	Caracter_modificat is Caracter),                              
-	citeste_intreg_cuvantul(Stream,Caractere,Caracter1),
-	name(Cuvant,[Caracter_modificat|Caractere]).
+		caractere_in_interiorul_unui_cuvant(Caracter),!,              
+		((Caracter>64,Caracter<91),!,
+		Caracter_modificat is Caracter+32;
+		Caracter_modificat is Caracter),                              
+		citeste_intreg_cuvantul(Stream,Caractere,Caracter1),
+		name(Cuvant,[Caracter_modificat|Caractere]).
 			
 	 
 	citeste_intreg_cuvantul(Stream,Lista_Caractere,Caracter1) :-
-	get_code(Stream,Caracter),
-	(caractere_in_interiorul_unui_cuvant(Caracter),
-	((Caracter>64,Caracter<91),!, 
-	Caracter_modificat is Caracter+32;
-	Caracter_modificat is Caracter),
-	citeste_intreg_cuvantul(Stream,Lista_Caractere1, Caracter1),
-	Lista_Caractere=[Caracter_modificat|Lista_Caractere1]; \+(caractere_in_interiorul_unui_cuvant(Caracter)),
-	Lista_Caractere=[], Caracter1=Caracter).
-	 
+		get_code(Stream,Caracter),
+		(caractere_in_interiorul_unui_cuvant(Caracter),
+		((Caracter>64,Caracter<91),!, 
+		Caracter_modificat is Caracter+32;
+		Caracter_modificat is Caracter),
+		citeste_intreg_cuvantul(Stream,Lista_Caractere1, Caracter1),
+		Lista_Caractere=[Caracter_modificat|Lista_Caractere1]; \+(caractere_in_interiorul_unui_cuvant(Caracter)),
+		Lista_Caractere=[], Caracter1=Caracter).
+		
 	 
 	citeste_cuvant(Stream,_,Cuvant,Caracter1) :-                
-	get_code(Stream,Caracter),       
-	citeste_cuvant(Stream,Caracter,Cuvant,Caracter1).
+		get_code(Stream,Caracter),       
+		citeste_cuvant(Stream,Caracter,Cuvant,Caracter1).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 	 /*
 	 
@@ -1240,22 +1236,19 @@ inceput:-format('Salutare\n',[]),   flush_output,
                 socket_client_open(localhost: Port, Stream, [type(text)]),
                 proceseaza_text_primit(Stream,0).
                 
-                
 proceseaza_text_primit(Stream,C):-
                 write(inainte_de_citire),
                 read(Stream,CevaCitit),
                 write(dupa_citire),
                 write(CevaCitit),nl,
                 proceseaza_termen_citit(Stream,CevaCitit,C).
+
+proceseaza_termen_citit(Stream, exit,C):-
+				flush_output(Stream),
+				halt.
                 
 proceseaza_termen_citit(Stream,salut,C):-
                 write(Stream,'salut, bre!\n'),
-                flush_output(Stream),
-                C1 is C+1,
-                proceseaza_text_primit(Stream,C1).
-                
-proceseaza_termen_citit(Stream,'I hate you!',C):-
-                write(Stream,'I hate you too!!'),
                 flush_output(Stream),
                 C1 is C+1,
                 proceseaza_text_primit(Stream,C1).
@@ -1264,7 +1257,6 @@ proceseaza_termen_citit(Stream,'I hate you!',C):-
 proceseaza_termen_citit(Stream,director(D),C):- %pentru a seta directorul curent
                 format(Stream,'Locatia curenta de lucru s-a deplasat la adresa ~p.',[D]),
                 format('Locatia curenta de lucru s-a deplasat la adresa ~p',[D]),
-                
                 X=current_directory(_,D),
                 write(X),
                 call(X),
@@ -1296,8 +1288,12 @@ proceseaza_termen_citit(Stream, X, _):- % cand vrem sa-i spunem "Pa"
                 
             
 proceseaza_termen_citit(Stream, Altceva,C):- %cand ii trimitem sistemului expert o comanda pe care n-o pricepe
-                write(Stream,'ce vrei, neica, de la mine?! '),write(Stream,Altceva),nl(Stream),
+                write(Stream,'----comanda incorecta----'),write(Stream,Altceva),nl(Stream),
                 flush_output(Stream),
                 C1 is C+1,
                 proceseaza_text_primit(Stream,C1).
  
+
+ /*
+
+ */

@@ -20,8 +20,9 @@ public class MainFrame extends javax.swing.JFrame {
 // <editor-fold defaultstate="collapsed" desc="Componente">
     ConnectionSicstus conn;
     QuestionFrame qFrame;
-    public static boolean AFISAT_SOLUTII=false;
-
+    public static boolean AFISAT_SOLUTII = false;
+    public static boolean Reset = false;
+    public static boolean Multiple_Choices=false;
 // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="Constructor"> 
 
@@ -53,7 +54,6 @@ public class MainFrame extends javax.swing.JFrame {
         debug = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(400, 400));
 
         startFrame.setPreferredSize(new java.awt.Dimension(240, 170));
 
@@ -144,6 +144,11 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         // TODO add your handling code here:
+        try {
+            conn.sender.trimiteMesajSicstus("exit");
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.exit(0);
     }//GEN-LAST:event_exitActionPerformed
 
@@ -184,6 +189,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_startActionPerformed
 
+// <editor-fold defaultstate="collapsed" desc="Event Butoane Dinamice">
     private void optionActionPerformed(java.awt.event.ActionEvent evt) {                                           
        
        
@@ -196,6 +202,7 @@ public class MainFrame extends javax.swing.JFrame {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     } 
+// </editor-fold >
     
 // <editor-fold defaultstate="collapsed" desc="Metodele mele"> 
     public javax.swing.JTextArea getDebug(){
@@ -208,7 +215,7 @@ public class MainFrame extends javax.swing.JFrame {
     
     public void setQuestion(String question){
         this.qFrame.questionLabel.setText(
-                "<html><body style='width:100%'>"+question+"</html>"
+                "<html><body style='width:100%; align-content:center; dysplay:flex;'>"+question+"</html>"
         );
         this.qFrame.repaint();
     }
@@ -252,7 +259,6 @@ public class MainFrame extends javax.swing.JFrame {
         JLabel jsol=new JLabel(solutie);
         this.qFrame.add(jsol);
        
-
         this.qFrame.repaint();
         this.qFrame.revalidate();
         //this.revalidate();

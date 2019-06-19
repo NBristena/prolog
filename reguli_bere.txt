@@ -705,7 +705,7 @@ enunt@ 'De obicei preferi alimentele cu ce tip de gust?'
 variante@ (dulce || amar).
 
 intreaba@ conteaza_prospetime
-enunt@ 'Din 2 alimente iti pasa care este mai proaspat, chiar daca nu exista o diferenta de gust?'
+enunt@ 'Te intereseaza prospetimea alimentelor pe care le consumi?'
 variante@ (da || nu).
 
 intreaba@ conteaza_aspect

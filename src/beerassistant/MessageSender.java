@@ -29,7 +29,7 @@ public class MessageSender extends Thread{
     //volatile ca sa fie protejat la accesul concurent al mai multor threaduri
     volatile PipedOutputStream pos=null;
     volatile PipedInputStream pis;
-    volatile boolean gata=false;
+    volatile boolean done=false;
     
 // </editor-fold>
 
@@ -37,7 +37,7 @@ public class MessageSender extends Thread{
     
     public MessageSender(MessageReader _reader) throws IOException{
         reader = _reader;
-        pis = new PipedInputStream();
+        pis = new PipedInputStream(100000);
         setPipedOutputStream(new PipedOutputStream(pis));
 
     }

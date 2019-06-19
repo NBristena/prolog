@@ -31,8 +31,14 @@ public class BeerAssistant {
         ConnectionSicstus conn;
         
         try {            
-            final MainFrame frame=new MainFrame("Exemplu Interfata Prolog");
-            System.out.println("Here i m");
+            final MainFrame frame=new MainFrame("");
+//            System.out.println("Here i m");
+//            String sss ="bere este grolsch cu fc 28 bere este timisoreana cu fc 36 bere este nenea_iancu cu fc 50";
+//        
+//            String[] ssss = sss.split("bere este ");
+//            for (String a : ssss) 
+//                System.out.println(a); 
+            
             conn=new ConnectionSicstus(PORT,frame);
             frame.setConnection(conn);
             frame.setVisible(true);
@@ -40,7 +46,7 @@ public class BeerAssistant {
                 public void windowClosing(WindowEvent e) {
                     try {
                         frame.conn.opresteProlog();                        
-                        frame.conn.sender.gata=true;
+                        frame.conn.sender.done=true;
                     } catch (InterruptedException ex) {
                         Logger.getLogger(BeerAssistant.class.getName()).log(Level.SEVERE, null, ex);
                     }

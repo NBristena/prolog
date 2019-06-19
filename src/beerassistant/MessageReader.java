@@ -86,7 +86,8 @@ public class MessageReader extends Thread {
             
             PipedOutputStream pos=new PipedOutputStream();
             /*leg un pipedInputStream de capatul in care se scrie*/
-            setPipedInputStream(new PipedInputStream(pos));
+            setPipedInputStream(new PipedInputStream(pos,100000));
+            
             
             int chr;
             String str = "";
@@ -95,6 +96,7 @@ public class MessageReader extends Thread {
                 str += (char)chr;
                 if(chr == '\n'){
                     final String sirDeScris = str;
+                    System.out.println(str);
                     str = "";
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
@@ -118,8 +120,14 @@ public class MessageReader extends Thread {
                             //verific daca e solutie
                             if(text.length()>2 && text.charAt(0)=='s'&& text.charAt(1)=='(' && text.charAt(text.length()-1)==')')
                             {
-                                String intrebare=text.substring(2, text.length()-1);
-                                conn.getMainFrame().setSolution(intrebare);
+                                String solutie=text.substring(2, text.length()-1);
+                                conn.getMainFrame().setSolution(solutie);
+                            }
+                            //verific daca nu a gasit solutie
+                            if(text.length()>2 && text.charAt(0)=='n'&& text.charAt(1)=='(' && text.charAt(text.length()-1)==')')
+                            {
+                                String nuSolutie=text.substring(2, text.length()-1);
+                                conn.getMainFrame().setSolution(nuSolutie);
                             }
                         }
 

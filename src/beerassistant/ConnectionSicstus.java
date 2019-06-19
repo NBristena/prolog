@@ -42,7 +42,6 @@ public class ConnectionSicstus {
         
         ServerSocket servs = new ServerSocket(port);
         //Socket sock_s=servs.accept();
-        
         reader = new MessageReader(this,servs);
         reader.start();
         
