@@ -11,6 +11,10 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
+enum State{
+    start,consult,nonSolution,solution,multipleSolutions
+}
+
 /**
  *
  * @author Zorro Andrei

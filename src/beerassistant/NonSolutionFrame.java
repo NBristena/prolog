@@ -71,9 +71,14 @@ public class NonSolutionFrame extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
+// <editor-fold defaultstate="collapsed" desc="Setteri"> 
+    public void setNonSolution(String nonSol){
+        this.nonSolution.setText(nonSol);
+    }
+// </editor-fold> 
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JLabel nonSolution;
-    private javax.swing.JPanel nonSolutionPanel;
+    private javax.swing.JLabel nonSolution;
+    public javax.swing.JPanel nonSolutionPanel;
     // End of variables declaration//GEN-END:variables
 }

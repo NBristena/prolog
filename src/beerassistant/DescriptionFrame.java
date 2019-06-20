@@ -5,6 +5,8 @@
  */
 package beerassistant;
 
+import java.io.IOException;
+
 /**
  *
  * @author Zorro Andrei
@@ -18,6 +20,46 @@ public class DescriptionFrame extends javax.swing.JPanel {
         initComponents();
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Setteri"> 
+    public void setNameLabel(String name){
+        this.nameLabel.setText(name);
+    }
+    
+    public void setDescriptionLabel(String desc){
+        this.descriptionLabel.setText(desc);
+    }
+    
+    public void setPropertiesValuesLabel(String properties){
+        if(properties.trim().equals("") || properties.trim().equals(null)){
+            this.propertiesValuesLabel.setText("");
+        }else{
+            String[] props = properties.split("\\|");
+            String html = "";
+            String property = "";
+            for(String prop : props){
+                prop=prop.trim();
+                if (!prop.equals("")){
+                      property+= "-" + prop +"<br>";
+                }
+            }
+            html += "<html><body>"+property+"</body></html>";
+            this.propertiesValuesLabel.setText(html);
+            this.propertiesValuesLabel.repaint();
+        }
+    }
+    
+    public void setImageLabel(String path) throws IOException{
+        
+        String current = new java.io.File( "." ).getCanonicalPath();
+        
+        String currentPath = current + "\\" + path.replace("/","\\");
+        //System.out.println("Current dir:"+current);
+        
+        this.imageLabel.setIcon(new javax.swing.ImageIcon(currentPath));
+    }
+    
+    
+    // </editor-fold> 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,7 +79,9 @@ public class DescriptionFrame extends javax.swing.JPanel {
         propertiesPanel = new javax.swing.JPanel();
         propertiesLabel = new javax.swing.JLabel();
         propertiesValuesPanel = new javax.swing.JPanel();
+        propertiesValuesLabel = new javax.swing.JLabel();
         imagePanel = new javax.swing.JPanel();
+        imageLabel = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -65,7 +109,7 @@ public class DescriptionFrame extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         nameLabel.setText("nume");
@@ -79,9 +123,9 @@ public class DescriptionFrame extends javax.swing.JPanel {
             .addGroup(generalInfoValuesPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(generalInfoValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nameLabel)
-                    .addComponent(descriptionLabel))
-                .addContainerGap(272, Short.MAX_VALUE))
+                    .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(descriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE))
+                .addContainerGap())
         );
         generalInfoValuesPanelLayout.setVerticalGroup(
             generalInfoValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,8 +151,8 @@ public class DescriptionFrame extends javax.swing.JPanel {
             generalInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generalInfoPanelLayout.createSequentialGroup()
                 .addGroup(generalInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(generalInfoLabelPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(generalInfoValuesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(generalInfoValuesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(generalInfoLabelPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -116,15 +160,19 @@ public class DescriptionFrame extends javax.swing.JPanel {
 
         propertiesLabel.setText("Proprietati");
 
+        propertiesValuesLabel.setText("Loading..");
+
         javax.swing.GroupLayout propertiesValuesPanelLayout = new javax.swing.GroupLayout(propertiesValuesPanel);
         propertiesValuesPanel.setLayout(propertiesValuesPanelLayout);
         propertiesValuesPanelLayout.setHorizontalGroup(
             propertiesValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addComponent(propertiesValuesLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
         );
         propertiesValuesPanelLayout.setVerticalGroup(
             propertiesValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 261, Short.MAX_VALUE)
+            .addGroup(propertiesValuesPanelLayout.createSequentialGroup()
+                .addComponent(propertiesValuesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 69, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout propertiesPanelLayout = new javax.swing.GroupLayout(propertiesPanel);
@@ -134,11 +182,11 @@ public class DescriptionFrame extends javax.swing.JPanel {
             .addGroup(propertiesPanelLayout.createSequentialGroup()
                 .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(propertiesPanelLayout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(propertiesLabel))
-                    .addGroup(propertiesPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(propertiesValuesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(propertiesValuesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(propertiesPanelLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(propertiesLabel)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         propertiesPanelLayout.setVerticalGroup(
@@ -152,16 +200,17 @@ public class DescriptionFrame extends javax.swing.JPanel {
         );
 
         imagePanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        imagePanel.setName(""); // NOI18N
 
         javax.swing.GroupLayout imagePanelLayout = new javax.swing.GroupLayout(imagePanel);
         imagePanel.setLayout(imagePanelLayout);
         imagePanelLayout.setHorizontalGroup(
             imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(imageLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         imagePanelLayout.setVerticalGroup(
             imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(imageLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -171,7 +220,7 @@ public class DescriptionFrame extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(generalInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(generalInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(propertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -182,7 +231,7 @@ public class DescriptionFrame extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(8, 8, 8)
-                .addComponent(generalInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(generalInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(imagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -197,12 +246,14 @@ public class DescriptionFrame extends javax.swing.JPanel {
     private javax.swing.JPanel generalInfoLabelPanel;
     public javax.swing.JPanel generalInfoPanel;
     private javax.swing.JPanel generalInfoValuesPanel;
+    private javax.swing.JLabel imageLabel;
     private javax.swing.JPanel imagePanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JLabel propertiesLabel;
     private javax.swing.JPanel propertiesPanel;
+    private javax.swing.JLabel propertiesValuesLabel;
     private javax.swing.JPanel propertiesValuesPanel;
     // End of variables declaration//GEN-END:variables
 }

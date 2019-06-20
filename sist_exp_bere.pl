@@ -422,22 +422,31 @@ scrie_scop(av(_,Val),FC,Desc,Img) :-
 		
 		gen_nume_fisier(av(Atr,Solutie),NumeFisier):-
 			fapt(av(Atr,Solutie),FC,_),
-			now(Timestamp),
+			datime(Timestamp),
 			creaza_nume_fisier(Timestamp,Solutie,FC,NumeFisier).
 
-			creaza_nume_fisier(Timestamp, Solutie, FC, NumeFisier):-
-				conversie_nr_atom(Timestamp, Time),
-				conversie_nr_atom(FC, FcNr),
-				atom_concat( 'demonstratie[', Time, DemTime),
-				atom_concat( DemTime, '][', DemTimeParanteze),
-				atom_concat( DemTimeParanteze, Solutie, DemTimeSol),
-				atom_concat( DemTimeSol, '][', DemTimeSolParanteze),
-				atom_concat( DemTimeSolParanteze, FcNr, DemTimeSolFc),
-				atom_concat( DemTimeSolFc, '].txt', NumeFisier).
-				
-				conversie_nr_atom(Nr,Atom):-
-					number_chars(Nr,Lchr),
-					atom_chars(Atom,Lchr).
+		creaza_nume_fisier(Timestamp, Solutie, FC, NumeFisier):-
+			conversie_dt_atom(Timestamp, Time),
+			conversie_nr_atom(FC, FcNr),
+			atom_concat( 'demonstratie[', Time, DemTime),
+			atom_concat( DemTime, '][', DemTimeParanteze),
+			atom_concat( DemTimeParanteze, Solutie, DemTimeSol),
+			atom_concat( DemTimeSol, '][', DemTimeSolParanteze),
+			atom_concat( DemTimeSolParanteze, FcNr, DemTimeSolFc),
+			atom_concat( DemTimeSolFc, '].txt', NumeFisier).
+			
+			conversie_dt_atom(datime(Y,M,D,H,Mi,S),Atom):-
+				YM is Y - 2000,
+				conversie_nr_atom(YM,YY), atom_concat('`',YY,A0), atom_concat(A0,'-',A1),
+				conversie_nr_atom(M,MM), atom_concat(A1,MM,A11),atom_concat(A11,'-',A2),
+				conversie_nr_atom(D,DD), atom_concat(A2,DD,A22),atom_concat(A22,' ',A3),
+				conversie_nr_atom(H,HH), atom_concat(A3,HH,A33),atom_concat(A33,'h',A4),
+				conversie_nr_atom(Mi,MI), atom_concat(A4,MI,A44),atom_concat(A44,'m',A5),
+				conversie_nr_atom(S,SS), atom_concat(A5,SS,A55),atom_concat(A55,'s',Atom).
+					   
+			conversie_nr_atom(Nr,Atom):-
+				number_chars(Nr,Lchr),
+				atom_chars(Atom,Lchr).
 
 
 
@@ -959,7 +968,9 @@ determina(_,_).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 afiseaza_scop(Stream, Atr) :-
 	nl,fapt(av(Atr,Val),FC,_),
-	FC >= 20,format(Stream,"s(~p cu fc ~p)",[Val, FC]),
+	FC >= 20,
+	afiseaza_props(Stream, Val, Descriere),
+	format(Stream,"s(~p cu fc ~p @ ~p ?)",[Val, FC,Descriere]),
 	nl(Stream),flush_output(Stream),fail.
 	 
 afiseaza_scop(Stream,_):-write('a terminat'), nl, flush_output(Stream).
@@ -967,6 +978,39 @@ afiseaza_scop(Stream,_):-write('a terminat'), nl, flush_output(Stream).
 afiseaza_scop_nu(Stream, Atr) :-
 	nl,format(Stream,"n(Nu am gasit nicio ~p care sa se potriveasca cu preferintele tale)",[Atr]),
 	nl(Stream),flush_output(Stream).
+
+afiseaza_props(_, Val, Descriere) :-
+	nl,solutie(Val,Desc,Img,Prop),
+	formateaza_props(Prop,Lprop),
+	atom_chars(Val,Lval),
+	atom_chars(Desc,Ldesc),
+	atom_chars(Img,Limg),
+	append(Lval, 						['#'], Val_diez),
+	append(Val_diez, 					Ldesc, Val_diez_desc),
+	append(Val_diez_desc, 				['#'], Val_diez_desc_diez),
+	append(Val_diez_desc_diez, 			Limg, Val_diez_desc_diez_img),
+	append(Val_diez_desc_diez_img, 		['#'], Val_diez_desc_diez_img_diez),
+	append(Val_diez_desc_diez_img_diez, Lprop, Val_diez_desc_diez_img_diez_props),
+	atom_chars(Descriere,Val_diez_desc_diez_img_diez_props),!.
+
+
+	formateaza_props([av(Prop,Val)|Tprop],Sir):-
+		formateaza_props(Tprop,T),
+		atom_chars(Prop,Lprop),
+		atom_chars(Val,Lval),
+		append(Lprop, [' ',':',' '], Lprop_egal),
+		append(Lprop_egal, Lval, H ),
+		(T = [] ->
+			Sir = H
+			;
+			append(H, ['|'], H1 ),
+			append(H1, T, Sir )
+		).
+
+	formateaza_props([],[]).
+		
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	 
@@ -1256,11 +1300,11 @@ inceput:-format('Salutare\n',[]),   flush_output,
 proceseaza_text_primit(Stream,C):-
                 write(inainte_de_citire),
                 read(Stream,CevaCitit),
-                write(dupa_citire),(CevaCitit = reset->trace;true),
+                write(dupa_citire),
 				write(CevaCitit),nl,
 				proceseaza_termen_citit(Stream,CevaCitit,C).
 
-proceseaza_termen_citit(Stream, exit,C):-
+proceseaza_termen_citit(Stream, exit,_):-
 				flush_output(Stream),
 				halt.
                 
