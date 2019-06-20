@@ -122,6 +122,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Statistici"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="statsActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="exit">
           <Properties>

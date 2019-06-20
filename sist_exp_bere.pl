@@ -932,7 +932,7 @@ scrie_lista(Stream,[H|T]) :-
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 scopuri_princ(Stream) :-
-	%write('a intrat in scopuri_princ'),nl,nl,
+	write('a intrat in scopuri_princ'),nl,nl,
 	scop(Atr),
 	determina(Stream,Atr), 
 	(fapt(av(Atr,_),_,_)->
@@ -940,6 +940,7 @@ scopuri_princ(Stream) :-
 	;
 		afiseaza_scop_nu(Stream,Atr)
 	),
+	write('a iesit in scopuri_princ'),nl,nl,
 	fail.
 
 scopuri_princ(_).
@@ -961,7 +962,7 @@ afiseaza_scop(Stream, Atr) :-
 	FC >= 20,format(Stream,"s(~p cu fc ~p)",[Val, FC]),
 	nl(Stream),flush_output(Stream),fail.
 	 
-afiseaza_scop(_,_):-write('a terminat'),nl.
+afiseaza_scop(Stream,_):-write('a terminat'), nl, flush_output(Stream).
 
 afiseaza_scop_nu(Stream, Atr) :-
 	nl,format(Stream,"n(Nu am gasit nicio ~p care sa se potriveasca cu preferintele tale)",[Atr]),
@@ -1063,8 +1064,16 @@ citeste_opt(Stream,Optiuni) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %aici
 de_la_utiliz(Stream,X,Istorie,Lista_opt) :-
-    repeat,write('astept raspuns\n'),citeste_linie(Stream,X),format('Am citit ~p din optiunile ~p\n',[X,Lista_opt]),
-    proceseaza_raspuns(X,Istorie,Lista_opt), write('gata de la utiliz\n').
+	repeat,write('astept raspuns\n'),
+	citeste_linie(Stream,X),
+	write(X),
+	(
+		X = [reset] -> 
+			reset(Stream)
+		;
+			format('Am citit ~p din optiunile ~p\n',[X,Lista_opt]),
+			proceseaza_raspuns(X,Istorie,Lista_opt), write('gata de la utiliz\n')
+	).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -1103,6 +1112,14 @@ incarca_java(2,F) :-
 incarca_java(3,F) :-
 	retractall(stats(_,_,_)),
 	open(F,read,StreamR),incarca_fisier(StreamR),close(StreamR),!.
+
+reset(Stream):- 
+	retractall(interogat(_)),
+	retractall(fapt(_,_,_)),!,
+	flush_output(Stream),
+	incarca_java,
+    proceseaza_termen_citit(Stream, comanda(consulta),0).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	 
 	 
@@ -1239,19 +1256,13 @@ inceput:-format('Salutare\n',[]),   flush_output,
 proceseaza_text_primit(Stream,C):-
                 write(inainte_de_citire),
                 read(Stream,CevaCitit),
-                write(dupa_citire),
-                write(CevaCitit),nl,
-                proceseaza_termen_citit(Stream,CevaCitit,C).
+                write(dupa_citire),(CevaCitit = reset->trace;true),
+				write(CevaCitit),nl,
+				proceseaza_termen_citit(Stream,CevaCitit,C).
 
 proceseaza_termen_citit(Stream, exit,C):-
 				flush_output(Stream),
 				halt.
-                
-proceseaza_termen_citit(Stream,salut,C):-
-                write(Stream,'salut, bre!\n'),
-                flush_output(Stream),
-                C1 is C+1,
-                proceseaza_text_primit(Stream,C1).
                 
 %SETEZ WORKING DIRECTORY
 proceseaza_termen_citit(Stream,director(D),C):- %pentru a seta directorul curent
@@ -1272,6 +1283,9 @@ proceseaza_termen_citit(Stream, incarca,C):-
 				incarca_java,
                 C1 is C+1,
                 proceseaza_text_primit(Stream,C1).
+
+proceseaza_termen_citit(Stream, reset ,_):-
+				reset(Stream).
                 
 %INCEPE CONSULTAREA
 proceseaza_termen_citit(Stream, comanda(consulta),C):-

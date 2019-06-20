@@ -20,9 +20,11 @@ public class MainFrame extends javax.swing.JFrame {
 // <editor-fold defaultstate="collapsed" desc="Componente">
     ConnectionSicstus conn;
     QuestionFrame qFrame;
-    public static boolean AFISAT_SOLUTII = false;
-    public static boolean Reset = false;
-    public static boolean Multiple_Choices=false;
+    JButton reset;
+    public static boolean boolSolutii = false;
+    public static boolean boolForced_Exit = false;
+    public static boolean boolReset = false;
+    public static boolean boolMultiple_Choices=false;
 // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="Constructor"> 
 
@@ -32,6 +34,18 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame(String titlu) {
         super(titlu);
         qFrame=new QuestionFrame();
+        reset = new JButton("Reset");
+        reset.setVisible(false);
+        reset.addActionListener(
+                    new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) 
+                    {
+                    resetActionPerformed(evt);
+                    }
+                }
+        );
+        
+        this.add(reset);
         initComponents();
     }
 // </editor-fold>  
@@ -70,6 +84,11 @@ public class MainFrame extends javax.swing.JFrame {
         welcome.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         stats.setText("Statistici");
+        stats.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statsActionPerformed(evt);
+            }
+        });
 
         exit.setText("Exit");
         exit.addActionListener(new java.awt.event.ActionListener() {
@@ -145,7 +164,12 @@ public class MainFrame extends javax.swing.JFrame {
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         // TODO add your handling code here:
         try {
-            conn.sender.trimiteMesajSicstus("exit");
+            if(!MainFrame.boolForced_Exit)
+                conn.sender.trimiteMesajSicstus("exit");
+            else{
+                conn.sender.trimiteMesajSicstus("exit");
+                conn.sender.trimiteMesajSicstus("halt.");
+            }
         } catch (InterruptedException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -155,11 +179,12 @@ public class MainFrame extends javax.swing.JFrame {
     private void startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startActionPerformed
         // TODO add your handling code here:
         
-        MainFrame.AFISAT_SOLUTII=false;
+        MainFrame.boolSolutii = false;
+        MainFrame.boolForced_Exit = true;
         
-        String dir=System.getProperty("user.dir");
-        dir=dir.replace("\\", "/");
-        System.out.println(dir);
+        String dir = System.getProperty("user.dir");
+        dir = dir.replace("\\", "/");
+        //System.out.println(dir);
         try {
             conn.sender.trimiteMesajSicstus("director('"+dir+"')");
             conn.sender.trimiteMesajSicstus("incarca");
@@ -168,12 +193,13 @@ public class MainFrame extends javax.swing.JFrame {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.remove(this.start);
+        /*this.remove(this.start);
         this.remove(this.exit);
         this.remove(this.stats);
         this.remove(this.startFrame);
-        this.remove(this.welcome);
-        
+        this.remove(this.welcome);*/
+        this.startFrame.setVisible(false);
+        this.reset.setVisible(true);
         this.setLayout(new FlowLayout());
         this.add(this.qFrame);
         this.qFrame.paint(null);
@@ -189,6 +215,15 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_startActionPerformed
 
+    private void statsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsActionPerformed
+        try {
+            // TODO add your handling code here:
+            conn.sender.trimiteMesajSicstus("exit");
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_statsActionPerformed
+
 // <editor-fold defaultstate="collapsed" desc="Event Butoane Dinamice">
     private void optionActionPerformed(java.awt.event.ActionEvent evt) {                                           
        
@@ -197,6 +232,22 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             conn.sender.trimiteSirSicstus(raspuns);
             
+        
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    } 
+    
+    private void resetActionPerformed(java.awt.event.ActionEvent evt) { 
+        try {
+            if(!MainFrame.boolSolutii )
+                conn.sender.trimiteSirSicstus("reset");
+            else
+            {
+                conn.sender.trimiteMesajSicstus("reset");
+                MainFrame.boolSolutii = false;
+            }
+            System.out.println("resetbtn");
         
         } catch (InterruptedException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -248,12 +299,12 @@ public class MainFrame extends javax.swing.JFrame {
         this.qFrame.optionsPanel.revalidate();
     }  
 
-     public void setSolution(String solutie){
-        if(!MainFrame.AFISAT_SOLUTII)
+    public void setSolution(String solutie){
+        if(!MainFrame.boolSolutii)
         {
             this.qFrame.removeAll();
             this.qFrame.setLayout(new FlowLayout());
-            MainFrame.AFISAT_SOLUTII=true;
+            MainFrame.boolSolutii=true;
         }
 
         JLabel jsol=new JLabel(solutie);
@@ -263,6 +314,11 @@ public class MainFrame extends javax.swing.JFrame {
         this.qFrame.revalidate();
         //this.revalidate();
     } 
+     
+    public void togglePage() {
+        
+    }
+ 
 // </editor-fold>  
     
     
