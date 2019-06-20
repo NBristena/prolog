@@ -122,7 +122,7 @@ public class MessageReader extends Thread {
                             {
                                 String solutie=text.substring(2, text.length()-1);
                                 conn.getMainFrame().setSolution(solutie);
-                                System.out.println(solutie);
+                                ////System.out.println(solutie);
                             }
                             //verific daca nu a gasit solutie
                             if(text.length()>2 && text.charAt(0)=='n'&& text.charAt(1)=='(' && text.charAt(text.length()-1)==')')
