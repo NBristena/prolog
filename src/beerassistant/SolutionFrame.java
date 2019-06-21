@@ -5,19 +5,61 @@
  */
 package beerassistant;
 
+import java.io.IOException;
+
 /**
  *
  * @author Zorro Andrei
  */
-public class SolutionFrame extends javax.swing.JPanel {
+public class DescriptionFrame extends javax.swing.JPanel {
 
     /**
-     * Creates new form SolutionFrame
+     * Creates new form DescriptionFrame
      */
-    public SolutionFrame() {
+    public DescriptionFrame() {
         initComponents();
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Setteri"> 
+    public void setNameLabel(String name){
+        this.nameLabel.setText(name);
+    }
+    
+    public void setDescriptionLabel(String desc){
+        this.descriptionLabel.setText(desc);
+    }
+    
+    public void setPropertiesValuesLabel(String properties){
+        if(properties.trim().equals("") || properties.trim().equals(null)){
+            this.propertiesValuesLabel.setText("");
+        }else{
+            String[] props = properties.split("\\|");
+            String html = "";
+            String property = "";
+            for(String prop : props){
+                prop=prop.trim();
+                if (!prop.equals("")){
+                      property+= "-" + prop +"<br>";
+                }
+            }
+            html += "<html><body>"+property+"</body></html>";
+            this.propertiesValuesLabel.setText(html);
+            this.propertiesValuesLabel.repaint();
+        }
+    }
+    
+    public void setImageLabel(String path) throws IOException{
+        
+        String current = new java.io.File( "." ).getCanonicalPath();
+        
+        String currentPath = current + "\\" + path.replace("/","\\");
+        //System.out.println("Current dir:"+current);
+        
+        this.imageLabel.setIcon(new javax.swing.ImageIcon(currentPath));
+    }
+    
+    
+    // </editor-fold> 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,55 +69,148 @@ public class SolutionFrame extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        solutionPanel = new javax.swing.JPanel();
-        optionPanel = new javax.swing.JPanel();
-        savePanel = new javax.swing.JPanel();
-        descriptionPanel = new javax.swing.JPanel();
+        generalInfoPanel = new javax.swing.JPanel();
+        generalInfoLabelPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        generalInfoValuesPanel = new javax.swing.JPanel();
+        nameLabel = new javax.swing.JLabel();
+        descriptionLabel = new javax.swing.JLabel();
+        propertiesPanel = new javax.swing.JPanel();
+        propertiesLabel = new javax.swing.JLabel();
+        propertiesValuesPanel = new javax.swing.JPanel();
+        propertiesValuesLabel = new javax.swing.JLabel();
+        imagePanel = new javax.swing.JPanel();
+        imageLabel = new javax.swing.JLabel();
 
-        solutionPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        javax.swing.GroupLayout solutionPanelLayout = new javax.swing.GroupLayout(solutionPanel);
-        solutionPanel.setLayout(solutionPanelLayout);
-        solutionPanelLayout.setHorizontalGroup(
-            solutionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 277, Short.MAX_VALUE)
-        );
-        solutionPanelLayout.setVerticalGroup(
-            solutionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 256, Short.MAX_VALUE)
-        );
+        generalInfoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        javax.swing.GroupLayout optionPanelLayout = new javax.swing.GroupLayout(optionPanel);
-        optionPanel.setLayout(optionPanelLayout);
-        optionPanelLayout.setHorizontalGroup(
-            optionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        optionPanelLayout.setVerticalGroup(
-            optionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 57, Short.MAX_VALUE)
-        );
+        jLabel1.setText("Nume");
 
-        javax.swing.GroupLayout savePanelLayout = new javax.swing.GroupLayout(savePanel);
-        savePanel.setLayout(savePanelLayout);
-        savePanelLayout.setHorizontalGroup(
-            savePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        jLabel2.setText("Descriere");
+
+        javax.swing.GroupLayout generalInfoLabelPanelLayout = new javax.swing.GroupLayout(generalInfoLabelPanel);
+        generalInfoLabelPanel.setLayout(generalInfoLabelPanelLayout);
+        generalInfoLabelPanelLayout.setHorizontalGroup(
+            generalInfoLabelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalInfoLabelPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(generalInfoLabelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        savePanelLayout.setVerticalGroup(
-            savePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 72, Short.MAX_VALUE)
+        generalInfoLabelPanelLayout.setVerticalGroup(
+            generalInfoLabelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalInfoLabelPanelLayout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout descriptionPanelLayout = new javax.swing.GroupLayout(descriptionPanel);
-        descriptionPanel.setLayout(descriptionPanelLayout);
-        descriptionPanelLayout.setHorizontalGroup(
-            descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+        nameLabel.setText("nume");
+
+        descriptionLabel.setText("descriere");
+
+        javax.swing.GroupLayout generalInfoValuesPanelLayout = new javax.swing.GroupLayout(generalInfoValuesPanel);
+        generalInfoValuesPanel.setLayout(generalInfoValuesPanelLayout);
+        generalInfoValuesPanelLayout.setHorizontalGroup(
+            generalInfoValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalInfoValuesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(generalInfoValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(descriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE))
+                .addContainerGap())
         );
-        descriptionPanelLayout.setVerticalGroup(
-            descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        generalInfoValuesPanelLayout.setVerticalGroup(
+            generalInfoValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalInfoValuesPanelLayout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(nameLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(descriptionLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout generalInfoPanelLayout = new javax.swing.GroupLayout(generalInfoPanel);
+        generalInfoPanel.setLayout(generalInfoPanelLayout);
+        generalInfoPanelLayout.setHorizontalGroup(
+            generalInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalInfoPanelLayout.createSequentialGroup()
+                .addComponent(generalInfoLabelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(generalInfoValuesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        generalInfoPanelLayout.setVerticalGroup(
+            generalInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalInfoPanelLayout.createSequentialGroup()
+                .addGroup(generalInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(generalInfoValuesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(generalInfoLabelPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        propertiesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        propertiesLabel.setText("Proprietati");
+
+        propertiesValuesLabel.setText("Loading..");
+
+        javax.swing.GroupLayout propertiesValuesPanelLayout = new javax.swing.GroupLayout(propertiesValuesPanel);
+        propertiesValuesPanel.setLayout(propertiesValuesPanelLayout);
+        propertiesValuesPanelLayout.setHorizontalGroup(
+            propertiesValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(propertiesValuesLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+        );
+        propertiesValuesPanelLayout.setVerticalGroup(
+            propertiesValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertiesValuesPanelLayout.createSequentialGroup()
+                .addComponent(propertiesValuesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 69, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout propertiesPanelLayout = new javax.swing.GroupLayout(propertiesPanel);
+        propertiesPanel.setLayout(propertiesPanelLayout);
+        propertiesPanelLayout.setHorizontalGroup(
+            propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertiesPanelLayout.createSequentialGroup()
+                .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(propertiesPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(propertiesValuesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(propertiesPanelLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(propertiesLabel)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        propertiesPanelLayout.setVerticalGroup(
+            propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertiesPanelLayout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(propertiesLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(propertiesValuesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        imagePanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        imagePanel.setName(""); // NOI18N
+
+        javax.swing.GroupLayout imagePanelLayout = new javax.swing.GroupLayout(imagePanel);
+        imagePanel.setLayout(imagePanelLayout);
+        imagePanelLayout.setHorizontalGroup(
+            imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(imageLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        imagePanelLayout.setVerticalGroup(
+            imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(imageLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -83,38 +218,42 @@ public class SolutionFrame extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(generalInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(solutionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(optionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(savePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(descriptionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                        .addComponent(propertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(0, 6, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(8, 8, 8)
+                .addComponent(generalInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(solutionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(optionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(savePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(descriptionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(imagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(propertiesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JPanel descriptionPanel;
-    public javax.swing.JPanel optionPanel;
-    public javax.swing.JPanel savePanel;
-    public javax.swing.JPanel solutionPanel;
+    private javax.swing.JLabel descriptionLabel;
+    private javax.swing.JPanel generalInfoLabelPanel;
+    public javax.swing.JPanel generalInfoPanel;
+    private javax.swing.JPanel generalInfoValuesPanel;
+    private javax.swing.JLabel imageLabel;
+    private javax.swing.JPanel imagePanel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JLabel propertiesLabel;
+    private javax.swing.JPanel propertiesPanel;
+    private javax.swing.JLabel propertiesValuesLabel;
+    private javax.swing.JPanel propertiesValuesPanel;
     // End of variables declaration//GEN-END:variables
 }
