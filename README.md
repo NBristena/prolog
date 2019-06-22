@@ -379,7 +379,9 @@ sampanie si pot fi pastrate pentru 30 ani.
 ## Instructiuni de utilizare
 
 1. Se seteaza directorul curent al proiectului din meniul consolei :
-    *File -> Working Directory..*   Noi am ales sa integram comanda care face acest lucru in codul proiectului pentru a scuti
+    *File -> Working Directory..*   
+
+Noi am ales sa integram comanda care face acest lucru in codul proiectului pentru a scuti
 utilizatorul de acest pas
 `
 :- use_module(library(file_systems),[]),file_systems:current_directory(_,'Path').`
@@ -440,7 +442,9 @@ m. Este obligatoriu sa puteti afisa demonstratia pentru raspunsurile date.
 
 n. Sistemul expert sa admita pentru unele intrebari si raspunsurile nu_stiu si nu_conteaza. Daca o intrebare primeste raspunsul nu_stiu, atunci sistemul va sari peste regulile care au nevoie de valoarea acelui atribut. Daca o intrebare primeste raspunsul nu_conteaza, atunci considera testul pentru atributul asociat ca fiind adevarat in orice regula indiferent de valoarea lui.
 
-##### Pentru interfata grafica:
+
+
+#### Pentru interfata grafica:
 
 a. Va exista un buton de reset, vizibil in orice stadiu al aplicatiei, care, la click, va reseta aplicatia la primul ecran, si va reseta si baza de cunostinte in Prolog, pentru a se permite o noua consultare.
 
