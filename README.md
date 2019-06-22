@@ -370,11 +370,13 @@ sampanie si pot fi pastrate pentru 30 ani.
 
 
 #### Arbore de inferenta 1 :
-
+![Arbore Inf1](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/AroboreI1.png)
 #### Arbori de inferenta 2 :
-
+![Arbore1 Inf2](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/AroboreI21.png)
+![Arbore2 Inf2](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/AroboreI22.png)
 #### Arbore de inferenta 3 :
-
+![Arbore1 Inf3](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/AroboreI31.png)
+![Arbore2 Inf3](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/AroboreI32.png)
 #
 ## Instructiuni de utilizare
 
@@ -389,29 +391,40 @@ Noi am ales sa integram comanda care face acest lucru in codul proiectului pentr
     *File -> Consult... -> sist_exp_bere.pl*
 
 3. Se apeleaza comanda **start.** pentru pornirea sistemului expert in urma careia este afisat meniul principal
+![Start](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/Instruct3.png)
 
 4. Comanda **Incarca** este folosita pentru incarcarea fisierului de reguli si a fisierului de descrieri ale solutiilor.
+![Incarca](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/Instruct4.png)
 
 5. Comanda **Reinitiaza** sterge atat faptele salvate in baza de cunostiinte cat si atributele in care sunt salvate intrebarile deja puse.
+![Reinitiaza](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/Instruct5.png)
 
 6. Comanda **Consulta** porneste motorul de luare a deciziilor incercand sa gaseasca o solutie pe baza raspunsurilor date de utilizator la intrebari. 
 Toate intrebarile accepta raspunsurile speciale *nu_stiu* si *nu_conteaza*.
 Daca utilizatorul nu stie sa raspunda la o intrebare se salveaza in baza de cunostiinte un fapt pentru atributul respectiv si valoarea raspunsului „nu_stiu‟, iar daca raspunde cu „nu_conteaza‟ se va salva in baza de cunostiinte cate un fapt al atributului cu fiecare valoare din lista de posibile optiuni.
 *Factorul de certitudine* este un numar, calculat dupa anumite formule matematice, care ajuta sistemul expert sa stabileasca cat de bine se potriveste o solutie pentru raspunsurile primite. Acest factor ia valori intre 0 si 100 iar limita inferioara pentru care se acceta o solutie este 20. Mai este folosit si pentru a ordona descrescator lista de solutii atunci cand sistemult gaseste mai mult de una.
+![Consulta](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/Instruct6.png)
 
 7. Comanda **Afiseaza_fapte** listeaza toate faptele primite si deduse de catre sistem.
+![Afiseaza_fapte](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/Instruct7.png)
+
 8. Comanda **Cum..** afiseaza demonstratia pentru o solutie gasita.
+![Cum](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/Instruct8.png)
 
 #
 ## Interogari
 
 #### Set de raspunsuri pentru nicio solutie :
+![Int 0 sol](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/Interog0.png)
 
 #### Set de raspunsuri pentru o solutie :
+![Int 1 sol](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/Interog1.png)
 
 #### Set de raspunsuri pentru 3 solutii :
+![Int 3 sol](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/Interog3.png)
 
 #### Set de raspunsuri pentru 4 solutii :
+![Int 4 sol](https://raw.githubusercontent.com/NBristena/prolog/master/PozeDocumentatie/Interog4.png)
 
 #
 ## Cerinte
