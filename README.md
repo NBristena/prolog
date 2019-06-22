@@ -466,7 +466,7 @@ g. se va da punctaj si pe originalitate, aspect si usurinta in utilizare. Interf
 #### 1. Parsare
 
 ```
-// Reguli
+/* Reguli */
 regula@ id
 lista_premise@ (
     atr @ valoare @
@@ -475,22 +475,19 @@ lista_premise@ (
 )
 concluzie@ ( atr @= valoare , fc@ nr @ ). 
 ```
-
 ```
-// Concluzii booleene
+/* Concluzii booleene */
 ( @ atr , fc@ nr @ )
 ( @! atr , fc@ nr @ )   
 ```
-
 ```
-//Intrebari
+/* Intrebari */
 intreaba@ atribut
 enunt@ 'continut intrebare'
 variante@ (val1 || val2 || val3 || ...).  
 ```
-
 ```
-//      Scop
+/* Scop */
 scop @ atr.
 ```
 
