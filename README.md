@@ -463,7 +463,7 @@ g. se va da punctaj si pe originalitate, aspect si usurinta in utilizare. Interf
 
 ### II. Individuale
 
-##### 1. Parsare
+#### 1. Parsare
 
 ```
 // Reguli
@@ -498,13 +498,13 @@ Rezolvare:
 - am adaugat noile caractere in lista de caractere acceptate pentru citirea unei propozitii
 - am modificat predicatul trad astfel incat sa recunoasca propozitiile scrise in fisierul reguli.txt dupa template-ul dat
 
-##### 2. In afisarea demonstratiei regulile se vor afisa ca in fisierul de intrare
+#### 2. In afisarea demonstratiei regulile se vor afisa ca in fisierul de intrare
 
 Rezolvare:
 - am duplicat predicatul transforma in transforma_premisa si transforma_concluzie pentru a accepta cele 2 template-uri diferite
 - am rescris predicatul afis_regula pentru a urma intregul template al regulii
 
-##### 3. Programul va citi dintr-un fisier de intrare datele pentru fiecare solutie in parte. 
+#### 3. Programul va citi dintr-un fisier de intrare datele pentru fiecare solutie in parte. 
 
 Acestea vor fi scrise in modul urmator:
 ```
@@ -522,64 +522,36 @@ Cuvantul *nume_sol* va fi inlocuit cu valoarea solutiei. Apoi se va adauga descr
 
 - Cand se afiseaza solutiile, sub ele se afiseaza si descrierile, in felul urmator:
 ```
-Reguli
-regula@ id
-lista_premise@ (
-atr @ valoare @
-@ atr @
-@! atr @
-)
-concluzie@ ( atr @= valoare , fc@ nr @ ).
-```
-```
-Concluzii booleene
-( @ atr , fc@ nr @ )
-( @! atr , fc@ nr @ )
-```
-```
-Intrebari
-intreaba@ atribut
-enunt@ 'continut intrebare'
-variante@ (val1 || val2 || val3 || ...).
-```
-```
-Scop
-scop @ atr.
-```
-
-```
 [valoare scop --> nume_sol]
 [descriere --> ...
 [imagine solutie --> cale_relativa_imagine]
 [proprietati --> prop1 = val1 ;
 prop2 = val2 ;
 prop3 = val3 ...]
-### /////////////////////.
-```
 
-```
-### ***************************
-- > nume_sol #### avand fc egal cu 87
-[cale_relativa_imagine]
-Despre solutie: 'text descriere'
-***************************
+/////////////////////.
 ```
 
 - La final, dupa afisarea solutiilor, se va afisa un submeniu cu trei optiuni: *afis_alfabetic*, *afis_proprietati*, *back*.
   - daca se alege optiunea **afis_alfabetic**, se afiseaza din nou solutiile dar ordonate alfabetic dupa numele lor. Inainte de afisare se va scrie fraza:
-```[ Afisare in ordine alfabetica ] -----------------------```
+```
+[ Afisare in ordine alfabetica ] -----------------------
+```
   - daca se alege optiunea **afis_proprietati**, se vor afisa solutiile doar cu numele lor si proprietatile astfel:
-```***************************```
-```-> nume_sol  ####  avand fc egal cu 87```
-```   [cale_relativa_imagine] ```
-```Despre solutie: 'text descriere'   ```
-```***************************```
+```
+***************************
+-> nume_sol  ####  avand fc egal cu 87
+   
+   [cale_relativa_imagine] 
+   Despre solutie: 'text descriere'
+***************************
+```
   - daca se alege optiunea **back** se revine la meniul principal.
 
-##### 4. Se va crea prin program un folder numit demonstratii_solutii (daca exista, il va folosi pe acela, iar daca nu exista, il va crea). In directorul de output se va crea cate un fisier numit **demonstratie[timestamp][solutie][fc].txt**, pentru fiecare solutie in parte.
+#### 4. Se va crea prin program un folder numit demonstratii_solutii (daca exista, il va folosi pe acela, iar daca nu exista, il va crea). In directorul de output se va crea cate un fisier numit **demonstratie[timestamp][solutie][fc].txt**, pentru fiecare solutie in parte.
 Cuvantul *solutie* din numele fisierului va fi inlocuit cu valoarea solutiei, *fc* cu factorul de certitudine, iar *timestamp* va fi calculat cu ajutorul predicatului datime(X) (prin concatenarea valorilor in forma “ `An-Luna-Zi OrahMinmSecs “). Fisierul va contine, evident, demonstratia pentru acea solutie. In demonstratii, afisarea regulilor se va face exact in forma in care au fost scrise in fisierul de intrare. Forma de afisare a celorlalte tipuri de informatii din demonstratie se lasa la alegerea studentilor.
 
-##### 5. Se va crea si completa prin program un fisier numit rezultate.txt care va contine toate rezultatele pe care le ofera sistemul, in formatul “timestamp → rezultat fc FC”, astfel:
+#### 5. Se va crea si completa prin program un fisier numit rezultate.txt care va contine toate rezultatele pe care le ofera sistemul, in formatul “timestamp → rezultat fc FC”, astfel:
        - atunci cand sistemul nu gaseste solutii cuvantul *rezultat* este inlocuit cu “fail” iar *FC* = 0
        - atunci cand sistemul gaseste solutii cu care utilizatorul nu este de acord cuvantul *rezultat* este inlocuit cu “niciuna” iar *FC* = 0
        - atunci cand sistemul gaseste solutii iar utilizatorul alege una din ele cuvantul *rezultat* este inlocuit cu numele berii alese iar *FC* = factorul cu care a fost gasita berea aleasa
@@ -589,7 +561,7 @@ Cuvantul *solutie* din numele fisierului va fi inlocuit cu valoarea solutiei, *f
     Rezolvare:
     - in urma raspunsului dat de utilizator se genereaza o linie in fisierul 'rezultate.txt', deschis cu predicatul open , cu optiunea append
 
-##### 6. Pe baza datelor salvate la cerinta 5) se vor genera 2 matrici de statistica, una pentru solutiile alese de useri si una pentru problemele sistemului astfel:
+#### 6. Pe baza datelor salvate la cerinta 5) se vor genera 2 matrici de statistica, una pentru solutiile alese de useri si una pentru problemele sistemului astfel:
     - matricea solutiilor va avea pe coloane frecventa alegerii unei solutii, numele solutiei si factorul de certitudine mediu (daca solutia a fost aleasa de mai multe ori se va calcula media aritmetica a factorilor cu care a fost gasita de catre sistem)
     - matricea problemelor va avea pe coloane frecventa intalnirii problemei respective si descrierea problemei ( posibilele probleme intalnite sunt : sistemul nu a gasit o solutie sau user-ul nu a fost de acord cu solutia gasita)
     
