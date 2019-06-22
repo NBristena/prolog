@@ -2,9 +2,7 @@
 ## Sistem expert pentru alegerea unei beri potrivite
 
 
-> Echipa:
- Nicolescu Bristena | grupa 353
- Zanfir Andrei | grupa 354
+> Echipa: Nicolescu Bristena | Zanfir Andrei
 
 > Profesor coordonator:
 Cidota Marina
