@@ -1,14 +1,14 @@
 # ~ BeerAssistant ~
 ## Sistem expert pentru alegerea unei beri potrivite
-#
-#
+
+
 > Echipa:
  Nicolescu Bristena | grupa 353
  Zanfir Andrei | grupa 354
 
 > Profesor coordonator:
 Cidota Marina
-#
+
 #
 ## Cuprins
 1. Introducere
@@ -23,7 +23,7 @@ Cidota Marina
 1. Cerinte
    - Generale
    - Individuale
-#
+
 #
 ## Introducere
 
@@ -52,12 +52,11 @@ specifice de care un necunoscator are nevoie pentru a ii fi mai usor sa se decid
 incerce. De asemenea, in Romania interesul si inclinarea oamenilor catre acest domeniu a inceput 
 sa creasca odata cu aparitia mai multor fabrici de bere artizanala si a din ce in ce mai multe baruri 
 specializate in diverse tipuri de beri romanesti sau de import, care sporesc curiozitatea tinerilor.
-#
+
 #
 ## Solutii
 #
 ##### `1. John Crabbie Ginger Beer`
-#
 ##### *Descriere :*
 Se bazeaza pe o infuzie de ghimbir si contine 4
 ingrediente secrete, iar productia poate dura pana la sase saptamani.
@@ -71,7 +70,6 @@ In general este servita cu gheata sau de la frigider.
 - pret 6 lei
 #
 ##### `2. Warsteiner Fresh`
-#
 ##### *Descriere :*
 O bere blonda pilsner, cu un gust racoritor ce se
 potriveste perfect la orice ocazie. Preparata in conformitate cu legea
@@ -84,7 +82,6 @@ germana de puritate, din malt de orz, hamei si extract de hamei.
 - pret 5 lei
 #
 ##### `3. Ursus Cooler`
-#
 ##### *Descriere :*
 Un amestec interesant de bere pasteurizata fara
 alcool si limonada cu suc de lamaie.
@@ -97,7 +94,6 @@ alcool si limonada cu suc de lamaie.
 - pret 6 lei
 #
 ##### `4. Birra Moretti Siciliana`
-#
 ##### *Descriere :*
 O bere proaspata care va trimite mintea in mijlocul unei
 plantatii de citrice din Sicilia. Caracterul sau distinct de portocale este
@@ -110,7 +106,6 @@ completat de un gust amarui pe baza de plante.
 - pret 8 lei
 #
 ##### `5. Desperados`
-#
 ##### *Descriere :*
 Prima bere din lume cu aroma de Tequila ofera o
 combinatie distincta de bere lagar completa cu o aroma de Tequila. Are un
@@ -123,7 +118,6 @@ gust usor, racoritor si echilibrat.
 - pret 10 lei
 #
 ##### `6. Mikkeller Organic Shandy`
-#
 ##### *Descriere :*
 Bere artizanala proaspata, preparata cu lamaie organica
 si lime, potrivita pentru zilele calde de primavara-vara.
@@ -136,7 +130,6 @@ si lime, potrivita pentru zilele calde de primavara-vara.
 - pret 14 lei
 #
 ##### `7. Mikkeller Beer Geek Vanilla Shake`
-#
 ##### *Descriere :*
 Acest Stout imperial se toarna negru cu un guler gros de
 spuma. Paleta de arome surprinde cu dulceata laptelui si ofera malt
@@ -150,7 +143,6 @@ prajit si un gust intens de vanilie.
 - pret 18 lei
 #
 ##### `8. Pohjala Cocobanger`
-#
 ##### *Descriere :*
 Un stout imperial cu arome de cocos si cafea Caturra din
 Costa Rica.
@@ -163,7 +155,6 @@ Costa Rica.
 - pret 30 lei
 #
 ##### `9. Mikkeller Brunch of Nuts`
-#
 ##### *Descriere :*
 Bere neagra cu o spuma maronie. Contine arome de
 malt prajit, cacao, cafea si nuci.
@@ -175,7 +166,6 @@ malt prajit, cacao, cafea si nuci.
 - pret 21 lei
 #
 ##### `10. Zaganu Adonis Pale Ale`
-#
 ##### *Descriere :*
 O bere artizanala de tip Pale Ale, cu hamei din belsug si
 placut mirositoare. O bere in cinstea vulturului zagan ce ne viziteaza
@@ -189,7 +179,6 @@ teritoriul tarii.
 - pret 14 lei
 #
 ##### `11. Bud Light Orange`
-#
 ##### *Descriere :*
 Un lager usor, creat cu coaja naturala de portocala si
 arome naturale de citrice.
@@ -201,7 +190,6 @@ arome naturale de citrice.
 - pret 8 lei
 #
 ##### `12. Nenea Iancu`
-#
 ##### *Descriere :*
 Textura spumoasa si putin aspra cu aspecte de malt,
 boabe de grane, citrice si vag de condimente uscate. Un Weizen real cu
@@ -215,7 +203,6 @@ gust acrisor-fructat si suficiente “printipuri” ce nu poate fi refuzat...
 - pret 9 lei
 #
 ##### `13. Yuengling Traditional Lager`
-#
 ##### *Descriere :*
  Un lager american faimos pentru culoara sa bogata
 si aroma echilibrata. Cu un malt caramelizat, aceasta bere are un
@@ -229,7 +216,6 @@ gust autentic si un caracter distinct.
 - pret 11 lei
 #
 ##### `14. Kasteel Rouge`
-#
 ##### *Descriere :*
 Este un mix intre Kasteel Donker si lichior de cirese.
 Amestecul celor doua produse creeaza o combinatie unica si delicioasa.
@@ -242,7 +228,6 @@ Amestecul celor doua produse creeaza o combinatie unica si delicioasa.
 - pret 18 lei
 #
 ##### `15. Timișoareana`
-#
 ##### *Descriere :*
 Berea de traditie a romanilor. Din 1718 pana in prezent a
 fost alaturi, pas cu pas, de bucuriile, incercarile si momentele linistite
@@ -255,7 +240,6 @@ din viata noastra.
 - pret 5 lei
 #
 ##### `16. Grolsch`
-#
 ##### *Descriere :*
 "Ca pe vremuri" si racoritoare, nu are nevoie de
 descriere. Este berea buna de care nu te saturi niciodata. Un lager
@@ -268,7 +252,6 @@ european gustos.
 - pret 9 lei
 #
 ##### `17. Abita Purple Haze`
-#
 ##### *Descriere :*
 Abita Purple Haze este o bere americana cu zmeure
 adaugate in timpul fermentatiei. Are un colorit subtil, o aroma fructata
@@ -282,7 +265,6 @@ si un gust dulce.
 - pret 12 lei
 #
 ##### `18. De Dolle Dulle Teve`
-#
 ##### *Descriere :*
 Facut dupa traditia "Belgianului Triplu". Densitatea mare
 rezulta din cantitatile uriase de malt adaugate in timpul fermentatiei.
@@ -296,7 +278,6 @@ Nefiltrata, nepasteurizata, perfecta pentru sticla.
 - pret 16 lei
 #
 ##### `19. O‟Fallon Vanilla Pumpkin Beer`
-#
 ##### *Descriere :*
 O bautura usoara si racoritoare, cu o coluare portocalie,
 fara spuma, dar al carei gust de dovleac iese in evidenta.
@@ -309,7 +290,6 @@ fara spuma, dar al carei gust de dovleac iese in evidenta.
 - pret 15 lei
 #
 ##### `20. Westbrook Gose`
-#
 ##### *Descriere :*
 Westbrook Gose este interpretarea americana a
 berii germane traditionale "Gose". Cuprinde note subtile de cereale,
@@ -323,7 +303,6 @@ lamaie, citrice, sare si coriandru.
 - pret 9 lei
 #
 ##### `21. Lost Nation Gose`
-#
 ##### *Descriere :*
 Bere traditionala germana, care disparuse pana
 acum 30 ani. Este o bere racoritoare extraordinara, cu spuma alba
@@ -337,7 +316,6 @@ si arome de coriandru si sare de mare.
 - pret 11 lei
 #
 ##### `22. New Belgium Frambozen`
-#
 ##### *Descriere :*
 Incepe cu o aroma de zmeura, urmata de seductia
 inocenta a unui Ale fructat si brun. Are o culoare rosiatica, cu arome
@@ -351,7 +329,6 @@ bogate.
 - pret 14 lei
 #
 ##### `23. Hanssens Oude Kriek`
-#
 ##### *Descriere :*
 Incorporeaza un mix de cirese negre de diferite varste
 urmate de inca o fermentatie in sticla. Toate sticlele au dop de
@@ -364,7 +341,7 @@ sampanie si pot fi pastrate pentru 30 ani.
 - sticla la 35 0ml
 - pret 16 lei
 
-#
+
 #
 ## Atribute si arbori
 #
