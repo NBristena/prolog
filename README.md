@@ -515,9 +515,11 @@ Acestea vor fi scrise in modul urmator:
 /////////////////////. 
 ```
 
-Cuvantul *nume_sol* va fi inlocuit cu valoarea solutiei. Apoi se va adauga descrierea, inlocuind *"..."* cu textul efectiv al descrierii. Descrierea se pune intre apostrofuri. Se va adauga si *calea relativa catre imaginea corespunzatoare* solutiei. De asemenea se vor enumera *proprietatile* care descriu solutia, impreuna cu *valorile* lor. Proprietatile sunt separate cu virgula. Aceste date vor fi cititie din fisier si memorate in baza de cunostinte de asa natura incat sa poata fi rezolvate cerintele urmatoare:
+Cuvantul *nume_sol* va fi inlocuit cu valoarea solutiei. Apoi se va adauga descrierea, inlocuind *"..."* cu textul efectiv al descrierii. Descrierea se pune intre apostrofuri. Se va adauga si *calea relativa catre imaginea corespunzatoare* solutiei. De asemenea se vor enumera *proprietatile* care descriu solutia, impreuna cu *valorile* lor. Proprietatile sunt separate cu virgula. 
 
-- Cand se afiseaza solutiile, sub ele se afiseaza si descrierile, in felul urmator:
+Aceste date vor fi cititie din fisier si memorate in baza de cunostinte de asa natura incat sa poata fi rezolvate cerintele urmatoare:
+
+1. Cand se afiseaza solutiile, sub ele se afiseaza si descrierile, in felul urmator:
 ```
 [valoare scop --> nume_sol]
 [descriere --> ...
@@ -529,7 +531,7 @@ prop3 = val3 ...]
 /////////////////////.
 ```
 
-- La final, dupa afisarea solutiilor, se va afisa un submeniu cu trei optiuni: *afis_alfabetic*, *afis_proprietati*, *back*.
+2. La final, dupa afisarea solutiilor, se va afisa un submeniu cu trei optiuni: *afis_alfabetic*, *afis_proprietati*, *back*.
   - daca se alege optiunea **afis_alfabetic**, se afiseaza din nou solutiile dar ordonate alfabetic dupa numele lor. Inainte de afisare se va scrie fraza:
 ```
 [ Afisare in ordine alfabetica ] -----------------------
@@ -549,17 +551,18 @@ prop3 = val3 ...]
 Cuvantul *solutie* din numele fisierului va fi inlocuit cu valoarea solutiei, *fc* cu factorul de certitudine, iar *timestamp* va fi calculat cu ajutorul predicatului datime(X) (prin concatenarea valorilor in forma “ `An-Luna-Zi OrahMinmSecs “). Fisierul va contine, evident, demonstratia pentru acea solutie. In demonstratii, afisarea regulilor se va face exact in forma in care au fost scrise in fisierul de intrare. Forma de afisare a celorlalte tipuri de informatii din demonstratie se lasa la alegerea studentilor.
 
 #### 5. Se va crea si completa prin program un fisier numit rezultate.txt care va contine toate rezultatele pe care le ofera sistemul, in formatul “timestamp → rezultat fc FC”, astfel:
-       - atunci cand sistemul nu gaseste solutii cuvantul *rezultat* este inlocuit cu “fail” iar *FC* = 0
-       - atunci cand sistemul gaseste solutii cu care utilizatorul nu este de acord cuvantul *rezultat* este inlocuit cu “niciuna” iar *FC* = 0
-       - atunci cand sistemul gaseste solutii iar utilizatorul alege una din ele cuvantul *rezultat* este inlocuit cu numele berii alese iar *FC* = factorul cu care a fost gasita berea aleasa
-    *Timestamp-ul* se va scrie sub forma dt_An_Luna_Zi_Ora_Min_Sec si va fi calculat cu ajutorul predicatului datime(X). Informatiile necesare vor fi cerute dupa ce user-ul apeleaza m_anterior astfel:
-       - daca s-a gasit o solutie, user-ul este intrebat daca o alege sau nu
-       - daca s-au gasit mai multe solutii este intrebat pe care dintre ele o alege si i se ofera si optiunea “niciuna"
-    Rezolvare:
+- atunci cand sistemul nu gaseste solutii cuvantul *rezultat* este inlocuit cu “fail” iar *FC* = 0
+- atunci cand sistemul gaseste solutii cu care utilizatorul nu este de acord cuvantul *rezultat* este inlocuit cu “niciuna” iar *FC* = 0
+- atunci cand sistemul gaseste solutii iar utilizatorul alege una din ele cuvantul *rezultat* este inlocuit cu numele berii alese iar *FC* = factorul cu care a fost gasita berea aleasa
+*Timestamp-ul* se va scrie sub forma dt_An_Luna_Zi_Ora_Min_Sec si va fi calculat cu ajutorul predicatului datime(X). Informatiile necesare vor fi cerute dupa ce user-ul apeleaza m_anterior astfel:
+- daca s-a gasit o solutie, user-ul este intrebat daca o alege sau nu
+- daca s-au gasit mai multe solutii este intrebat pe care dintre ele o alege si i se ofera si optiunea “niciuna"
+
+Rezolvare:
     - in urma raspunsului dat de utilizator se genereaza o linie in fisierul 'rezultate.txt', deschis cu predicatul open , cu optiunea append
 
 #### 6. Pe baza datelor salvate la cerinta 5) se vor genera 2 matrici de statistica, una pentru solutiile alese de useri si una pentru problemele sistemului astfel:
-    - matricea solutiilor va avea pe coloane frecventa alegerii unei solutii, numele solutiei si factorul de certitudine mediu (daca solutia a fost aleasa de mai multe ori se va calcula media aritmetica a factorilor cu care a fost gasita de catre sistem)
-    - matricea problemelor va avea pe coloane frecventa intalnirii problemei respective si descrierea problemei ( posibilele probleme intalnite sunt : sistemul nu a gasit o solutie sau user-ul nu a fost de acord cu solutia gasita)
+- matricea solutiilor va avea pe coloane frecventa alegerii unei solutii, numele solutiei si factorul de certitudine mediu (daca solutia a fost aleasa de mai multe ori se va calcula media aritmetica a factorilor cu care a fost gasita de catre sistem)
+- matricea problemelor va avea pe coloane frecventa intalnirii problemei respective si descrierea problemei ( posibilele probleme intalnite sunt : sistemul nu a gasit o solutie sau user-ul nu a fost de acord cu solutia gasita)
     
 Fiind o statistica de care are nevoie proprietarul barului si nu user-ul aplicatiei, ea se va apela cu “afisare_statistica” in afara sistemului expert.
