@@ -381,15 +381,19 @@ sampanie si pot fi pastrate pentru 30 ani.
 1. Se seteaza directorul curent al proiectului din meniul consolei :
     *File -> Working Directory..*   
 
-Noi am ales sa integram comanda care face acest lucru in codul proiectului pentru a scuti
-utilizatorul de acest pas
+Noi am ales sa integram comanda care face acest lucru in codul proiectului pentru a scuti utilizatorul de acest pas
 `
 :- use_module(library(file_systems),[]),file_systems:current_directory(_,'Path').`
+
 2. Se consulta fisierul ce contine codul programului din meniul consolei:
     *File -> Consult... -> sist_exp_bere.pl*
+
 3. Se apeleaza comanda **start.** pentru pornirea sistemului expert in urma careia este afisat meniul principal
+
 4. Comanda **Incarca** este folosita pentru incarcarea fisierului de reguli si a fisierului de descrieri ale solutiilor.
+
 5. Comanda **Reinitiaza** sterge atat faptele salvate in baza de cunostiinte cat si atributele in care sunt salvate intrebarile deja puse.
+
 6. Comanda **Consulta** porneste motorul de luare a deciziilor incercand sa gaseasca o solutie pe baza raspunsurilor date de utilizator la intrebari. 
 Toate intrebarile accepta raspunsurile speciale *nu_stiu* si *nu_conteaza*.
 Daca utilizatorul nu stie sa raspunda la o intrebare se salveaza in baza de cunostiinte un fapt pentru atributul respectiv si valoarea raspunsului „nu_stiu‟, iar daca raspunde cu „nu_conteaza‟ se va salva in baza de cunostiinte cate un fapt al atributului cu fiecare valoare din lista de posibile optiuni.
@@ -552,8 +556,9 @@ Cuvantul *solutie* din numele fisierului va fi inlocuit cu valoarea solutiei, *f
 
 #### 5. Se va crea si completa prin program un fisier numit rezultate.txt care va contine toate rezultatele pe care le ofera sistemul, in formatul “timestamp → rezultat fc FC”, astfel:
 - atunci cand sistemul nu gaseste solutii cuvantul *rezultat* este inlocuit cu “fail” iar *FC* = 0
-- atunci cand sistemul gaseste solutii cu care utilizatorul nu este de acord cuvantul *rezultat* este inlocuit cu “niciuna” iar *FC* = 0
-- atunci cand sistemul gaseste solutii iar utilizatorul alege una din ele cuvantul *rezultat* este inlocuit cu numele berii alese iar *FC* = factorul cu care a fost gasita berea aleasa
+- atunci cand sistemul gaseste solutii cu care utilizatorul nu este de acord *rezultat* este inlocuit cu “niciuna” iar *FC* = 0
+- atunci cand sistemul gaseste solutii iar utilizatorul alege una din ele *rezultat* este inlocuit cu numele berii alese iar *FC* = factorul cu care a fost gasita berea aleasa
+
 *Timestamp-ul* se va scrie sub forma dt_An_Luna_Zi_Ora_Min_Sec si va fi calculat cu ajutorul predicatului datime(X). Informatiile necesare vor fi cerute dupa ce user-ul apeleaza m_anterior astfel:
 - daca s-a gasit o solutie, user-ul este intrebat daca o alege sau nu
 - daca s-au gasit mai multe solutii este intrebat pe care dintre ele o alege si i se ofera si optiunea “niciuna"
