@@ -38,8 +38,7 @@ BeerAssistant vine in ajutorul unui bar care doreste sa ofere clientilor ajutor 
 caracteristicilor lor, lucru care necesita timp si resurse din partea proprietarului barului. Dezvoltarea acestui program ar scuti barul de cheltuieli in plus si ar face posibila angajarea persoanelor care nu au cunostiinte in domeniu sau care nu se descurca la memorarea informatiilor.
  
 Am ales aceasta tema de proiect fiindca am observat ca exista multe aplicatii care ofera informatii generale despre toate berile existente, insa nu am gasit niciuna care sa ofere anumite detalii specifice de care un necunoscator are nevoie pentru a ii fi mai usor sa se decide ce bere vrea sa incerce. De asemenea, in Romania interesul si inclinarea oamenilor catre acest domeniu a inceput sa creasca odata cu aparitia mai multor fabrici de bere artizanala si a din ce in ce mai multe baruri specializate in diverse tipuri de beri romanesti sau de import, care sporesc curiozitatea tinerilor.
-
-
+######
 #
 ## Solutii
 ##### `1. John Crabbie Ginger Beer`
