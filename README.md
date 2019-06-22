@@ -28,6 +28,7 @@ Cidota Marina
 ## Introducere
 
 Un **sistem expert** este un program care foloseste tehnologii de inteligenta artificiala pentru a simula gandirea unui om care are experienta si cunostiinte de expert intr-un anumit domeniu. Pentru a putea ajunge la o concluzie, sistemul expert pune un set de intrebari si aplica regulile definite pe setul de raspunsuri primite de la utilizator. 
+
 In general un sistemele expert au 3 module principale:
 - o baza de cunostiinte care contine fapte si concluzii acumulate
 - o un motor de inferenta format dintr-un set de reguli ce ajuta la 
