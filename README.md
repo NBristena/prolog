@@ -27,35 +27,21 @@ Cidota Marina
 #
 ## Introducere
 
-Un **sistem expert** este un program care foloseste tehnologii de inteligenta artificiala pentru a
-simula gandirea unui om care are experienta si cunostiinte de expert intr-un anumit domeniu. 
-Pentru a putea ajunge la o concluzie, sistemul expert pune un set de intrebari si aplica regulile 
-definite pe setul de raspunsuri primite de la utilizator. In general un sistemele expert au 3 module principale:
+Un **sistem expert** este un program care foloseste tehnologii de inteligenta artificiala pentru a simula gandirea unui om care are experienta si cunostiinte de expert intr-un anumit domeniu. Pentru a putea ajunge la o concluzie, sistemul expert pune un set de intrebari si aplica regulile definite pe setul de raspunsuri primite de la utilizator. 
+In general un sistemele expert au 3 module principale:
 - o baza de cunostiinte care contine fapte si concluzii acumulate
 - o un motor de inferenta format dintr-un set de reguli ce ajuta la 
 imbogatirea bazei de cunostiinte si interogarea ei pentru fiecare situatie particulara descrisa
 - o interfata cu utilizatorul
-#
+
 ##### Contextul temei alese:
-BeerAssistant vine in ajutorul unui bar care doreste sa ofere clientilor ajutor in comandarea 
-unei beri potrivite pentru starea si preferintele fiecaruia. In toate barurile care ofera o gama 
-larga de beri si tipuri de beri este necesara prezenta unui expert deoarece majoritatea 
-clientilor nu sunt familiarizati cu diversele tipuri si arome de bere. Din acest motiv, barurile 
-angajeaza ospatari carora  le ofera o perioada de invatare a tuturor produselor vandute si a 
-caracteristicilor lor, lucru care necesita timp si resurse din partea proprietarului barului. 
-Dezvoltarea acestui program ar scuti barul de cheltuieli in plus si ar face posibila angajarea 
-persoanelor care nu au cunostiinte in domeniu sau care nu se descurca la memorarea informatiilor.
+BeerAssistant vine in ajutorul unui bar care doreste sa ofere clientilor ajutor in comandarea unei beri potrivite pentru starea si preferintele fiecaruia. In toate barurile care ofera o gama larga de beri si tipuri de beri este necesara prezenta unui expert deoarece majoritatea clientilor nu sunt familiarizati cu diversele tipuri si arome de bere. Din acest motiv, barurile angajeaza ospatari carora  le ofera o perioada de invatare a tuturor produselor vandute si a 
+caracteristicilor lor, lucru care necesita timp si resurse din partea proprietarului barului. Dezvoltarea acestui program ar scuti barul de cheltuieli in plus si ar face posibila angajarea persoanelor care nu au cunostiinte in domeniu sau care nu se descurca la memorarea informatiilor.
  
-Am ales aceasta tema de proiect fiindca am observat ca exista multe aplicatii care ofera informatii 
-generale despre toate berile existente, insa nu am gasit niciuna care sa ofere anumite detalii 
-specifice de care un necunoscator are nevoie pentru a ii fi mai usor sa se decide ce bere vrea sa 
-incerce. De asemenea, in Romania interesul si inclinarea oamenilor catre acest domeniu a inceput 
-sa creasca odata cu aparitia mai multor fabrici de bere artizanala si a din ce in ce mai multe baruri 
-specializate in diverse tipuri de beri romanesti sau de import, care sporesc curiozitatea tinerilor.
+Am ales aceasta tema de proiect fiindca am observat ca exista multe aplicatii care ofera informatii generale despre toate berile existente, insa nu am gasit niciuna care sa ofere anumite detalii specifice de care un necunoscator are nevoie pentru a ii fi mai usor sa se decide ce bere vrea sa incerce. De asemenea, in Romania interesul si inclinarea oamenilor catre acest domeniu a inceput sa creasca odata cu aparitia mai multor fabrici de bere artizanala si a din ce in ce mai multe baruri specializate in diverse tipuri de beri romanesti sau de import, care sporesc curiozitatea tinerilor.
 
 #
 ## Solutii
-#
 ##### `1. John Crabbie Ginger Beer`
 ##### *Descriere :*
 Se bazeaza pe o infuzie de ghimbir si contine 4
